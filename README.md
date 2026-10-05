@@ -27,15 +27,15 @@ website builds and serves with only `NEXT_PUBLIC_SITE_URL` set — Firebase,
 Sanity, Razorpay and Mux are all read lazily, so an unconfigured integration
 disables its feature instead of breaking the build.
 
-| Group | Needed for |
-| --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical URLs, sitemap, robots |
-| `NEXT_PUBLIC_FIREBASE_*` | Sign-in and the portals ([setup](./docs/firebase.md)) |
-| `FIREBASE_PROJECT_ID` / `_CLIENT_EMAIL` / `_PRIVATE_KEY` | Server-side Firestore — **secret** |
-| `CLOUDINARY_CLOUD_NAME` / `_API_KEY` / `_API_SECRET` | File storage ([setup](./docs/cloudinary.md)) — **secret** |
-| `NEXT_PUBLIC_SANITY_*`, `SANITY_*` | CMS content and the publish webhook ([setup](./docs/sanity.md)) |
-| `RAZORPAY_*` | Online fee payment — **secret** |
-| `MUX_*` | Signed lecture playback — **secret** |
+| Group                                                    | Needed for                                                      |
+| -------------------------------------------------------- | --------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                                   | Canonical URLs, sitemap, robots                                 |
+| `NEXT_PUBLIC_FIREBASE_*`                                 | Sign-in and the portals ([setup](./docs/firebase.md))           |
+| `FIREBASE_PROJECT_ID` / `_CLIENT_EMAIL` / `_PRIVATE_KEY` | Server-side Firestore — **secret**                              |
+| `CLOUDINARY_CLOUD_NAME` / `_API_KEY` / `_API_SECRET`     | File storage ([setup](./docs/cloudinary.md)) — **secret**       |
+| `NEXT_PUBLIC_SANITY_*`, `SANITY_*`                       | CMS content and the publish webhook ([setup](./docs/sanity.md)) |
+| `RAZORPAY_*`                                             | Online fee payment — **secret**                                 |
+| `MUX_*`                                                  | Signed lecture playback — **secret**                            |
 
 ## Pages
 
@@ -63,17 +63,17 @@ Surfaces alternate `white` → `paper` (pale indigo) → `indigo` (full-colour b
 
 ## Conversion paths
 
-| Action | Where it lives |
-| --- | --- |
-| Enroll Now | `/enrol` — `EnrolmentForm`, header, hero, batch cards |
-| Book Free Counselling | `/counselling` |
-| Free demo class | `/demo` |
-| Download Brochure | `/brochure` — `BrochureForm`; serves the file directly once `BROCHURE.href` is set |
-| Request a Callback | `HeroCallbackForm` in the hero (name, mobile, programme) and `CallbackForm` — homepage contact block, `/contact#callback`, `/enrol`. Both post `form: "callback"`; `callbackSchema` requires only name and phone, and each form tightens the rest with `.extend()`. |
-| Enquiry form | `/contact#enquiry` |
-| Free study material | `/resources` — direct download or `ResourceRequestForm` |
-| Event / webinar registration | `/events` |
-| WhatsApp + Call | `StickyMobileCta` below `lg`, `FloatingActions` above it, plus header and footer |
+| Action                       | Where it lives                                                                                                                                                                                                                                                      |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enroll Now                   | `/enrol` — `EnrolmentForm`, header, hero, batch cards                                                                                                                                                                                                               |
+| Book Free Counselling        | `/counselling`                                                                                                                                                                                                                                                      |
+| Free demo class              | `/demo`                                                                                                                                                                                                                                                             |
+| Download Brochure            | `/brochure` — `BrochureForm`; serves the file directly once `BROCHURE.href` is set                                                                                                                                                                                  |
+| Request a Callback           | `HeroCallbackForm` in the hero (name, mobile, programme) and `CallbackForm` — homepage contact block, `/contact#callback`, `/enrol`. Both post `form: "callback"`; `callbackSchema` requires only name and phone, and each form tightens the rest with `.extend()`. |
+| Enquiry form                 | `/contact#enquiry`                                                                                                                                                                                                                                                  |
+| Free study material          | `/resources` — direct download or `ResourceRequestForm`                                                                                                                                                                                                             |
+| Event / webinar registration | `/events`                                                                                                                                                                                                                                                           |
+| WhatsApp + Call              | `StickyMobileCta` below `lg`, `FloatingActions` above it, plus header and footer                                                                                                                                                                                    |
 
 Every one of them posts to `/api/leads` with its own Zod schema.
 
@@ -119,7 +119,7 @@ authorises first. See [`docs/architecture.md`](./docs/architecture.md).
 
 ## Logo
 
-The mark is **Kalam — the Nib** (concept 01 of *VidyantIAS Logo Concepts*): a fountain-pen nib whose slit and breather hole together spell a hidden "i". It is drawn, not photographed — `components/ui/NibMark` renders it inline from the geometry in `src/lib/brand/nib.ts`, which is the only place the shape is defined.
+The mark is **Kalam — the Nib** (concept 01 of _VidyantIAS Logo Concepts_): a fountain-pen nib whose slit and breather hole together spell a hidden "i". It is drawn, not photographed — `components/ui/NibMark` renders it inline from the geometry in `src/lib/brand/nib.ts`, which is the only place the shape is defined.
 
 The body uses `currentColor` and the slit is an `evenodd` cut-out, not a white shape, so one path serves every surface: indigo on white, white on indigo, black on a photocopy. The breather hole is the identity's single saffron element — it stands for the student. `mono` punches it out with the slit for one-colour printing and stamps.
 
@@ -127,12 +127,12 @@ The body uses `currentColor` and the slit is an `evenodd` cut-out, not a white s
 
 Static assets are generated, never hand-edited — run `npm run brand:assets` after changing the geometry:
 
-| File | Use |
-| --- | --- |
-| `src/app/icon.svg` | favicon / tab icon — white nib on an indigo tile |
-| `src/app/apple-icon.png` | 180px home-screen icon (iOS applies its own mask) |
-| `public/images/logo-mark.svg` | the bare mark, indigo on light surfaces |
-| `public/images/logo-mark-light.svg` | the bare mark reversed, used by the OG card |
+| File                                | Use                                               |
+| ----------------------------------- | ------------------------------------------------- |
+| `src/app/icon.svg`                  | favicon / tab icon — white nib on an indigo tile  |
+| `src/app/apple-icon.png`            | 180px home-screen icon (iOS applies its own mask) |
+| `public/images/logo-mark.svg`       | the bare mark, indigo on light surfaces           |
+| `public/images/logo-mark-light.svg` | the bare mark reversed, used by the OG card       |
 
 **Naming note:** the logo deck sets the name as **VidyantIAS**, while the site copy uses **vidyantIAS** throughout. `BRAND.logotype` carries the deck's casing for the drawn name and `BRAND.name` the running-copy casing; confirm which wins before launch and align the other — both live in `lib/constants/site.ts`.
 
@@ -146,12 +146,12 @@ Colour is used in **blocks, not as trim**: full-width indigo bands (the learning
 
 That audience sets four rules the tokens already encode:
 
-| Rule | Token / value |
-| --- | --- |
-| Body text targets AAA, not AA | `ink-secondary` 9.0:1 on white, `ink-muted` 9.7:1 |
-| Nothing below 13px; body is 17px | `--text-body` 1.0625rem, `--text-small` 0.9375rem, `--text-eyebrow` 0.8125rem |
-| Borders survive a cheap LCD in daylight | `--color-line` `#DDE2F2`, `--color-line-strong` `#C2CBE4` |
-| Controls are thumb-sized | Button heights `h-10 / h-12 / h-14`, every icon control 44px |
+| Rule                                    | Token / value                                                                 |
+| --------------------------------------- | ----------------------------------------------------------------------------- |
+| Body text targets AAA, not AA           | `ink-secondary` 9.0:1 on white, `ink-muted` 9.7:1                             |
+| Nothing below 13px; body is 17px        | `--text-body` 1.0625rem, `--text-small` 0.9375rem, `--text-eyebrow` 0.8125rem |
+| Borders survive a cheap LCD in daylight | `--color-line` `#DDE2F2`, `--color-line-strong` `#C2CBE4`                     |
+| Controls are thumb-sized                | Button heights `h-10 / h-12 / h-14`, every icon control 44px                  |
 
 The phone number and WhatsApp link sit in the hero notice strip as well as the sticky bar, because a large part of this audience would rather call than fill a form. No hero photography or icon fonts — illustrations are inline SVG drawn from tokens, so the page is useful on 3G. Renaming the family means editing the token block and the class names together — they are kept in sync (`bg-indigo`, `tone="indigo"`). Dark mode is deliberately not implemented.
 
@@ -161,21 +161,21 @@ The phone number and WhatsApp link sit in the hero notice strip as well as the s
 
 Everything below is marked `TODO(institute)` or `TODO(content)` in code:
 
-| What | Where |
-| --- | --- |
-| Address, phone, WhatsApp, email, social handles | `src/lib/constants/site.ts` |
-| Faculty names, credentials, photographs | `src/data/faculty.ts` (`isPlaceholder: true`) |
-| Photography (mentorship, classroom, library) | `src/lib/constants/images.ts` + `/public/images` |
-| Orientation and demo dates | `src/data/events.ts` (template in the file header) |
-| Noticeboard announcements | `src/data/announcements.ts` (ships empty; same field names as the Sanity `announcement` document) |
-| Practice quizzes | `src/data/quizzes.ts` (ships empty; a quiz without `href` renders as "Opens <date>", never as a dead link) |
-| Course durations, schedules, fees | `src/data/courses.ts` |
-| Free resource PDFs | `src/data/resources.ts` (`href: ""` → request flow) |
-| Batch start dates, timings, fees | `src/data/batches.ts` (ships empty; template in the file header) |
-| Brochure PDF | `BROCHURE.href` in `src/lib/constants/site.ts` (null → emailed by the team) |
-| Student app store links | `APP` in `src/lib/constants/site.ts` (`available: false` → "notify me") |
-| YouTube channel and video ids | `YOUTUBE` in `src/lib/constants/site.ts` (empty ids → channel invitation) |
-| Target exam cycle | `EXAM_CYCLE` in `src/lib/constants/site.ts` |
+| What                                            | Where                                                                                                      |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Address, phone, WhatsApp, email, social handles | `src/lib/constants/site.ts`                                                                                |
+| Faculty names, credentials, photographs         | `src/data/faculty.ts` (`isPlaceholder: true`)                                                              |
+| Photography (mentorship, classroom, library)    | `src/lib/constants/images.ts` + `/public/images`                                                           |
+| Orientation and demo dates                      | `src/data/events.ts` (template in the file header)                                                         |
+| Noticeboard announcements                       | `src/data/announcements.ts` (ships empty; same field names as the Sanity `announcement` document)          |
+| Practice quizzes                                | `src/data/quizzes.ts` (ships empty; a quiz without `href` renders as "Opens <date>", never as a dead link) |
+| Course durations, schedules, fees               | `src/data/courses.ts`                                                                                      |
+| Free resource PDFs                              | `src/data/resources.ts` (`href: ""` → request flow)                                                        |
+| Batch start dates, timings, fees                | `src/data/batches.ts` (ships empty; template in the file header)                                           |
+| Brochure PDF                                    | `BROCHURE.href` in `src/lib/constants/site.ts` (null → emailed by the team)                                |
+| Student app store links                         | `APP` in `src/lib/constants/site.ts` (`available: false` → "notify me")                                    |
+| YouTube channel and video ids                   | `YOUTUBE` in `src/lib/constants/site.ts` (empty ids → channel invitation)                                  |
+| Target exam cycle                               | `EXAM_CYCLE` in `src/lib/constants/site.ts`                                                                |
 
 **Not fabricated anywhere:** testimonials, results, batches, events, announcements, quizzes and current-affairs articles ship empty on purpose. The homepage renders honest empty states for them instead of invented content. Add real entries with `status: "published"` and the sections switch to cards automatically.
 
@@ -218,12 +218,12 @@ Firebase Storage is not used and must not be enabled: every file is a Cloudinary
 Authorisation has three layers and needs all of them —
 [`docs/security.md`](./docs/security.md):
 
-| Layer | Where |
-| --- | --- |
-| Optimistic redirect | `src/proxy.ts` |
-| Real server check | `lib/auth/server.ts`, inside every service |
-| Direct-client check | `firestore.rules` |
-| File access | `services/storage/storage.service.ts` — no rules layer behind it |
+| Layer               | Where                                                            |
+| ------------------- | ---------------------------------------------------------------- |
+| Optimistic redirect | `src/proxy.ts`                                                   |
+| Real server check   | `lib/auth/server.ts`, inside every service                       |
+| Direct-client check | `firestore.rules`                                                |
+| File access         | `services/storage/storage.service.ts` — no rules layer behind it |
 
 ## Next step
 
