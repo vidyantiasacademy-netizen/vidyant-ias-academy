@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="">
+  <!-- Fallback student photo: brand wash, no stock face. Used when a student
+       has not uploaded a photograph yet. -->
+  <rect width="160" height="160" fill="#e4e7f5"/>
+  <circle cx="80" cy="62" r="26" fill="#1d2470" opacity="0.55"/>
+  <path d="M80 96c-26 0-46 16-50 39a4 4 0 0 0 4 5h92a4 4 0 0 0 4-5c-4-23-24-39-50-39Z" fill="#1d2470" opacity="0.55"/>
+  <rect x="0" y="152" width="160" height="8" fill="#f39a1e"/>
+</svg>

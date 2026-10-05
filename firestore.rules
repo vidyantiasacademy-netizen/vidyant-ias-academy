@@ -1,0 +1,369 @@
+rules_version = '2';
+
+// vidyantIAS Firestore Security Rules
+//
+// These rules govern direct access from the browser. They do not apply to the
+// Admin SDK, which the services in `src/services` use and which bypasses rules
+// entirely — that path is authorised by `requireAuth()` / `requireRole()`
+// instead. Both layers are required: this file is what protects the data when
+// someone skips our app and talks to Firestore with their own token.
+//
+// Default posture: deny. Every collection below opens the narrowest hole that
+// the product needs, and anything not listed is unreachable.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------- helpers
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // `active` is mirrored from `users/{uid}.isActive` into a custom claim. A
+    // deactivated account fails every check below, including reads of its own
+    // data, without having to delete anything.
+    function claims() {
+      return request.auth.token;
+    }
+
+    function active() {
+      return signedIn() && claims().get('active', true) == true;
+    }
+
+    function role() {
+      return claims().get('role', 'STUDENT');
+    }
+
+    // Rank mirrors the ROLES array order in src/types/db/user.ts. Keep the two
+    // in step: a role added here but not there (or vice versa) is a silent hole.
+    function rank(r) {
+      return r == 'SUPER_ADMIN' ? 5
+           : r == 'ADMIN'       ? 4
+           : r == 'COUNSELLOR'  ? 3
+           : r == 'FACULTY'     ? 2
+           : r == 'MENTOR'      ? 1
+           : 0;
+    }
+
+    function atLeast(minimum) {
+      return active() && rank(role()) >= rank(minimum);
+    }
+
+    function isSelf(uid) {
+      return active() && request.auth.uid == uid;
+    }
+
+    function isStaff()      { return atLeast('MENTOR'); }
+    function isFaculty()    { return atLeast('FACULTY'); }
+    function isCounsellor() { return atLeast('COUNSELLOR'); }
+    function isAdmin()      { return atLeast('ADMIN'); }
+    function isSuperAdmin() { return role() == 'SUPER_ADMIN' && active(); }
+
+    // Enrollment ids are deterministic (`{uid}_{courseId}`), so access is a
+    // single document lookup instead of a query — rules cannot run queries.
+    function isEnrolled(courseId) {
+      return active() && exists(
+        /databases/$(database)/documents/enrollments/$(request.auth.uid + '_' + courseId)
+      ) && get(
+        /databases/$(database)/documents/enrollments/$(request.auth.uid + '_' + courseId)
+      ).data.status == 'active';
+    }
+
+    // Returns the set of field names a write is trying to change.
+    function changing() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    // True when a write touches only the listed fields.
+    function onlyChanges(allowed) {
+      return changing().hasOnly(allowed);
+    }
+
+    function unchanged(field) {
+      return request.resource.data[field] == resource.data[field];
+    }
+
+    // ------------------------------------------------------------------ users
+
+    // Roles are assigned server-side only. A client that could write its own
+    // `users` document would choose its own role, so create and role changes
+    // are closed to every client regardless of rank.
+    match /users/{uid} {
+      allow get: if isSelf(uid) || isCounsellor();
+      allow list: if isAdmin();
+
+      allow create: if false;
+
+      allow update: if (isSelf(uid) || isAdmin())
+                    && onlyChanges(['displayName', 'phone', 'photoPath', 'updatedAt', 'updatedBy'])
+                    && unchanged('role')
+                    && unchanged('isActive');
+
+      allow delete: if false;
+    }
+
+    // --------------------------------------------------------------- students
+
+    match /students/{uid} {
+      allow get: if isSelf(uid) || isStaff();
+      allow list: if isCounsellor();
+
+      allow create: if false;
+
+      // A student may edit their own biographical details. Not `rollNumber`
+      // (the institute's identifier), not `mentorUid` (an assignment), not
+      // `activeEnrollmentIds` (which would hand them any course), not `notes`
+      // (staff-written).
+      allow update: if isSelf(uid)
+                    && onlyChanges([
+                         'fullName', 'phone', 'dateOfBirth', 'city', 'state',
+                         'optionalSubject', 'preparationStage', 'attemptsGiven',
+                         'targetExamYear', 'updatedAt', 'updatedBy'
+                       ]);
+
+      allow update: if isCounsellor();
+      allow delete: if false;
+    }
+
+    // ---------------------------------------------------------------- faculty
+
+    match /faculty/{uid} {
+      allow get, list: if signedIn() && active();
+      allow write: if isAdmin();
+    }
+
+    // ---------------------------------------------------- courses and batches
+
+    match /courses/{courseId} {
+      // Published courses are public: the marketing site may render them
+      // without a session. Drafts are staff-only.
+      allow get, list: if resource.data.status == 'published' || isFaculty();
+
+      // Course configuration — price, access window, faculty list — is admin
+      // only. `stats` counters are written by the server, never a client.
+      allow write: if isAdmin();
+    }
+
+    match /batches/{batchId} {
+      allow get, list: if signedIn() && active();
+      allow write: if isCounsellor();
+    }
+
+    // ------------------------------------------------------------ enrollments
+
+    // The access grant. Entirely server-written: a student who could create or
+    // activate one of these would enroll themselves for free.
+    match /enrollments/{enrollmentId} {
+      allow get: if isSelf(resource.data.studentUid) || isStaff();
+      allow list: if isCounsellor();
+      allow write: if false;
+    }
+
+    // ---------------------------------------------------------------- lessons
+
+    match /lessons/{lessonId} {
+      allow get, list: if isFaculty()
+                       || (resource.data.status == 'published'
+                           && (resource.data.isFreePreview == true
+                               || isEnrolled(resource.data.courseId)));
+
+      // Faculty may author lessons for their own courses; admins for any.
+      allow create: if isAdmin()
+                    || (isFaculty()
+                        && request.auth.uid in get(
+                             /databases/$(database)/documents/courses/$(request.resource.data.courseId)
+                           ).data.facultyUids);
+
+      allow update, delete: if isAdmin()
+                            || (isFaculty()
+                                && request.auth.uid in get(
+                                     /databases/$(database)/documents/courses/$(resource.data.courseId)
+                                   ).data.facultyUids);
+    }
+
+    // ------------------------------------------------------------------ tests
+
+    match /tests/{testId} {
+      allow get, list: if isFaculty()
+                       || (resource.data.status == 'published'
+                           && isEnrolled(resource.data.courseId));
+
+      allow write: if isFaculty();
+    }
+
+    // -------------------------------------------------------------- questions
+
+    // The answer key. No student may read this collection at any point, not
+    // even for a test they are sitting: during an attempt the server returns a
+    // redacted projection (`QuestionForAttempt`) that omits
+    // `correctOptionIds`, `modelAnswer` and `explanation`. Firestore cannot
+    // withhold fields on a read, so the whole collection stays closed.
+    match /questions/{questionId} {
+      allow get, list: if isFaculty();
+      allow write: if isFaculty();
+    }
+
+    // ----------------------------------------------------------- testAttempts
+
+    // A sitting. Closed to every client write, including the student's own.
+    //
+    // This used to let a student create their own attempt and move it to
+    // `submitted`. The exam runner removed that: starting, answering, beating and
+    // submitting all go through Server Actions, because invigilation only works
+    // if the server is the one counting. A client that could write here directly
+    // could start an attempt without a `sessionToken`, keep two windows alive,
+    // reset `focusLossCount`, or submit without the violation counters ever
+    // being read — none of which any rule here can detect.
+    match /testAttempts/{attemptId} {
+      allow get: if isSelf(resource.data.studentUid) || isFaculty();
+      allow list: if isFaculty();
+
+      allow create, delete: if false;
+
+      // Staff only, for an invigilator voiding or reopening a sitting. A student
+      // has no write path to their own attempt at all.
+      allow update: if isFaculty();
+    }
+
+    // ---------------------------------------------------------------- answers
+
+    // Answers are written by `testService.saveAnswer`, never by the browser.
+    //
+    // Rules cannot do what that function does: check the session token, refuse a
+    // write past `expiresAt` with its grace, verify that the question belongs to
+    // this paper and that the chosen option exists on it, and keep
+    // `answeredCount` honest in both directions. A client-writable answer
+    // collection would let a student answer a paper they are not sitting, or
+    // keep writing after the bell from a window the server has evicted.
+    match /answers/{answerId} {
+      allow get, list: if isSelf(resource.data.studentUid) || isFaculty();
+
+      allow create, delete: if false;
+
+      // Faculty evaluate; they may not rewrite what the student submitted.
+      allow update: if isFaculty()
+                    && onlyChanges([
+                         'marksAwarded', 'isCorrect', 'evaluatorNote',
+                         'evaluatedBy', 'updatedAt', 'updatedBy'
+                       ]);
+    }
+
+    // ----------------------------------------------------------- proctorEvents
+
+    // The invigilation log: one row per fullscreen exit, tab switch, refused
+    // copy or second window during a sitting.
+    //
+    // Evidence, so it is append-only and server-written — a student who could
+    // delete a row could clear their own record, and one who could write a row
+    // could bury a real violation under a hundred invented ones.
+    //
+    // Students cannot read it either, including their own. A log that tells a
+    // student which of their attempts was noticed also tells them which were
+    // not.
+    match /proctorEvents/{eventId} {
+      allow get, list: if isFaculty();
+      allow write: if false;
+    }
+
+    // ---------------------------------------------------------------- results
+
+    // Scorecards. Read-only for the owner, and only once published — the
+    // `publishedAt` check is what keeps a test's results sealed until the whole
+    // batch has sat it. Writes are server-only, from every role.
+    match /results/{resultId} {
+      allow get: if (isSelf(resource.data.studentUid)
+                     && resource.data.publishedAt != null
+                     && resource.data.publishedAt <= request.time)
+                  || isStaff();
+
+      allow list: if isStaff();
+      allow write: if false;
+    }
+
+    // ----------------------------------------------------------------- doubts
+
+    match /doubts/{doubtId} {
+      allow get: if isSelf(resource.data.studentUid) || isStaff();
+      allow list: if isStaff();
+
+      allow create: if isSelf(request.resource.data.studentUid)
+                    && request.resource.data.status == 'open'
+                    && request.resource.data.answer == null
+                    && request.resource.data.answeredBy == null;
+
+      // A student may edit their question until it is answered.
+      allow update: if isSelf(resource.data.studentUid)
+                    && resource.data.status == 'open'
+                    && onlyChanges([
+                         'question', 'attachmentPaths', 'subject',
+                         'updatedAt', 'updatedBy'
+                       ]);
+
+      allow update: if isFaculty();
+      allow delete: if isAdmin();
+    }
+
+    // ------------------------------------------------------------- mentorship
+
+    // `privateNotes` is mentor-only, and Firestore cannot hide one field from a
+    // read. So students do not read this collection directly at all — the
+    // server returns a projection without that field.
+    match /mentorship/{sessionId} {
+      allow get, list: if isStaff();
+      allow write: if isStaff();
+    }
+
+    // ---------------------------------------------------------- notifications
+
+    match /notifications/{notificationId} {
+      allow get, list: if isSelf(resource.data.userUid) || isAdmin();
+
+      // The recipient may only mark one read.
+      allow update: if isSelf(resource.data.userUid)
+                    && onlyChanges(['readAt']);
+
+      allow create: if isAdmin();
+      allow delete: if isSelf(resource.data.userUid) || isAdmin();
+    }
+
+    // -------------------------------------------------------------- enquiries
+
+    // Website leads. Created by the server from the public form (no session
+    // exists on that request), read by counsellors. Closed to all client
+    // writes: a client-writable CRM is a spam target.
+    match /enquiries/{enquiryId} {
+      allow get, list: if isCounsellor();
+      allow write: if false;
+    }
+
+    // --------------------------------------------------------------- payments
+
+    // Entirely server-written, from the Razorpay webhook. Nothing — no role,
+    // not even SUPER_ADMIN from the browser — may set a payment status.
+    match /payments/{paymentId} {
+      allow get: if isSelf(resource.data.studentUid) || isCounsellor();
+      allow list: if isCounsellor();
+      allow write: if false;
+    }
+
+    // --------------------------------------------------------------- activity
+
+    // Learning events. Append-only: a student may record their own, and nobody
+    // may edit or delete one, so the history cannot be rewritten.
+    match /activity/{activityId} {
+      allow get, list: if isSelf(resource.data.studentUid) || isStaff();
+
+      allow create: if isSelf(request.resource.data.studentUid);
+      allow update, delete: if false;
+    }
+
+    // ------------------------------------------------------------------ catch
+
+    // Anything not matched above is denied. Adding a collection to the app
+    // means adding a block here, deliberately.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

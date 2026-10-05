@@ -1,0 +1,28 @@
+// Cloudflare Worker that calls the exam sweep on a schedule.
+// Setup and deploy: docs/exam-sweep.md
+{
+  "name": "vidyantias-exam-sweep",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+
+  // No public URL: the Worker only runs on its schedule, and nothing should be
+  // able to reach it over HTTP.
+  "workers_dev": false,
+  "preview_urls": false,
+
+  // Every two minutes. Cron runs in UTC, which does not matter for an interval.
+  "triggers": {
+    "crons": ["*/2 * * * *"]
+  },
+
+  "vars": {
+    // The live site's sweep route. Not a secret.
+    "SWEEP_URL": "https://REPLACE-WITH-LIVE-DOMAIN/api/exams/sweep"
+  },
+  // EXAM_SWEEP_SECRET is a secret, set with `wrangler secret put`, never here.
+
+  // Keeps run logs in the dashboard (Workers Logs), free-plan friendly.
+  "observability": {
+    "enabled": true
+  }
+}

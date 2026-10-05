@@ -1,0 +1,299 @@
+@import "tailwindcss";
+
+/* ============================================================
+   vidyantIAS design system — colour and type
+   ------------------------------------------------------------
+   THEME: "Ink Indigo & Kesar" — the palette of the VidyantIAS
+   logo system (Kalam, the nib). Deep indigo is the ink and the
+   authority; saffron appears once, and it always stands for the
+   student. Built for the audience this institute actually serves:
+   aspirants in small towns and villages, reading on a budget
+   Android phone, often outdoors in daylight, often on a slow
+   connection.
+
+   Colour is used in BLOCKS, not as trim. Full-width indigo bands
+   alternate with white and pale-indigo sections; kesar fills the
+   primary call to action and washes behind highlights. An accent
+   rationed to a hairline reads as beige on a cheap panel — that
+   is the one mistake this palette exists to avoid.
+
+   Four brand colours, nothing else:
+
+     Ink Indigo #1D2470   authority, ink, bands, headings
+     Kesar      #F39A1E   the student — the call to action, once
+     White      #FFFFFF   breathing room
+     Black      #111111   photocopies, stamps, body ink
+
+   Everything below is one of those four, a tint or shade of them,
+   or a desaturated indigo used for secondary text and rules.
+   Never hardcode a colour in a component — use a token. The only
+   non-palette colours are `danger` and `success`, which are
+   functional form-feedback colours and not part of the brand.
+
+   What the audience changes, concretely:
+     - contrast targets AAA (7:1) for body text, not AA. Cheap LCD
+       panels and sunlight eat the bottom two stops of any ramp.
+     - body text is 17px and small print 15px. Nothing on this site
+       is set below 13px.
+     - borders are strong enough to survive a low-contrast screen;
+       hairlines that look refined on a MacBook vanish on a ₹8,000
+       phone.
+     - no hero photography or icon fonts — the page must be useful
+       on 3G. Illustrations are inline SVG, drawn from tokens.
+     - the phone number is a first-class call to action, because a
+       large part of this audience would rather call than fill a
+       form.
+
+   Contrast (WCAG 2.1) of the pairings this system allows:
+     ink (#111111)       on white    18.9:1
+     indigo              on white    13.7:1
+     indigo              on paper    12.3:1
+     indigo-700          on white     9.6:1
+     ink-muted           on white     9.7:1
+     ink-secondary       on white     9.0:1   <- AAA body text
+     ink-secondary       on paper     8.1:1
+     kesar-600           on white     5.9:1   <- text-grade kesar
+     kesar-700           on kesar-100 7.2:1
+     white               on indigo   13.7:1
+     kesar               on indigo    6.1:1
+     indigo-900          on kesar     7.3:1   <- kesar button label
+     indigo              on kesar-100 12.2:1
+
+   Base Kesar is only 2.2:1 on white, so it is reserved for fills,
+   rules and decoration on white, and for text only on indigo.
+   On white, text and meaningful icons use `kesar-600`.
+   ============================================================ */
+
+@theme {
+  /* ---- Ink Indigo ----------------------------------------- */
+  --color-indigo: #1d2470;
+  /* A step lighter — hover on indigo, raised panels on a band. */
+  --color-indigo-700: #2e3a9b;
+  /* Steps darker — band gradients, deepest surfaces, footer. */
+  --color-indigo-900: #141a50;
+  --color-indigo-950: #0d1138;
+  /* Tint for badges and icon chips on light surfaces. */
+  --color-indigo-100: #e4e7f5;
+
+  /* ---- Kesar --------------------------------------------- */
+  --color-kesar: #f39a1e;
+  /* Text-grade kesar: >= 4.5:1 on white and on paper. */
+  --color-kesar-600: #8a5a00;
+  /* Text-grade kesar for use on the kesar-100 wash. */
+  --color-kesar-700: #6f4800;
+  /* The wash that sits behind highlights, stats and badges. */
+  --color-kesar-100: #fdf1dd;
+
+  /* ---- Semantic surfaces --------------------------------- */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  /* `paper` is the alternating section surface — a pale indigo
+     wash that is visibly not white, so the band rhythm survives a
+     dim panel. It matches the card field used across the logo
+     deck. */
+  --color-paper: #f1f3fa;
+  --color-paper-200: #e2e7f3;
+  --color-surface-muted: var(--color-paper);
+
+  /* ---- Text ---------------------------------------------- */
+  --color-ink: #111111;
+  --color-ink-muted: #3c4264;
+  --color-ink-secondary: #414769;
+
+  /* ---- Lines --------------------------------------------- */
+  --color-line: #dde2f2;
+  --color-line-strong: #c2cbe4;
+
+  /* ---- Functional feedback (not brand colours) ----------- */
+  --color-danger: #b42318;
+  --color-danger-50: #fef3f2;
+  --color-success: #067647;
+  --color-success-50: #ecfdf3;
+
+  /* Type */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Logotype only — the drawn name in the Kalam lockup. */
+  --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
+
+  --text-hero: 2.5rem;            /* 40px mobile */
+  --text-hero--line-height: 1.08;
+  --text-hero--letter-spacing: -0.025em;
+  --text-hero-lg: 4rem;           /* 64px desktop */
+  --text-hero-lg--line-height: 1.05;
+  --text-hero-lg--letter-spacing: -0.03em;
+
+  --text-h1: 2.25rem;             /* 36px mobile */
+  --text-h1--line-height: 1.12;
+  --text-h1--letter-spacing: -0.022em;
+  --text-h1-lg: 3.25rem;          /* 52px */
+  --text-h1-lg--line-height: 1.1;
+  --text-h1-lg--letter-spacing: -0.026em;
+
+  --text-h2: 1.875rem;            /* 30px mobile */
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h2-lg: 2.5rem;           /* 40px */
+  --text-h2-lg--line-height: 1.15;
+  --text-h2-lg--letter-spacing: -0.022em;
+
+  --text-h3: 1.5rem;              /* 24px mobile */
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.015em;
+  --text-h3-lg: 1.75rem;          /* 28px */
+  --text-h3-lg--line-height: 1.2;
+  --text-h3-lg--letter-spacing: -0.015em;
+
+  --text-h4: 1.375rem;            /* 22px */
+  --text-h4--line-height: 1.3;
+  --text-h4--letter-spacing: -0.01em;
+
+  /* Sizes are a step up from a typical desktop-first scale: 17px
+     body, 15px small, nothing below 13px. Measured on a 360px
+     screen, not a 1440px one. */
+  --text-body-lg: 1.3125rem;      /* 21px */
+  --text-body-lg--line-height: 1.6;
+  --text-body: 1.0625rem;         /* 17px */
+  --text-body--line-height: 1.65;
+  --text-small: 0.9375rem;        /* 15px */
+  --text-small--line-height: 1.55;
+  /* Wide tracking shreds legibility at small sizes on a low-DPI
+     panel, so eyebrows are bigger and tracked less than usual. */
+  --text-eyebrow: 0.8125rem;      /* 13px */
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.08em;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;   /* buttons, inputs */
+  --radius-lg: 14px;   /* cards */
+  --radius-xl: 20px;   /* large panels */
+
+  /* Elevation — used sparingly, borders do most of the work.
+     Shadows are tinted with Ink Indigo, never neutral grey. */
+  --shadow-card: 0 1px 2px 0 rgb(29 36 112 / 0.07);
+  --shadow-card-hover: 0 8px 24px -12px rgb(29 36 112 / 0.22);
+  --shadow-panel: 0 24px 64px -32px rgb(29 36 112 / 0.32);
+
+  /* Motion */
+  --ease-brand: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@layer base {
+  :root {
+    /* Focus ring colour. Indigo reads at 13.7:1 on white; dark
+       surfaces flip it to white with the `focus-invert` utility. */
+    --focus-ring: var(--color-indigo);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-kesar-100);
+    color: var(--color-indigo);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  h1, h2, h3, h4 {
+    color: var(--color-indigo);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer utilities {
+  /* Put on any indigo/black surface so focus rings stay visible.
+     The custom property inherits to every descendant. */
+  .focus-invert {
+    --focus-ring: #ffffff;
+  }
+
+  /* Section reveal — opt-in, honours reduced motion */
+  .reveal {
+    animation: reveal-up 0.6s var(--ease-brand) both;
+  }
+
+  .reveal-delay-1 { animation-delay: 0.08s; }
+  .reveal-delay-2 { animation-delay: 0.16s; }
+  .reveal-delay-3 { animation-delay: 0.24s; }
+
+  @keyframes reveal-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Carousel rotation indicator. Fills once per slide, never loops on its
+     own — the component re-keys the element to restart it. */
+  .promo-progress {
+    animation: promo-progress linear 1 forwards;
+    transform-origin: left;
+  }
+
+  @keyframes promo-progress {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+
+  /* Notification ticker. The track holds the notices twice, so sliding it by
+     half its width lands exactly on the second copy and the loop has no seam.
+     Duration is set per instance, from how much text there is to read. */
+  .notice-ticker {
+    animation: notice-ticker linear infinite;
+  }
+
+  [data-paused="true"] .notice-ticker {
+    animation-play-state: paused;
+  }
+
+  @keyframes notice-ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Toast entrance. One short slide so the message is noticed arriving;
+     flattened by the reduced-motion override at the end of this file. */
+  .toast-enter {
+    animation: toast-enter 0.22s var(--ease-brand) both;
+  }
+
+  @keyframes toast-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
