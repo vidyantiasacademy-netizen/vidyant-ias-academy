@@ -234,6 +234,38 @@ export const importQuestionsAction = action(
 );
 
 /**
+ * Publishes every draft question on the paper — typically a CSV import that
+ * was brought in as drafts and has since been checked. Archived questions are
+ * left alone; they were taken out on purpose.
+ */
+export const publishDraftQuestionsAction = action(
+  roleGuard("FACULTY"),
+  z.object({ testId: id }),
+  async ({ testId }) => {
+    await assertEditable(testId);
+
+    const drafts = (await testService.listQuestionsForStaff(testId)).filter(
+      (question) => question.status === "draft",
+    );
+
+    // A question shared with another paper is only as editable as that paper.
+    const otherPapers = new Set(
+      drafts.flatMap((question) => question.testIds).filter((paperId) => paperId !== testId),
+    );
+    for (const otherId of otherPapers) await assertEditable(otherId);
+
+    await testService.setQuestionsStatus(
+      drafts.map((question) => question.id),
+      "published",
+    );
+
+    revalidatePaper(testId);
+    for (const otherId of otherPapers) revalidatePaper(otherId);
+    return { count: drafts.length };
+  },
+);
+
+/**
  * Takes a question off this paper. The question stays in the bank — it may sit
  * on other papers, or be reused later — so nothing is deleted.
  */
@@ -253,5 +285,17 @@ export const removeQuestionAction = action(
 
     revalidatePaper(testId);
     return { id: questionId };
+  },
+);
+
+// ─── Results ─────────────────────────────────────────────────────────────────
+
+export const releaseResultsAction = action(
+  roleGuard("FACULTY"),
+  z.object({ testId: id }),
+  async ({ testId }) => {
+    const outcome = await testService.releaseResults(testId);
+    revalidatePaper(testId);
+    return outcome;
   },
 );

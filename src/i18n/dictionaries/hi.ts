@@ -13,6 +13,7 @@ export const hi: Dictionary = {
     call: "{phone} पर कॉल करें",
     whatsappChat: "WhatsApp पर vidyantIAS से बात करें",
     whatsappShort: "WhatsApp करें",
+    backToTop: "ऊपर जाएँ",
   },
   nav: {
     primary: "मुख्य",

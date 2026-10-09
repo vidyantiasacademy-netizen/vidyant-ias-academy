@@ -7,6 +7,7 @@ import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
 import { getFacultyRoster } from "@/lib/faculty/roster";
 import { getImage, type IMAGES } from "@/lib/constants/images";
 import { isAdminConfigured } from "@/lib/firebase/admin";
+import { isOnlineCheckoutEnabled } from "@/lib/payments/config";
 import { COLLECTIONS } from "@/lib/firebase/collections";
 import { collection } from "@/lib/firebase/firestore";
 import { projectedImageUrl } from "@/lib/sanity/image";
@@ -138,6 +139,8 @@ function toCourse(
     studyMaterial: content.studyMaterial,
     schedule: content.schedule ?? "Timings shared at enrolment",
     fee: record.price ? RUPEES.format(record.price.amountInPaise / 100) : FEE_ON_COUNSELLING,
+    priceInPaise: record.price?.amountInPaise ?? null,
+    buyOnline: Boolean(record.price) && isOnlineCheckoutEnabled(),
     // A reference to an unpublished profile resolves to null in the published
     // perspective, and the roster only holds published ones.
     faculty: content.facultySlugs.flatMap((slug) => {

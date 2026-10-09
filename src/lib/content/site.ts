@@ -56,8 +56,12 @@ export async function getSiteResources(locale: Locale = DEFAULT_LOCALE): Promise
     type: resource.resourceType,
     tracks: resource.tracks,
     // No file yet → `ResourceCard` routes the visitor to the request form.
-    href: resource.fileUrl ?? "",
+    // A paid resource never exposes its file: the Sanity CDN URL is public, so
+    // handing it out would give the material away.
+    href: resource.price ? "" : (resource.fileUrl ?? ""),
     requiresLead: resource.requiresLead,
+    price: resource.price && resource.price > 0 ? resource.price : null,
+    pages: resource.pages,
     status: "published",
   }));
 }

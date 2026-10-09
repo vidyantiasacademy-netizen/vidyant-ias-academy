@@ -19,7 +19,7 @@ import { pageMetadata, SEO_KEYWORDS } from "@/lib/seo/metadata";
 export const generateMetadata = () => pageMetadata({
   title: `Admissions & Batches — ${EXAM_CYCLE.label}`,
   description:
-    "Enrol at vidyantIAS Pune for UPSC CSE 2026. Batch start dates, modes of attendance, the admission steps and a transparent fee conversation — no payment is taken online.",
+    "Enrol at vidyantIAS Pune for UPSC CSE 2026. Batch start dates, modes of attendance, the admission steps and transparent fees — pay online for listed programmes or confirm on a call.",
   path: ROUTES.enrol,
   keywords: [...SEO_KEYWORDS.primary, "UPSC admission Pune", "UPSC batch Pune"],
 });
@@ -45,8 +45,11 @@ const STEPS = [
   },
 ];
 
-export default async function EnrolPage() {
+export default async function EnrolPage({ searchParams }: PageProps<"/[lang]/enrol">) {
+  const { course: requestedSlug } = await searchParams;
   const courses = await getCourseCatalogue(await getLocale());
+  // Arriving from a course card's "Enrol now": pre-select that programme.
+  const defaultCourse = courses.find((course) => course.slug === requestedSlug)?.title;
   const batches = upcomingBatches();
 
   return (
@@ -54,7 +57,7 @@ export default async function EnrolPage() {
       <PageHero
         eyebrow="Admissions"
         title={`Enrol for ${EXAM_CYCLE.label}.`}
-        description="Three steps, no online payment and no pressure. Admission is confirmed on a call with our academic team so you know exactly what you are joining."
+        description="Three steps and no pressure. Send your details and our academic team confirms your batch and fee on a call, so you know exactly what you are joining."
         breadcrumbs={[{ label: "Home", href: ROUTES.home }, { label: "Admissions" }]}
       />
 
@@ -116,7 +119,7 @@ export default async function EnrolPage() {
       <Section containerSize="wide">
         <div className="grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:gap-14">
           <div id="enrolment-form" className="scroll-mt-28">
-            <EnrolmentForm courses={courses} batches={batches} />
+            <EnrolmentForm courses={courses} batches={batches} defaultCourse={defaultCourse} />
           </div>
 
           <aside className="flex flex-col gap-4">

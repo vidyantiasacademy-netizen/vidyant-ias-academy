@@ -1,13 +1,19 @@
-import { ArrowRight, Download, FileText } from "lucide-react";
+import { ArrowRight, Download, FileText, ShoppingBag } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { TrackedAnchor, TrackedLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { RESOURCE_TYPE_LABELS } from "@/data/resources";
-import { ROUTES } from "@/lib/constants/site";
+import { BRAND, ROUTES, whatsappUrl } from "@/lib/constants/site";
 import { cn } from "@/lib/utils/cn";
 import type { Resource } from "@/types";
+
+const RUPEES = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
 
 export function ResourceCard({
   resource,
@@ -17,6 +23,7 @@ export function ResourceCard({
   className?: string;
 }) {
   const available = Boolean(resource.href);
+  const paid = resource.price !== null;
 
   return (
     <Card
@@ -29,12 +36,39 @@ export function ResourceCard({
         <span className="flex size-10 shrink-0 items-center justify-center border border-line bg-white text-kesar-600">
           <FileText aria-hidden className="size-5" />
         </span>
-        <Badge tone="neutral">{RESOURCE_TYPE_LABELS[resource.type]}</Badge>
+        <span className="flex gap-1.5">
+          {paid ? <Badge tone="chilli">Premium</Badge> : <Badge tone="success">Free</Badge>}
+          <Badge tone="neutral">{RESOURCE_TYPE_LABELS[resource.type]}</Badge>
+        </span>
       </div>
       <h3 className="mt-5 text-h4 font-bold">{resource.title}</h3>
       <p className="mt-3 flex-1 text-small text-ink-secondary">{resource.description}</p>
+      {resource.pages ? (
+        <p className="mt-3 text-small text-ink-muted">{resource.pages} pages</p>
+      ) : null}
 
-      {available ? (
+      {paid ? (
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+          <span className="text-h4 font-bold tabular-nums text-indigo">
+            {RUPEES.format(resource.price!)}
+          </span>
+          {/* Paid material is ordered on WhatsApp and delivered after payment,
+              until it has an online checkout of its own. */}
+          <TrackedAnchor
+            href={whatsappUrl(
+              `Hi ${BRAND.name}, I would like to buy "${resource.title}" (${RUPEES.format(resource.price!)}).`,
+            )}
+            target="_blank"
+            rel="noreferrer"
+            event={ANALYTICS_EVENTS.resourceBuyClick}
+            payload={{ resource: resource.id, price: resource.price }}
+            className="inline-flex h-10 items-center gap-2 bg-indigo px-4 text-small font-bold text-white transition-colors hover:bg-indigo-900"
+          >
+            <ShoppingBag aria-hidden className="size-4" />
+            Buy now
+          </TrackedAnchor>
+        </div>
+      ) : available ? (
         <TrackedAnchor
           href={resource.href}
           event={ANALYTICS_EVENTS.resourceDownload}

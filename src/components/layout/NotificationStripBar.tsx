@@ -1,18 +1,10 @@
 "use client";
 
-import {
-  BadgeCheck,
-  CalendarClock,
-  ChevronLeft,
-  ChevronRight,
-  Megaphone,
-} from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { BadgeCheck, CalendarClock, Megaphone } from "lucide-react";
 
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import type { StripNotice } from "@/data/strip-notices";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
-import { cn } from "@/lib/utils/cn";
 
 /**
  * Ticker speed, in seconds per character of the strip's text.
@@ -26,9 +18,6 @@ const SECONDS_PER_CHARACTER = 0.1;
 /** Short lists still need long enough on screen to be read at all. */
 const MIN_DURATION_SECONDS = 14;
 
-/** How long one notice holds the strip when the ticker is off (reduced motion). */
-const STEP_MS = 6000;
-
 /** Tone carries an icon as well as a word, so colour is never the only signal. */
 const TONE_ICON = {
   info: Megaphone,
@@ -36,7 +25,7 @@ const TONE_ICON = {
   warning: CalendarClock,
 } as const;
 
-/** One notice: icon, line, and its link. Used by both the ticker and the steps. */
+/** One notice: icon, line, and its link. */
 function NoticeLine({ notice }: { notice: StripNotice }) {
   const Icon = TONE_ICON[notice.tone];
 
@@ -60,7 +49,7 @@ function NoticeLine({ notice }: { notice: StripNotice }) {
 
 /**
  * The notification strip above the header: the notices run past in one
- * continuous ticker, end to end, and start again.
+ * continuous ticker, end to end, and start again — forever.
  *
  * Shape of the thing:
  *  - it lives inside the sticky header, so it stays pinned with the navigation
@@ -68,57 +57,13 @@ function NoticeLine({ notice }: { notice: StripNotice }) {
  *  - the ticker is the notice list rendered twice inside one track that slides
  *    by exactly half its width, so the loop has no seam and no gap. The second
  *    copy is `inert` and hidden from assistive tech — it is the same text.
- *  - it stops on hover and on keyboard focus, so a link can be read and
- *    clicked rather than chased.
- *  - a visitor who prefers reduced motion gets no ticker at all: the strip
- *    falls back to one notice at a time with chevrons to step through, which
- *    is also what the site-wide reduced-motion rule would otherwise break.
+ *  - it never stops: not on hover, not on focus, and not for reduced motion
+ *    (`.notice-ticker` is exempt from the site-wide reduced-motion rule).
  *
  * `notices` is computed on the server (see `stripNotices`) so the announcement
  * window is evaluated once, against one clock.
  */
 export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
-  const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  // Assume motion is allowed: that is the common case, and it keeps the markup
-  // the server sent — the effect below switches the strip over if it is not.
-  const [allowsMotion, setAllowsMotion] = useState(true);
-
-  const count = notices.length;
-
-  const goTo = useCallback(
-    (next: number) => setIndex(((next % count) + count) % count),
-    [count],
-  );
-
-  // A ticker is motion: opt out entirely when the OS says to.
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setAllowsMotion(!query.matches);
-    sync();
-    query.addEventListener("change", sync);
-    return () => query.removeEventListener("change", sync);
-  }, []);
-
-  const isStepping = !allowsMotion && !isPaused && count > 1;
-
-  useEffect(() => {
-    if (!isStepping) return;
-    const timer = window.setTimeout(() => goTo(index + 1), STEP_MS);
-    return () => window.clearTimeout(timer);
-  }, [goTo, index, isStepping]);
-
-  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (allowsMotion || count < 2) return;
-    if (event.key === "ArrowRight") {
-      event.preventDefault();
-      goTo(index + 1);
-    } else if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      goTo(index - 1);
-    }
-  }
-
   const characters = notices.reduce(
     (total, notice) => total + notice.text.length + (notice.linkLabel?.length ?? 0),
     0,
@@ -126,98 +71,34 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
   const duration = Math.max(MIN_DURATION_SECONDS, characters * SECONDS_PER_CHARACTER);
 
   return (
-    <div
-      role="region"
-      aria-label="Site notices"
-      data-paused={isPaused}
-      className="group/strip bg-indigo-900 text-white"
-      onKeyDown={handleKeyDown}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onFocus={() => setIsPaused(true)}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-          setIsPaused(false);
-        }
-      }}
-    >
+    <div role="region" aria-label="Site notices" className="bg-indigo-900 text-white">
       {/* Full-bleed rather than inside a Container: the ticker should run off
           both edges of the screen, not start and stop at the page gutter. */}
       <div className="flex min-h-10 items-center gap-2 pr-2 pl-4 sm:pr-4 sm:pl-6 lg:pl-8">
-        {allowsMotion ? (
-          <div className="flex-1 overflow-hidden">
-            <div
-              className="notice-ticker flex w-max items-center"
-              style={{ animationDuration: `${duration}s` }}
-            >
-              {[0, 1].map((copy) => (
-                <div
-                  key={copy}
-                  aria-hidden={copy === 1}
-                  inert={copy === 1 || undefined}
-                  className="flex w-max items-center"
-                >
-                  {notices.map((notice) => (
-                    <span
-                      key={notice.id}
-                      className="flex items-center gap-2 py-2 pr-10 text-small whitespace-nowrap"
-                    >
-                      <NoticeLine notice={notice} />
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <>
-            <div className="grid min-w-0 flex-1 overflow-hidden">
-              {notices.map((notice, slide) => (
-                <p
-                  key={notice.id}
-                  aria-hidden={slide !== index}
-                  inert={slide !== index || undefined}
-                  className={cn(
-                    "col-start-1 row-start-1 flex min-w-0 items-center gap-2 py-2 text-small",
-                    slide === index ? "opacity-100" : "pointer-events-none opacity-0",
-                  )}
-                >
-                  <NoticeLine notice={notice} />
-                </p>
-              ))}
-            </div>
-
-            {count > 1 ? (
-              <div className="flex shrink-0 items-center">
-                <button
-                  type="button"
-                  onClick={() => goTo(index - 1)}
-                  aria-label="Previous notice"
-                  className="inline-flex size-10 cursor-pointer items-center justify-center text-white/80 transition-colors hover:bg-white hover:text-indigo-900"
-                >
-                  <ChevronLeft aria-hidden className="size-4" />
-                </button>
-                <span aria-hidden className="text-small tabular-nums text-white/70">
-                  {index + 1}
-                  <span className="text-white/60"> / {count}</span>
-                </span>
-                <button
-                  type="button"
-                  onClick={() => goTo(index + 1)}
-                  aria-label="Next notice"
-                  className="inline-flex size-10 cursor-pointer items-center justify-center text-white/80 transition-colors hover:bg-white hover:text-indigo-900"
-                >
-                  <ChevronRight aria-hidden className="size-4" />
-                </button>
+        <div className="flex-1 overflow-hidden">
+          <div
+            className="notice-ticker flex w-max items-center"
+            style={{ animationDuration: `${duration}s` }}
+          >
+            {[0, 1].map((copy) => (
+              <div
+                key={copy}
+                aria-hidden={copy === 1}
+                inert={copy === 1 || undefined}
+                className="flex w-max items-center"
+              >
+                {notices.map((notice) => (
+                  <span
+                    key={notice.id}
+                    className="flex items-center gap-2 py-2 pr-10 text-small whitespace-nowrap"
+                  >
+                    <NoticeLine notice={notice} />
+                  </span>
+                ))}
               </div>
-            ) : null}
-
-            {/* The step is visual; announce it once, politely. */}
-            <p aria-live="polite" aria-atomic="true" className="sr-only">
-              {`Notice ${index + 1} of ${count}: ${notices[index].text}`}
-            </p>
-          </>
-        )}
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

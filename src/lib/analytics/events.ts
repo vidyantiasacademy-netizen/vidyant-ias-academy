@@ -23,6 +23,9 @@ export const ANALYTICS_EVENTS = {
   appDownloadClick: "app_download_click",
   socialClick: "social_click",
   noticeClick: "notice_click",
+  checkoutStart: "checkout_start",
+  checkoutSuccess: "checkout_success",
+  resourceBuyClick: "resource_buy_click",
 } as const;
 
 export type AnalyticsEvent =

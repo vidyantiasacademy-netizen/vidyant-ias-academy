@@ -184,6 +184,25 @@ export interface AvatarUpload {
  */
 export async function uploadOwnAvatar(input: AvatarUpload): Promise<string> {
   const user = await requireAuth();
+  return storeAvatar(user.uid, input);
+}
+
+/**
+ * Stores a profile photograph for someone else — the super admin attaching a
+ * photo while creating an account. Admin-only: `uploadOwnAvatar` is the only
+ * path by which anyone else writes into a `users/{uid}/avatar/` folder.
+ */
+export async function uploadAvatarFor(uid: string, input: AvatarUpload): Promise<string> {
+  const user = await requireAuth();
+
+  if (!isAtLeast(user.role, "ADMIN")) {
+    throw new AppError(ERROR_CODES.FORBIDDEN);
+  }
+
+  return storeAvatar(uid, input);
+}
+
+async function storeAvatar(uid: string, input: AvatarUpload): Promise<string> {
   const { maxBytes, mimeTypes } = UPLOAD_LIMITS.image;
 
   if (!(mimeTypes as readonly string[]).includes(input.contentType)) {
@@ -206,7 +225,7 @@ export async function uploadOwnAvatar(input: AvatarUpload): Promise<string> {
     });
   }
 
-  const publicId = MEDIA_PATHS.userAvatar(user.uid, uniqueAssetName(input.fileName));
+  const publicId = MEDIA_PATHS.userAvatar(uid, uniqueAssetName(input.fileName));
 
   try {
     const result = await uploadBuffer(bytes, {
@@ -355,6 +374,7 @@ export const storageService = {
   getLessonDocumentUrl,
   remove,
   uploadOwnAvatar,
+  uploadAvatarFor,
   removeOwnAvatar,
   signUpload,
 };

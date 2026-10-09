@@ -1,4 +1,4 @@
-import { BookOpen, Bell } from "lucide-react";
+import { ArrowRight, BookOpen, Bell } from "lucide-react";
 
 import Link from "@/i18n/Link";
 import { ButtonLink } from "@/components/ui/Button";
@@ -7,8 +7,10 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { GeoTriad } from "@/components/ui/Geometry";
 import { getCurrentStudent } from "@/lib/auth/server";
 import { ROUTES } from "@/lib/constants/site";
+import { summarisePerformance } from "@/lib/exam/analytics";
 import { courseService } from "@/services/courses/course.service";
 import { notificationService } from "@/services/notifications/notification.service";
+import { testService } from "@/services/tests/test.service";
 
 /**
  * The student portal's entry point.
@@ -19,11 +21,15 @@ import { notificationService } from "@/services/notifications/notification.servi
  * mentorship are each a page under this route group.
  */
 export default async function DashboardPage() {
-  const [student, enrolled, unread] = await Promise.all([
+  const [student, enrolled, unread, scored] = await Promise.all([
     getCurrentStudent(),
     courseService.getEnrolledCourses(),
     notificationService.countUnread(),
+    testService.listOwnPublishedResults(),
   ]);
+
+  const performance = summarisePerformance(scored);
+  const latest = performance.trend.at(-1);
 
   const firstName = student?.fullName.split(" ")[0] ?? "there";
 
@@ -45,6 +51,51 @@ export default async function DashboardPage() {
           {unread} unread
         </span>
       </div>
+
+      {latest ? (
+        <section aria-labelledby="performance-snapshot" className="mt-10">
+          <Card tone="paper" padding="md" className="border-t-2 border-t-kesar">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <h2 id="performance-snapshot" className="text-h4 font-bold">
+                  Your performance
+                </h2>
+                <dl className="mt-4 flex flex-wrap gap-x-10 gap-y-4">
+                  <div>
+                    <dt className="text-eyebrow font-semibold uppercase text-ink-secondary">
+                      Latest paper
+                    </dt>
+                    <dd className="mt-1 text-h4 font-bold tabular-nums">{latest.percent}%</dd>
+                  </div>
+                  <div>
+                    <dt className="text-eyebrow font-semibold uppercase text-ink-secondary">
+                      Average
+                    </dt>
+                    <dd className="mt-1 text-h4 font-bold tabular-nums">
+                      {performance.averagePercent}%
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-eyebrow font-semibold uppercase text-ink-secondary">
+                      Accuracy
+                    </dt>
+                    <dd className="mt-1 text-h4 font-bold tabular-nums">
+                      {performance.accuracy === null ? "—" : `${performance.accuracy}%`}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+              <Link
+                href="/dashboard/performance"
+                className="inline-flex items-center gap-1 text-small font-semibold text-indigo underline"
+              >
+                View full analytics
+                <ArrowRight aria-hidden className="size-4" />
+              </Link>
+            </div>
+          </Card>
+        </section>
+      ) : null}
 
       <section aria-labelledby="my-courses" className="mt-10">
         <h2 id="my-courses" className="text-h3 font-bold tracking-tight">

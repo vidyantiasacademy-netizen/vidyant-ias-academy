@@ -1,6 +1,7 @@
 "use client";
 
-import { MessageCircle, Phone } from "lucide-react";
+import { ArrowUp, MessageCircle, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { usePathnameWithoutLocale } from "@/i18n/usePathnameWithoutLocale";
 import { TrackedAnchor } from "@/components/ui/TrackedLink";
@@ -10,18 +11,70 @@ import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CONTACT, ROUTES, whatsappUrl } from "@/lib/constants/site";
 
 /**
- * Desktop WhatsApp and call buttons. Below `lg` the same two actions live in
- * `StickyMobileCta`, so this is hidden there to avoid a double bar.
+ * Bottom-right floating stack: back-to-top on every page, plus desktop
+ * WhatsApp and call buttons. Below `lg` those two actions live in
+ * `StickyMobileCta`, so they are hidden there to avoid a double bar — and the
+ * stack sits above that bar.
  */
 const HIDDEN_ON: string[] = [ROUTES.counselling, ROUTES.demo, ROUTES.contact];
+
+/** Scroll distance (px) after which the back-to-top button appears. */
+const SCROLL_THRESHOLD = 600;
 
 export function FloatingActions() {
   const pathname = usePathnameWithoutLocale();
   const { dict } = useI18n();
-  if (HIDDEN_ON.includes(pathname)) return null;
+  const showContact = !HIDDEN_ON.includes(pathname);
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 hidden flex-col items-end gap-3 lg:flex">
+    <div
+      className={`fixed right-4 z-40 flex flex-col items-end gap-3 lg:bottom-6 lg:right-6 ${
+        showContact ? "bottom-24" : "bottom-6"
+      }`}
+    >
+      <ScrollToTop label={dict.common.backToTop} />
+      {showContact && <ContactActions />}
+    </div>
+  );
+}
+
+function ScrollToTop({ label }: { label: string }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > SCROLL_THRESHOLD);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={scrollToTop}
+      aria-label={label}
+      title={label}
+      tabIndex={visible ? 0 : -1}
+      aria-hidden={!visible}
+      className={`flex size-12 items-center justify-center border-2 border-indigo bg-white text-indigo ring-2 ring-white transition-[opacity,transform,background-color,color] duration-200 hover:bg-indigo hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-indigo)] lg:h-[52px] lg:w-14 ${
+        visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"
+      }`}
+    >
+      <ArrowUp aria-hidden className="size-5" />
+    </button>
+  );
+}
+
+function ContactActions() {
+  const { dict } = useI18n();
+
+  return (
+    <div className="hidden flex-col items-end gap-3 lg:flex">
       <TrackedAnchor
         href={whatsappUrl()}
         target="_blank"

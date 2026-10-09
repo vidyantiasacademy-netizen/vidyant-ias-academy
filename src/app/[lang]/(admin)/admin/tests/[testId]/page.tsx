@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import { FileUp, Pencil, Plus } from "lucide-react";
+import { BarChart3, FileUp, Pencil, Plus } from "lucide-react";
 
 import Link from "@/i18n/Link";
-import { PaperStatusButton, RemoveQuestionButton } from "@/components/admin/PaperActions";
+import {
+  PaperStatusButton,
+  PublishDraftsButton,
+  RemoveQuestionButton,
+} from "@/components/admin/PaperActions";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -30,7 +34,9 @@ export const metadata: Metadata = {
  * with their answer keys. Staff-only — this page is the one place the key is
  * shown next to the question.
  */
-export default async function TestPage({ params }: PageProps<"/[lang]/admin/tests/[testId]">) {
+export default async function TestPage({
+  params,
+}: PageProps<"/[lang]/admin/tests/[testId]">) {
   const { testId } = await params;
   await requireFacultyPage(`/admin/tests/${testId}`);
 
@@ -42,11 +48,15 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
   const course = await courseService.getById(test.courseId);
 
   const lockReason = paperLockReason(test, sat);
-  const blocker = test.status === "published" ? null : publishBlocker(test, questions);
+  const blocker =
+    test.status === "published" ? null : publishBlocker(test, questions);
   const isMcq = test.kind !== "mains-descriptive";
 
   const live = questions.filter((question) => question.status === "published");
   const liveMarks = live.reduce((sum, question) => sum + question.marks, 0);
+  const draftCount = questions.filter(
+    (question) => question.status === "draft",
+  ).length;
 
   return (
     <>
@@ -62,23 +72,39 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
           </p>
         </div>
 
-        {isMcq ? (
-          <div className="flex flex-wrap gap-3">
-            <ButtonLink href={`/admin/tests/${test.id}/settings`} variant="secondary" size="sm">
-              <Pencil aria-hidden className="size-4" />
-              Settings
+        <div className="flex flex-wrap gap-3">
+          {sat ? (
+            <ButtonLink
+              href={`/admin/tests/${test.id}/results`}
+              variant="secondary"
+              size="sm"
+            >
+              <BarChart3 aria-hidden className="size-4" />
+              Results
             </ButtonLink>
-            {sat && test.status === "published" ? null : (
-              <PaperStatusButton testId={test.id} status={test.status} />
-            )}
-          </div>
-        ) : null}
+          ) : null}
+          {isMcq ? (
+            <>
+              <ButtonLink
+                href={`/admin/tests/${test.id}/settings`}
+                variant="secondary"
+                size="sm"
+              >
+                <Pencil aria-hidden className="size-4" />
+                Settings
+              </ButtonLink>
+              {sat && test.status === "published" ? null : (
+                <PaperStatusButton testId={test.id} status={test.status} />
+              )}
+            </>
+          ) : null}
+        </div>
       </div>
 
       {!isMcq ? (
         <p className="mt-6 border border-line-strong bg-paper px-4 py-3 text-small">
-          Mains papers are evaluated by faculty rather than sat in the online runner, so they are
-          not authored here.
+          Mains papers are evaluated by faculty rather than sat in the online
+          runner, so they are not authored here.
         </p>
       ) : null}
 
@@ -100,7 +126,9 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
         <Stat
           label="Window"
           value={test.opensAt ? formatIst(test.opensAt) : "Open any time"}
-          detail={test.closesAt ? `Closes ${formatIst(test.closesAt)}` : undefined}
+          detail={
+            test.closesAt ? `Closes ${formatIst(test.closesAt)}` : undefined
+          }
         />
       </dl>
 
@@ -121,6 +149,9 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
           </h2>
           {isMcq && !lockReason ? (
             <div className="flex flex-wrap gap-3">
+              {draftCount > 0 ? (
+                <PublishDraftsButton testId={test.id} count={draftCount} />
+              ) : null}
               <ButtonLink
                 href={`/admin/tests/${test.id}/questions/import`}
                 variant="secondary"
@@ -129,7 +160,10 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
                 <FileUp aria-hidden className="size-4" />
                 Import CSV
               </ButtonLink>
-              <ButtonLink href={`/admin/tests/${test.id}/questions/new`} size="sm">
+              <ButtonLink
+                href={`/admin/tests/${test.id}/questions/new`}
+                size="sm"
+              >
                 <Plus aria-hidden className="size-4" />
                 Add question
               </ButtonLink>
@@ -157,11 +191,14 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
                         </span>
 
                         <div className="min-w-0 flex-1">
-                          <p className="whitespace-pre-line text-body">{question.statement}</p>
+                          <p className="whitespace-pre-line text-body">
+                            {question.statement}
+                          </p>
 
                           <ul className="mt-3 space-y-1.5">
                             {question.options.map((option) => {
-                              const correct = question.correctOptionIds.includes(option.id);
+                              const correct =
+                                question.correctOptionIds.includes(option.id);
 
                               return (
                                 <li
@@ -172,8 +209,13 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
                                       : "text-ink-secondary"
                                   }
                                 >
-                                  <span className="uppercase">({option.id})</span> {option.text}
-                                  {correct ? <span className="sr-only"> — correct</span> : null}
+                                  <span className="uppercase">
+                                    ({option.id})
+                                  </span>{" "}
+                                  {option.text}
+                                  {correct ? (
+                                    <span className="sr-only"> — correct</span>
+                                  ) : null}
                                 </li>
                               );
                             })}
@@ -181,9 +223,15 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
 
                           <p className="mt-3 text-small text-ink-secondary">
                             {question.marks} marks · {question.subject}
-                            {question.topic ? ` · ${question.topic}` : ""} · {question.difficulty}
-                            {question.pyq ? ` · ${question.pyq.exam} ${question.pyq.year}` : ""}
-                            {question.status === "published" ? "" : ` · ${question.status}`}
+                            {question.topic
+                              ? ` · ${question.topic}`
+                              : ""} · {question.difficulty}
+                            {question.pyq
+                              ? ` · ${question.pyq.exam} ${question.pyq.year}`
+                              : ""}
+                            {question.status === "published"
+                              ? ""
+                              : ` · ${question.status}`}
                           </p>
                         </div>
 
@@ -230,10 +278,18 @@ function Stat({
   return (
     <Card padding="sm">
       <dt className="text-small text-ink-secondary">{label}</dt>
-      <dd className={warn ? "mt-1 font-semibold text-danger" : "mt-1 font-semibold text-indigo"}>
+      <dd
+        className={
+          warn
+            ? "mt-1 font-semibold text-danger"
+            : "mt-1 font-semibold text-indigo"
+        }
+      >
         {value}
       </dd>
-      {detail ? <dd className="mt-0.5 text-small text-ink-secondary">{detail}</dd> : null}
+      {detail ? (
+        <dd className="mt-0.5 text-small text-ink-secondary">{detail}</dd>
+      ) : null}
     </Card>
   );
 }

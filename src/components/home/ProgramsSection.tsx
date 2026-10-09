@@ -1,7 +1,9 @@
 import {
   ArrowRight,
   BookOpen,
+  Check,
   Clock,
+  Laptop,
   PenLine,
   Sprout,
   Target,
@@ -9,6 +11,7 @@ import {
 } from "lucide-react";
 
 import Link from "@/i18n/Link";
+import { BuyCourseButton } from "@/components/checkout/BuyCourseButton";
 import { Section } from "@/components/layout/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -30,43 +33,26 @@ const HOMEPAGE_CATEGORIES = [
 type HomepageCategory = (typeof HOMEPAGE_CATEGORIES)[number];
 
 /**
- * Each tile opens with the student's own situation as a question, so they
+ * Each card opens with the student's own situation as a question, so they
  * recognise themselves before they read a programme name — "that's me" is
  * faster than comparing four syllabi. One primary per stage, as a hard bar
- * across the tile's head, makes the four easy to tell apart.
+ * across the card's head, makes the four easy to tell apart.
  */
-const TILE: Record<
-  HomepageCategory,
-  { icon: LucideIcon; hook: string; gets: string; bar: string }
-> = {
-  foundation: {
-    icon: Sprout,
-    hook: "New to UPSC?",
-    gets: "NCERTs to full GS",
-    bar: "bg-kesar",
-  },
-  prelims: {
-    icon: Target,
-    hook: "Prelims up next?",
-    gets: "MCQs, CSAT and PYQs",
-    bar: "bg-ink",
-  },
-  mains: {
-    icon: PenLine,
-    hook: "Mains mode on?",
-    gets: "Answers, evaluated",
-    bar: "bg-chilli",
-  },
-  optional: {
-    icon: BookOpen,
-    hook: "Got your optional?",
-    gets: "Subject-wise depth",
-    bar: "bg-indigo",
-  },
+const TILE: Record<HomepageCategory, { icon: LucideIcon; hook: string; bar: string }> = {
+  foundation: { icon: Sprout, hook: "New to UPSC?", bar: "bg-kesar" },
+  prelims: { icon: Target, hook: "Prelims up next?", bar: "bg-ink" },
+  mains: { icon: PenLine, hook: "Mains mode on?", bar: "bg-chilli" },
+  optional: { icon: BookOpen, hook: "Got your optional?", bar: "bg-indigo" },
 };
 
 /** "6 months" fits a chip; the long fallback note belongs on the course page. */
 const isShortDuration = (duration: string) => duration.length <= 12;
+
+const RUPEES = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
 
 function isHomepageCategory(
   category: CourseCategory,
@@ -74,6 +60,12 @@ function isHomepageCategory(
   return (HOMEPAGE_CATEGORIES as readonly CourseCategory[]).includes(category);
 }
 
+/**
+ * The homepage's shop window. Every card carries what a buyer needs to decide
+ * without leaving the page — what it is, how long, how it is taught, what it
+ * costs — and a way to buy it there and then. A price the institute quotes in
+ * person is said so plainly, and that card's button opens the enrolment form.
+ */
 export function ProgramsSection({ courses }: { courses: Course[] }) {
   const featured = firstPerCategory(courses)
     .filter((course): course is Course & { category: HomepageCategory } =>
@@ -91,34 +83,28 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
     <Section id="programs" containerSize="wide">
       <SectionHeader
         accent="chilli"
-        eyebrow={`${EXAM_CYCLE.label} programs`}
+        eyebrow={`${EXAM_CYCLE.label} · ${EXAM_CYCLE.admissionNote}`}
         title={
           <>
             Pick{" "}
             <span className="-mx-1 box-decoration-clone bg-kesar-100 px-1">
               your stage.
-            </span>
+            </span>{" "}
+            Enrol today.
           </>
         }
-        description="Each program is built around the same system — teaching, practice, testing, evaluation and mentorship — applied to the stage you are actually at."
+        description="Each program is built around the same system — teaching, practice, testing, evaluation and mentorship — applied to the stage you are actually at. Fees are listed up front."
         action={
           <ButtonLink href={CTA.courses.href} variant="secondary">
-            {CTA.courses.label}
+            View all courses
           </ButtonLink>
         }
       />
 
-      {/* All four visible at once — a 2×2 grid on phones, one row from lg —
-          so no stage hides off-screen behind a swipe. */}
-      <ul className="mt-7 grid grid-cols-2 gap-4 sm:gap-5 lg:mt-9 lg:grid-cols-4 lg:gap-6">
+      <ul className="mt-7 grid gap-5 sm:grid-cols-2 lg:mt-9 lg:grid-cols-4 lg:gap-6">
         {featured.map((course, index) => {
-          const {
-            icon: Icon,
-            hook,
-            gets,
-            bar,
-          } = TILE[course.category];
-          const label = COURSE_CATEGORY_LABELS[course.category];
+          const { icon: Icon, hook, bar } = TILE[course.category];
+          const href = `/courses/${course.slug}`;
 
           return (
             <li
@@ -126,56 +112,104 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
               className="reveal relative"
               style={{ animationDelay: `${index * 70}ms` }}
             >
-              {/* A flat tag locked into the tile's top-right corner. */}
-              {index === 0 ? (
-                <span className="pointer-events-none absolute right-0 top-0 z-10 bg-kesar px-1.5 py-1 text-eyebrow font-bold uppercase text-indigo-900 sm:px-2">
-                  Start here
-                </span>
-              ) : null}
-              <TrackedLink
-                href={`/courses/${course.slug}`}
-                event={ANALYTICS_EVENTS.courseCtaClick}
-                payload={{ course: course.id, location: "programs-tile" }}
-                className="group relative flex aspect-square flex-col overflow-hidden border-2 border-indigo bg-white p-3.5 pt-5 transition-colors duration-150 hover:bg-indigo sm:p-5 sm:pt-7 lg:p-6 lg:pt-8"
-              >
-                {/* Stage colour as a hard bar across the head of the tile. */}
+              <article className="relative flex h-full flex-col border-2 border-indigo bg-white">
                 <span aria-hidden className={cn("absolute inset-x-0 top-0 h-1.5", bar)} />
-
-                <span className="flex items-center gap-2.5">
-                  <span
-                    aria-hidden
-                    className="text-small font-bold tabular-nums text-indigo transition-colors duration-150 group-hover:text-white"
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <Icon
-                    aria-hidden
-                    className="size-5 text-indigo transition-colors duration-150 group-hover:text-white sm:size-6"
-                  />
-                </span>
-
-                <span className="relative mt-auto text-[0.8125rem] font-bold leading-snug text-ink-secondary transition-colors duration-150 group-hover:text-white/85 sm:text-small">
-                  {hook}
-                </span>
-                <span className="relative mt-0.5 flex items-center gap-1.5 text-[1.25rem] font-bold leading-tight tracking-tight text-indigo transition-colors duration-150 group-hover:text-white sm:text-h3 lg:text-h3-lg">
-                  {label}
-                  <ArrowRight
-                    aria-hidden
-                    className="size-5 shrink-0"
-                  />
-                </span>
-                <span className="sr-only">: {course.title}.</span>
-                <span className="relative mt-1 text-[0.8125rem] font-medium leading-snug text-ink-secondary transition-colors duration-150 group-hover:text-white/85 sm:text-small">
-                  {gets}
-                </span>
-
-                {isShortDuration(course.duration) ? (
-                  <span className="relative mt-2 inline-flex w-fit items-center gap-1 border border-line bg-white px-2 py-0.5 text-eyebrow font-bold text-ink-secondary sm:mt-3 sm:px-2.5">
-                    <Clock aria-hidden className="size-3.5" />
-                    {course.duration}
+                {index === 0 ? (
+                  <span className="pointer-events-none absolute right-0 top-0 z-10 bg-kesar px-2 py-1 text-eyebrow font-bold uppercase text-indigo-900">
+                    Start here
                   </span>
                 ) : null}
-              </TrackedLink>
+
+                <div className="flex flex-1 flex-col p-5 pt-7 lg:p-6 lg:pt-8">
+                  <span className="flex items-center gap-2.5 text-indigo">
+                    <Icon aria-hidden className="size-5" />
+                    <span className="text-eyebrow font-bold uppercase">
+                      {COURSE_CATEGORY_LABELS[course.category]}
+                    </span>
+                  </span>
+
+                  <p className="mt-4 text-small font-bold text-ink-secondary">{hook}</p>
+                  <h3 className="mt-1 text-h4 font-bold leading-tight text-indigo">
+                    <TrackedLink
+                      href={href}
+                      event={ANALYTICS_EVENTS.courseView}
+                      payload={{ course: course.id, location: "programs-card" }}
+                      className="hover:underline underline-offset-4"
+                    >
+                      {course.title}
+                    </TrackedLink>
+                  </h3>
+                  {course.shortDescription ? (
+                    <p className="mt-2 line-clamp-3 text-small text-ink-secondary">
+                      {course.shortDescription}
+                    </p>
+                  ) : null}
+
+                  {course.features.length > 0 ? (
+                    <ul className="mt-4 space-y-1.5">
+                      {course.features.slice(0, 3).map((feature) => (
+                        <li key={feature} className="flex items-start gap-2 text-small text-ink">
+                          <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-kesar-600" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {isShortDuration(course.duration) ? (
+                      <span className="inline-flex items-center gap-1 border border-line px-2 py-0.5 text-eyebrow font-bold text-ink-secondary">
+                        <Clock aria-hidden className="size-3.5" />
+                        {course.duration}
+                      </span>
+                    ) : null}
+                    {course.mode.length > 0 ? (
+                      <span className="inline-flex items-center gap-1 border border-line px-2 py-0.5 text-eyebrow font-bold text-ink-secondary">
+                        <Laptop aria-hidden className="size-3.5" />
+                        {course.mode.join(" · ")}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="border-t-2 border-indigo p-5 lg:p-6">
+                  {course.priceInPaise ? (
+                    <p className="text-h3 font-bold tabular-nums text-indigo">
+                      {RUPEES.format(course.priceInPaise / 100)}
+                      <span className="ml-1.5 text-small font-medium text-ink-secondary">
+                        programme fee
+                      </span>
+                    </p>
+                  ) : (
+                    <p className="text-body font-bold text-indigo">
+                      Fee on a free counselling call
+                      <span className="block text-small font-medium text-ink-secondary">
+                        Instalments available
+                      </span>
+                    </p>
+                  )}
+
+                  <div className="mt-4 flex flex-col gap-2">
+                    <BuyCourseButton
+                      course={course}
+                      location="home-programs"
+                      variant={index === 0 ? "kesar" : "primary"}
+                      fullWidth
+                    >
+                      Enrol now
+                    </BuyCourseButton>
+                    <TrackedLink
+                      href={href}
+                      event={ANALYTICS_EVENTS.courseCtaClick}
+                      payload={{ course: course.id, location: "programs-card" }}
+                      className="inline-flex items-center justify-center gap-1.5 py-1 text-small font-bold text-indigo hover:underline underline-offset-4"
+                    >
+                      Syllabus, schedule &amp; faculty
+                      <ArrowRight aria-hidden className="size-4" />
+                    </TrackedLink>
+                  </div>
+                </div>
+              </article>
             </li>
           );
         })}

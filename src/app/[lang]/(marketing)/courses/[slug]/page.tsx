@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { notFound } from "next/navigation";
 
+import { BuyCourseButton } from "@/components/checkout/BuyCourseButton";
 import { FacultyCard } from "@/components/faculty/FacultyCard";
 import { PageHero } from "@/components/layout/PageHero";
 import { Section } from "@/components/layout/Section";
@@ -99,10 +100,13 @@ export default async function CourseDetailPage({ params }: PageProps<"/[lang]/co
           { label: course.title },
         ]}
       >
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+          <BuyCourseButton course={course} location="course-hero" variant="kesar" size="lg">
+            {course.priceInPaise ? `Enrol now · ${course.fee}` : "Enrol now"}
+          </BuyCourseButton>
           <TrackedButtonLink
             href={CTA.counselling.href}
-            variant="primary"
+            variant="secondary"
             size="lg"
             event={ANALYTICS_EVENTS.courseCtaClick}
             payload={{ course: course.id, location: "course-hero" }}

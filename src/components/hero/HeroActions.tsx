@@ -42,9 +42,11 @@ const ACTIONS: HeroAction[] = [
   {
     id: "enrol",
     verb: "Enrol",
-    lines: [EXAM_CYCLE.label, EXAM_CYCLE.admissionNote],
+    lines: [EXAM_CYCLE.label, "Courses & fees"],
     icon: CalendarCheck2,
-    href: CTA.enrol.href,
+    // Straight to the priced programme cards below, where a course can be
+    // bought — not to a form that asks the visitor to wait for a call.
+    href: "#programs",
     event: ANALYTICS_EVENTS.enrolClick,
     kesar: true,
   },

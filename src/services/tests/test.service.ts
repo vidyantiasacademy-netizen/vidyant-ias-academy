@@ -13,6 +13,7 @@ import {
   resolveExamSecurity,
 } from "@/lib/exam/policy";
 import { optionSeed, seededShuffle } from "@/lib/exam/shuffle";
+import type { ScoredPaper } from "@/lib/exam/analytics";
 import type { ExamPayload, ExamQuestion } from "@/lib/exam/types";
 import { COLLECTIONS, docId } from "@/lib/firebase/collections";
 import {
@@ -38,6 +39,7 @@ import type {
   QuestionForAttempt,
   Result,
   ResultDoc,
+  Student,
   TerminationReason,
   Test,
   TestAttempt,
@@ -205,6 +207,27 @@ export async function updateQuestion(
   await collection(COLLECTIONS.questions)
     .doc(questionId)
     .update({ ...patch, ...auditOnUpdate(actor.uid) });
+}
+
+/** Sets the status of several questions in one batch. */
+export async function setQuestionsStatus(
+  questionIds: string[],
+  status: QuestionDoc["status"],
+): Promise<void> {
+  const actor = await requireRole("FACULTY");
+
+  const questions = collection(COLLECTIONS.questions);
+
+  // A Firestore batch takes at most 500 writes.
+  for (let start = 0; start < questionIds.length; start += 500) {
+    const batch = questions.firestore.batch();
+
+    for (const questionId of questionIds.slice(start, start + 500)) {
+      batch.update(questions.doc(questionId), { status, ...auditOnUpdate(actor.uid) });
+    }
+
+    await batch.commit();
+  }
 }
 
 /**
@@ -1252,6 +1275,45 @@ export async function getReview(attemptId: string): Promise<ReviewQuestion[]> {
   );
 }
 
+/**
+ * Every scorecard of the signed-in student's that has been released, each with
+ * the paper it was for. The input to the performance board.
+ *
+ * Filters on `studentUid` alone so the single-field index serves it, and drops
+ * unreleased results here — the same `publishedAt` gate `getResult` applies —
+ * so an analytics page can never leak a score the scorecard page would refuse.
+ */
+export async function listOwnPublishedResults(): Promise<ScoredPaper[]> {
+  const user = await requireAuth();
+
+  const snapshot = await collection(COLLECTIONS.results)
+    .where("studentUid", "==", user.uid)
+    .get();
+
+  const nowIso = new Date().toISOString();
+  const results = (toEntities<ResultDoc>(snapshot.docs) as Result[]).filter(
+    (result) => result.publishedAt !== null && result.publishedAt <= nowIso,
+  );
+
+  const testIds = [...new Set(results.map((result) => result.testId))];
+  const tests = testIds.length
+    ? await collection(COLLECTIONS.tests).firestore.getAll(
+        ...testIds.map((id) => collection(COLLECTIONS.tests).doc(id)),
+      )
+    : [];
+  const testById = new Map(
+    tests
+      .map((snapshot) => toEntity<Test>(snapshot))
+      .filter((test): test is Test => test !== null)
+      .map((test) => [test.id, test]),
+  );
+
+  return results.map((result) => ({
+    result,
+    test: testById.get(result.testId) ?? null,
+  }));
+}
+
 export async function listAttempts(studentUid: string): Promise<TestAttempt[]> {
   await requireSelfOrRole(studentUid, "MENTOR");
 
@@ -1276,6 +1338,152 @@ export async function listProctorEvents(attemptId: string): Promise<ProctorEvent
     .get();
 
   return toEntities<ProctorEventDoc>(snapshot.docs) as ProctorEvent[];
+}
+
+/** One sitting of a paper as the staff results table shows it. */
+export interface StaffResultRow {
+  attempt: TestAttempt;
+  /** Absent for a sitting still in progress, and for Mains until it is marked. */
+  result: Result | null;
+  studentName: string;
+  rollNumber: string | null;
+}
+
+/**
+ * Everyone who has started a paper, with their scorecard where there is one.
+ * Best score first, then sittings without a result, newest first.
+ *
+ * Both queries filter on `testId` alone so the single-field indexes serve them;
+ * the paper's sittings are few enough to sort here.
+ */
+export async function listResultsForStaff(testId: string): Promise<StaffResultRow[]> {
+  await requireRole("FACULTY");
+
+  const [attemptSnapshot, resultSnapshot] = await Promise.all([
+    collection(COLLECTIONS.testAttempts).where("testId", "==", testId).get(),
+    collection(COLLECTIONS.results).where("testId", "==", testId).get(),
+  ]);
+
+  const attempts = toEntities<TestAttemptDoc>(attemptSnapshot.docs) as TestAttempt[];
+  const resultByAttempt = new Map(
+    (toEntities<ResultDoc>(resultSnapshot.docs) as Result[]).map((result) => [
+      result.attemptId,
+      result,
+    ]),
+  );
+
+  const uids = [...new Set(attempts.map((attempt) => attempt.studentUid))];
+  const students = uids.length
+    ? await collection(COLLECTIONS.students).firestore.getAll(
+        ...uids.map((uid) => collection(COLLECTIONS.students).doc(docId.user(uid))),
+      )
+    : [];
+  const studentByUid = new Map(
+    students
+      .map((snapshot) => toEntity<Student>(snapshot))
+      .filter((student): student is Student => student !== null)
+      .map((student) => [student.uid, student]),
+  );
+
+  return attempts
+    .map((attempt) => {
+      const student = studentByUid.get(attempt.studentUid);
+
+      return {
+        attempt,
+        result: resultByAttempt.get(attempt.id) ?? null,
+        studentName: student?.fullName ?? "Unknown student",
+        rollNumber: student?.rollNumber ?? null,
+      };
+    })
+    .sort((a, b) => {
+      if (a.result && b.result) return b.result.score - a.result.score;
+      if (a.result) return -1;
+      if (b.result) return 1;
+      return b.attempt.startedAt.localeCompare(a.attempt.startedAt);
+    });
+}
+
+/** Firestore caps a batch at 500 writes. */
+const RELEASE_BATCH_SIZE = 400;
+
+/**
+ * Releases a paper's results now, and ranks them.
+ *
+ * Each result carries its own `publishedAt`, copied from the paper when it was
+ * scored, so moving the paper's result date afterwards does not move scorecards
+ * already written. This stamps every unreleased one with the present moment and
+ * sets the paper's date to match, so anyone who submits later sees theirs at once.
+ *
+ * Rank is competition ranking (equal scores share a rank, the next is skipped);
+ * percentile is the share of the other candidates who scored lower. Safe to run
+ * again — late submitters are ranked in and everyone else's rank is refreshed.
+ */
+export async function releaseResults(testId: string): Promise<{ released: number; ranked: number }> {
+  const actor = await requireRole("FACULTY");
+
+  const [inProgress, resultSnapshot] = await Promise.all([
+    collection(COLLECTIONS.testAttempts)
+      .where("testId", "==", testId)
+      .where("status", "==", "in-progress")
+      .limit(1)
+      .get(),
+    collection(COLLECTIONS.results).where("testId", "==", testId).get(),
+  ]);
+
+  if (!inProgress.empty) {
+    // Their rank would be wrong the moment they submit, and they could read the
+    // key mid-sitting from a second device.
+    throw new AppError(ERROR_CODES.CONFLICT, {
+      message: "A student is still sitting this paper. Release results once every sitting has ended.",
+    });
+  }
+
+  const results = (toEntities<ResultDoc>(resultSnapshot.docs) as Result[]).sort(
+    (a, b) => b.score - a.score,
+  );
+  const nowIso = new Date().toISOString();
+  const total = results.length;
+
+  let released = 0;
+  let rank = 0;
+  const writes = results.map((result, index) => {
+    if (index === 0 || results[index - 1].score !== result.score) rank = index + 1;
+
+    // Sorted best first, so everyone after the last equal score is below.
+    const below = total - (index + results.slice(index).filter((other) => other.score === result.score).length);
+    const percentile = total > 1 ? Number(((below / (total - 1)) * 100).toFixed(2)) : 100;
+
+    const unreleased = !result.publishedAt || result.publishedAt > nowIso;
+    if (unreleased) released += 1;
+
+    return {
+      id: result.id,
+      fields: {
+        rank,
+        percentile,
+        ...(unreleased ? { publishedAt: nowIso } : {}),
+        ...auditOnUpdate(actor.uid),
+      },
+    };
+  });
+
+  for (let start = 0; start < writes.length; start += RELEASE_BATCH_SIZE) {
+    const batch = collection(COLLECTIONS.results).firestore.batch();
+    for (const write of writes.slice(start, start + RELEASE_BATCH_SIZE)) {
+      batch.update(collection(COLLECTIONS.results).doc(write.id), write.fields);
+    }
+    await batch.commit();
+  }
+
+  const test = requireEntity<Test>(await collection(COLLECTIONS.tests).doc(testId).get(), "test");
+  if (!test.resultsVisibleFrom || test.resultsVisibleFrom > nowIso) {
+    await collection(COLLECTIONS.tests)
+      .doc(testId)
+      .update({ resultsVisibleFrom: nowIso, ...auditOnUpdate(actor.uid) });
+  }
+
+  return { released, ranked: total };
 }
 
 /** Faculty evaluation of one descriptive answer. */
@@ -1340,6 +1548,7 @@ export const testService = {
   createQuestion,
   createQuestions,
   updateQuestion,
+  setQuestionsStatus,
   setQuestionPapers,
   listQuestionsForStaff,
   getQuestionForStaff,
@@ -1356,7 +1565,10 @@ export const testService = {
   getResult,
   findOwnAttempt,
   getReview,
+  listOwnPublishedResults,
   listAttempts,
   listProctorEvents,
+  listResultsForStaff,
+  releaseResults,
   evaluateAnswer,
 };

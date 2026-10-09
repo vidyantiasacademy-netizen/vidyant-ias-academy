@@ -4,7 +4,7 @@ import { AppDownloadSection } from "@/components/home/AppDownloadSection";
 import { ContactSection } from "@/components/home/ContactSection";
 // import { CurrentAffairsSection } from "@/components/home/CurrentAffairsSection";
 // import { EventsSection } from "@/components/home/EventsSection";
-import { FacultySection } from "@/components/home/FacultySection";
+// import { FacultySection } from "@/components/home/FacultySection";
 import { HomeFaq } from "@/components/home/HomeFaq";
 import { LearningSystem } from "@/components/home/LearningSystem";
 import { MentorshipSection } from "@/components/home/MentorshipSection";
@@ -48,21 +48,22 @@ export default async function HomePage() {
     <>
       {/*
         Section order answers the four questions a visitor arrives with, in order:
-        who are you → what do you offer → why trust you → what do I do next.
+        who are you → what do you offer (and for how much) → why trust you → what do I do next.
       */}
       <HomeHero />
       <TrustBar />
+      {/* What we sell sits directly under the hero, priced and buyable. */}
+      <ProgramsSection courses={courses} />
       <NoticeboardSection />
       {/* <BatchesSection /> */}
-      <ProgramsSection courses={courses} />
       {/* <WhyVidyantIas /> */}
       <LearningSystem />
+      <ResourcesSection resources={resources} />
       <MentorshipSection />
       {/* <PerformanceTracking /> */}
-      <FacultySection />
+      {/* <FacultySection /> */}
       {/* <ResultsSection /> */}
       {/* <TestimonialsSection /> */}
-      <ResourcesSection resources={resources} />
       {/* <CurrentAffairsSection /> */}
       <OrientationSection />
       {/* <EventsSection /> */}

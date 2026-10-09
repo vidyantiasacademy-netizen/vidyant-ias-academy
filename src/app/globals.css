@@ -347,13 +347,10 @@
 
   /* Notification ticker. The track holds the notices twice, so sliding it by
      half its width lands exactly on the second copy and the loop has no seam.
-     Duration is set per instance, from how much text there is to read. */
+     Duration is set per instance, from how much text there is to read. It
+     never pauses and is exempt from the reduced-motion override below. */
   .notice-ticker {
     animation: notice-ticker linear infinite;
-  }
-
-  [data-paused="true"] .notice-ticker {
-    animation-play-state: paused;
   }
 
   @keyframes notice-ticker {
@@ -403,7 +400,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after {
+  /* The notice ticker is excluded on purpose: it must always keep moving. */
+  *:not(.notice-ticker), *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

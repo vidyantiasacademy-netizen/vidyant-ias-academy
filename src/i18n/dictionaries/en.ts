@@ -13,6 +13,7 @@ export const en = {
     call: "Call {phone}",
     whatsappChat: "Chat with vidyantIAS on WhatsApp",
     whatsappShort: "WhatsApp us",
+    backToTop: "Back to top",
   },
   nav: {
     primary: "Primary",
