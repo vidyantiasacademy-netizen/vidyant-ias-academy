@@ -14,7 +14,7 @@ import type { PortalNavItem } from "./PortalShell";
  * rendering on the server.
  *
  * Drawn as folder tabs on an Ink Indigo band: the labels sit in the dark, and
- * the current one is a pale panel with its top corners rounded, lifted onto a
+ * the current one is a pale square panel, lifted onto a
  * hairline that runs the width of the band. The page below continues out of
  * that panel, which is what makes the metaphor read — a row of buttons would
  * compete with the real buttons on the page beneath, and a navigation is not an
@@ -39,7 +39,7 @@ export function PortalNav({ nav, title }: { nav: PortalNavItem[]; title: string 
       // band rather than a floating card.
       className="focus-invert -mx-4 overflow-x-auto sm:mx-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
-      <div className="flex w-max min-w-full items-end gap-1 border-b border-white/35 bg-indigo-gradient px-2 pt-2 sm:gap-2 sm:rounded-t-lg sm:px-3 sm:pt-3">
+      <div className="flex w-max min-w-full items-end gap-1 border-b border-white/35 bg-indigo px-2 pt-2 sm:gap-2 sm:px-3 sm:pt-3">
         {nav.map((item) => {
           // `/dashboard` must not light up on `/dashboard/services`, so the
           // prefix rule applies to every tab except the exact-match home one.
@@ -59,7 +59,7 @@ export function PortalNav({ nav, title }: { nav: PortalNavItem[]; title: string 
                 // stacking a second one under it.
                 "-mb-px shrink-0 border-b-[3px] px-4 py-3 text-small font-semibold transition-colors sm:px-5",
                 isActive
-                  ? "rounded-t-lg border-white bg-indigo-100 text-indigo"
+                  ? "border-white bg-indigo-100 text-indigo"
                   : "border-transparent text-white/75 hover:text-white",
               )}
             >

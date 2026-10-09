@@ -31,48 +31,58 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   const centered = align === "center";
 
+  // Swiss header: a hard rule across the full measure, then an asymmetric
+  // split — the eyebrow hangs in the left 3 of 12 columns, the heading takes
+  // the rest, flush left. Centred headers keep the rule but stack.
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between",
-        centered && "lg:flex-col lg:items-center",
+        "border-t-2 pt-5 lg:pt-6",
+        tone === "light" ? "border-white" : "border-indigo",
+        centered
+          ? "flex flex-col items-center gap-4 text-center"
+          : "grid gap-4 lg:grid-cols-12 lg:gap-x-8",
         className,
       )}
     >
+      {eyebrow ? (
+        <Eyebrow
+          tone={tone === "light" ? "light" : accent}
+          className={cn(!centered && "lg:col-span-3 lg:pt-2", centered && "justify-center")}
+        >
+          {eyebrow}
+        </Eyebrow>
+      ) : null}
       <div
         className={cn(
-          "max-w-2xl",
-          centered && "mx-auto text-center",
+          "flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8",
+          !centered && (eyebrow ? "lg:col-span-9" : "lg:col-span-12"),
+          centered && "lg:flex-col lg:items-center",
         )}
       >
-        {eyebrow ? (
-          <Eyebrow
-            tone={tone === "light" ? "light" : accent}
-            className={cn("mb-3", centered && "justify-center")}
-          >
-            {eyebrow}
-          </Eyebrow>
-        ) : null}
-        <Heading
-          className={cn(
-            "text-h2 lg:text-h2-lg font-semibold",
-            tone === "light" && "text-white",
-          )}
-        >
-          {title}
-        </Heading>
-        {description ? (
-          <p
+        <div className={cn("max-w-3xl", centered && "mx-auto")}>
+          <Heading
             className={cn(
-              "mt-3 text-body sm:text-body-lg",
-              tone === "light" ? "text-white/75" : "text-ink-secondary",
+              "text-h2 font-bold lg:text-h2-lg",
+              tone === "light" && "text-white",
             )}
           >
-            {description}
-          </p>
-        ) : null}
+            {title}
+          </Heading>
+          {description ? (
+            <p
+              className={cn(
+                "mt-4 max-w-2xl text-body sm:text-body-lg",
+                centered && "mx-auto",
+                tone === "light" ? "text-white/80" : "text-ink-secondary",
+              )}
+            >
+              {description}
+            </p>
+          ) : null}
+        </div>
+        {action ? <div className="shrink-0">{action}</div> : null}
       </div>
-      {action ? <div className="shrink-0">{action}</div> : null}
     </div>
   );
 }

@@ -571,7 +571,7 @@ function SyncBadge({ state }: { state: "idle" | "saving" | "error" }) {
     <span
       className={
         state === "error"
-          ? "rounded-md bg-danger-50 px-2.5 py-1 text-small font-semibold text-danger"
+          ? "bg-danger-50 px-2.5 py-1 text-small font-semibold text-danger"
           : "inline-flex items-center gap-1.5 text-small text-ink-secondary"
       }
     >
@@ -603,8 +603,8 @@ function Blocker({
       aria-label={title}
       className="fixed inset-0 z-50 flex items-center justify-center bg-indigo-950/92 p-6"
     >
-      <div className="w-full max-w-lg rounded-lg bg-white p-7 sm:p-9">
-        <h2 className="text-h3 font-semibold">{title}</h2>
+      <div className="w-full max-w-lg bg-white p-7 sm:p-9">
+        <h2 className="text-h3 font-bold">{title}</h2>
         <p className="mt-3 text-body text-ink-secondary">{message}</p>
         <div className="mt-6">{action}</div>
       </div>
@@ -615,8 +615,8 @@ function Blocker({
 function ExamClosed({ title, message }: { title: string; message: string }) {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-paper p-6">
-      <div className="w-full max-w-lg rounded-lg border border-line bg-white p-7 text-center sm:p-9">
-        <h1 className="text-h3 font-semibold">{title}</h1>
+      <div className="w-full max-w-lg border border-line bg-white p-7 text-center sm:p-9">
+        <h1 className="text-h3 font-bold">{title}</h1>
         <p className="mt-3 text-body text-ink-secondary">{message}</p>
         <p className="mt-6 text-small text-ink-secondary">Taking you to your result…</p>
       </div>

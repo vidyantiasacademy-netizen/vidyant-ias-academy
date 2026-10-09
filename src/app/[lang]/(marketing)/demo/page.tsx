@@ -54,7 +54,7 @@ export default async function DemoPage() {
 
           <aside className="flex flex-col gap-4">
             <Card tone="paper">
-              <h2 className="text-h4 font-semibold">What you will see</h2>
+              <h2 className="text-h4 font-bold">What you will see</h2>
               <ul className="mt-5 space-y-5">
                 {WHAT_YOU_SEE.map(({ icon: Icon, title, description }) => (
                   <li key={title} className="flex gap-3">
@@ -69,7 +69,7 @@ export default async function DemoPage() {
             </Card>
 
             <Card>
-              <h2 className="text-h4 font-semibold">Good to know</h2>
+              <h2 className="text-h4 font-bold">Good to know</h2>
               <ul className="mt-4 space-y-3 text-small text-ink-secondary">
                 <li>Demo classes are free and carry no obligation to enrol.</li>
                 <li>

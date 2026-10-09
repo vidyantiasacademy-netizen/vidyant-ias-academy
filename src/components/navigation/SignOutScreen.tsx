@@ -37,8 +37,8 @@ export function SignOutScreen() {
   }, [router]);
 
   return (
-    <div className="py-10 text-center">
-      <h1 className="text-h2 font-semibold">
+    <div className="border-t-2 border-indigo py-10">
+      <h1 className="text-h2 font-bold tracking-tight">
         {failed ? "Could not sign you out" : "Signing you out…"}
       </h1>
 

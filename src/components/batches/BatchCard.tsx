@@ -31,7 +31,7 @@ export function BatchCard({ batch, className }: { batch: Batch; className?: stri
         {batch.highlight ? <Badge tone="kesar">{batch.highlight}</Badge> : null}
       </div>
 
-      <h3 className="mt-4 text-h4 font-semibold">{batch.title}</h3>
+      <h3 className="mt-4 text-h4 font-bold">{batch.title}</h3>
       <p className="mt-2 text-small text-ink-secondary">{batch.duration}</p>
 
       <dl className="mt-6 grid flex-1 gap-3 text-small">

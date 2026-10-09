@@ -14,7 +14,7 @@ export default async function NewUserPage() {
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">New user</h1>
+      <h1 className="text-h2 font-bold">New user</h1>
       <p className="mt-2 text-body text-ink-secondary">
         Creates the sign-in and sets the role in one step. A student added here can be enrolled
         straight away, without signing in first.

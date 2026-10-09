@@ -37,26 +37,27 @@ export async function CurrentAffairsSection() {
       ) : (
         <div className="mt-8">
           <Card className="flex items-start gap-4 bg-white">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-paper text-kesar-600">
+            <span className="flex size-10 shrink-0 items-center justify-center bg-indigo text-white">
               <Newspaper aria-hidden className="size-5" />
             </span>
             <p className="text-body text-ink-secondary">
-              Our current affairs desk publishes shortly. Rather than fill this space with
-              sample articles, here is exactly what each analysis will contain: the
-              development, why it matters for UPSC, the static syllabus link, and where it
-              can be used in Prelims or Mains.
+              Our current affairs desk publishes shortly. Rather than fill this space with sample
+              articles, here is exactly what each analysis will contain: the development, why it
+              matters for UPSC, the static syllabus link, and where it can be used in Prelims or
+              Mains.
             </p>
           </Card>
 
-          <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-            {CURRENT_AFFAIRS_COVERAGE.map((topic) => (
-              <li key={topic.subject}>
-                <Card className="h-full">
-                  <p className="text-eyebrow font-semibold uppercase text-kesar-600">
-                    {topic.subject}
-                  </p>
-                  <p className="mt-3 text-small text-ink-secondary">{topic.note}</p>
-                </Card>
+          <ul className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+            {CURRENT_AFFAIRS_COVERAGE.map((topic, index) => (
+              <li key={topic.subject} className="border-t-2 border-indigo pt-4">
+                <p className="flex items-baseline gap-3 text-eyebrow font-bold uppercase text-indigo">
+                  <span aria-hidden className="tabular-nums text-chilli-600">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {topic.subject}
+                </p>
+                <p className="mt-3 text-small text-ink-secondary">{topic.note}</p>
               </li>
             ))}
           </ul>

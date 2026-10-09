@@ -21,7 +21,7 @@ const PRELIMS_KINDS: readonly TestKind[] = ["prelims-mcq", "csat", "sectional"];
 export default function PrelimsPage() {
   return (
     <>
-      <h1 className="text-h2 font-semibold">Prelims Test Series</h1>
+      <h1 className="text-h2 font-bold">Prelims Test Series</h1>
       <p className="mt-2 text-body text-ink-secondary">
         Full-length papers, CSAT and sectional tests from your programmes.
       </p>

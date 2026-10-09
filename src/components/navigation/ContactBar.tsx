@@ -10,7 +10,7 @@ import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CONTACT, whatsappUrl } from "@/lib/constants/site";
 
 const linkClass =
-  "flex min-h-10 items-center gap-2 whitespace-nowrap font-semibold text-indigo underline-offset-4 transition-colors hover:text-chilli-600 hover:underline hover:decoration-chilli";
+  "flex min-h-10 items-center gap-2 whitespace-nowrap font-bold text-indigo underline-offset-4 transition-colors hover:text-chilli-600 hover:underline hover:decoration-chilli";
 
 /**
  * Contact strip at the top of the header. Phone and WhatsApp show at every

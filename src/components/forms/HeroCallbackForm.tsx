@@ -55,10 +55,10 @@ export function HeroCallbackForm({ courses }: { courses: Course[] }) {
   } = useForm<Values>({ resolver: zodResolver(schema), mode: "onBlur" });
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white text-ink shadow-[0_18px_48px_-30px_rgb(11_63_49/0.35)]">
+    <div className="flex h-full flex-col overflow-hidden border-2 border-indigo bg-white text-ink">
       <div
         aria-hidden
-        className="h-1 bg-gradient-to-r from-kesar via-kesar to-kesar-600"
+        className="h-1.5 bg-kesar"
       />
       {/* Beside the banner the card stretches to the banner's height; the
           content centres in whatever height that gives. */}
@@ -68,20 +68,17 @@ export function HeroCallbackForm({ courses }: { courses: Course[] }) {
             allows, so large screens get substance rather than empty padding:
             xl is compact, 2xl restores the intro, 3xl the counselling link,
             4xl the "what happens next" steps. */}
-        <p className="flex items-center gap-2.5 text-eyebrow font-semibold uppercase text-kesar-600 xl:hidden 2xl:flex">
-          <span aria-hidden className="relative flex size-2">
-            <span className="absolute inline-flex size-full animate-ping rounded-full bg-kesar opacity-70" />
-            <span className="relative inline-flex size-2 rounded-full bg-kesar" />
-          </span>
+        <p className="flex items-center gap-2.5 text-eyebrow font-bold uppercase text-kesar-600 xl:hidden 2xl:flex">
+          <span aria-hidden className="size-2 shrink-0 bg-current" />
           Admissions open · {EXAM_CYCLE.label}
         </p>
 
         {lead.isSuccess ? (
           <div role="status" className="mt-5">
-            <span className="flex size-11 items-center justify-center rounded-full bg-success-50 text-success">
+            <span className="flex size-11 items-center justify-center bg-success-50 text-success">
               <Check aria-hidden className="size-5.5" />
             </span>
-            <h2 className="mt-4 text-h4 font-semibold text-indigo">
+            <h2 className="mt-4 text-h4 font-bold text-indigo">
               We have your number.
             </h2>
             <p className="mt-2.5 text-body text-ink-secondary">
@@ -108,7 +105,7 @@ export function HeroCallbackForm({ courses }: { courses: Course[] }) {
               });
             })}
           >
-            <h2 className="mt-4 text-h4 font-semibold text-indigo xl:mt-0 2xl:mt-4 3xl:text-h3">
+            <h2 className="mt-4 text-h4 font-bold text-indigo xl:mt-0 2xl:mt-4 3xl:text-h3">
               Talk to an academic counsellor
             </h2>
             <p className="mt-2 text-small text-ink-secondary xl:hidden 2xl:block">
@@ -224,9 +221,9 @@ export function HeroCallbackForm({ courses }: { courses: Course[] }) {
                 <li key={step} className="flex items-start gap-3">
                   <span
                     aria-hidden
-                    className="flex size-8 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-small font-bold text-indigo"
+                    className="flex size-8 shrink-0 items-center justify-center bg-indigo text-small font-bold tabular-nums text-white"
                   >
-                    {i + 1}
+                    {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="pt-1 text-small text-ink-secondary">{step}</span>
                 </li>

@@ -1,12 +1,11 @@
 import type { ComponentProps } from "react";
 
 import { Container } from "@/components/ui/Container";
-import { KesarLines } from "@/components/ui/KesarLines";
 import { cn } from "@/lib/utils/cn";
 
 interface SectionProps extends ComponentProps<"section"> {
   /** Background treatment. Keeps the 70/20/10 neutral-indigo-kesar balance. */
-  tone?: "white" | "paper" | "cameo" | "indigo";
+  tone?: "white" | "paper" | "indigo";
   containerSize?: "default" | "narrow" | "wide";
   /** Turn off the built-in container when a section needs full-bleed children. */
   bleed?: boolean;
@@ -16,14 +15,12 @@ interface SectionProps extends ComponentProps<"section"> {
 const tones = {
   white: "bg-white",
   paper: "bg-paper",
-  /** Soft pink wash (Wada 116) — use in place of one `paper` section per page. */
-  cameo: "bg-cameo-100",
-  indigo: "relative overflow-hidden bg-indigo-gradient text-white focus-invert",
+  indigo: "relative overflow-hidden bg-indigo text-white focus-invert",
 } as const;
 
 const spacings = {
-  default: "py-10 sm:py-12 lg:py-16",
-  tight: "py-8 sm:py-10 lg:py-12",
+  default: "py-12 sm:py-14 lg:py-20",
+  tight: "py-10 sm:py-12 lg:py-16",
   none: "",
 } as const;
 
@@ -40,14 +37,13 @@ export function Section({
     <section
       // Sections are anchor targets; keep them clear of the sticky header.
       className={cn(
-        "scroll-mt-16 sm:scroll-mt-20 lg:scroll-mt-24",
+        "scroll-mt-16 sm:scroll-mt-18 lg:scroll-mt-20",
         tones[tone],
         spacings[spacing],
         className,
       )}
       {...props}
     >
-      {tone === "indigo" ? <KesarLines /> : null}
       {bleed ? (
         children
       ) : (

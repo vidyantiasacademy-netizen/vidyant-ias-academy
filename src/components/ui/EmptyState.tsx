@@ -22,18 +22,18 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center rounded-lg border border-dashed px-6 py-12 text-center sm:px-10 sm:py-14",
+        "flex flex-col items-start border-t-2 px-6 py-12 text-left sm:px-10 sm:py-14",
         tone === "dark"
-          ? "border-white/20 bg-white/5"
-          : "border-line-strong bg-paper/60",
+          ? "border-white bg-white/5"
+          : "border-indigo bg-paper",
         className,
       )}
     >
       {icon ? (
         <span
           className={cn(
-            "mb-5 flex size-12 items-center justify-center rounded-full",
-            tone === "dark" ? "bg-white/10 text-kesar" : "bg-white text-kesar-600",
+            "mb-5 flex size-12 items-center justify-center",
+            tone === "dark" ? "bg-kesar text-indigo-900" : "bg-indigo text-white",
           )}
         >
           {icon}
@@ -41,7 +41,7 @@ export function EmptyState({
       ) : null}
       <h3
         className={cn(
-          "text-h4 font-semibold",
+          "text-h4 font-bold tracking-tight",
           tone === "dark" ? "text-white" : "text-indigo",
         )}
       >
@@ -50,7 +50,7 @@ export function EmptyState({
       <p
         className={cn(
           "mt-3 max-w-xl text-body",
-          tone === "dark" ? "text-white/70" : "text-ink-secondary",
+          tone === "dark" ? "text-white/80" : "text-ink-secondary",
         )}
       >
         {description}

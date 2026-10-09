@@ -49,7 +49,7 @@ function NoticeLine({ notice }: { notice: StripNotice }) {
           href={notice.href}
           event={ANALYTICS_EVENTS.noticeClick}
           payload={{ location: "notification-strip", notice: notice.id }}
-          className="shrink-0 whitespace-nowrap font-semibold text-kesar underline decoration-kesar decoration-from-font underline-offset-4 transition-colors hover:text-white"
+          className="shrink-0 whitespace-nowrap font-bold text-kesar underline decoration-kesar decoration-2 underline-offset-4 transition-colors hover:text-white"
         >
           {notice.linkLabel ?? "Details"}
         </TrackedLink>
@@ -130,7 +130,7 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
       role="region"
       aria-label="Site notices"
       data-paused={isPaused}
-      className="group/strip bg-indigo-strip text-white"
+      className="group/strip bg-indigo-900 text-white"
       onKeyDown={handleKeyDown}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -193,19 +193,19 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
                   type="button"
                   onClick={() => goTo(index - 1)}
                   aria-label="Previous notice"
-                  className="inline-flex size-10 cursor-pointer items-center justify-center rounded-md text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                  className="inline-flex size-10 cursor-pointer items-center justify-center text-white/80 transition-colors hover:bg-white hover:text-indigo-900"
                 >
                   <ChevronLeft aria-hidden className="size-4" />
                 </button>
                 <span aria-hidden className="text-small tabular-nums text-white/70">
                   {index + 1}
-                  <span className="text-white/45"> / {count}</span>
+                  <span className="text-white/60"> / {count}</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => goTo(index + 1)}
                   aria-label="Next notice"
-                  className="inline-flex size-10 cursor-pointer items-center justify-center rounded-md text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                  className="inline-flex size-10 cursor-pointer items-center justify-center text-white/80 transition-colors hover:bg-white hover:text-indigo-900"
                 >
                   <ChevronRight aria-hidden className="size-4" />
                 </button>

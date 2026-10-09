@@ -14,7 +14,7 @@ export function TestimonialCard({
 }) {
   return (
     <Card as="figure" className={cn("flex h-full flex-col", className)}>
-      <Quote aria-hidden className="size-7 text-kesar/70" />
+      <Quote aria-hidden className="size-7 text-indigo" />
       <blockquote className="mt-4 flex-1 text-body text-ink">
         {testimonial.quote}
       </blockquote>
@@ -46,7 +46,7 @@ export function TestimonialCard({
             href={testimonial.videoUrl}
             target="_blank"
             rel="noreferrer"
-            className="ml-auto inline-flex items-center gap-1.5 text-small font-semibold text-indigo hover:text-kesar-600"
+            className="ml-auto inline-flex items-center gap-1.5 text-small font-semibold text-indigo hover:text-indigo-900 hover:underline underline-offset-4"
           >
             <PlayCircle aria-hidden className="size-4" />
             Watch

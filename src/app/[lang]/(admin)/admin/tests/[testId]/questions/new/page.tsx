@@ -30,7 +30,7 @@ export default async function NewQuestionPage({
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">Question {questions.length + 1}</h1>
+      <h1 className="text-h2 font-bold">Question {questions.length + 1}</h1>
       <p className="mt-2 text-body text-ink-secondary">{test.title}</p>
 
       <div className="mt-8 max-w-4xl">

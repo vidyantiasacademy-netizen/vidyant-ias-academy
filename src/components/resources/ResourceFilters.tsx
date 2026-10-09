@@ -36,10 +36,10 @@ export function ResourceFilters({ resources, filters }: ResourceFiltersProps) {
               aria-selected={isActive}
               onClick={() => setActive(filter.id)}
               className={cn(
-                "rounded-full px-4 py-2 text-small font-medium transition-colors",
+                "inline-flex h-10 items-center border px-4 text-small font-medium transition-colors",
                 isActive
-                  ? "bg-indigo-gradient text-white"
-                  : "border border-line text-ink-secondary hover:border-indigo hover:text-indigo",
+                  ? "border-indigo bg-indigo text-white"
+                  : "border-line text-ink-secondary hover:border-indigo hover:text-indigo",
               )}
             >
               {filter.label}

@@ -44,7 +44,7 @@ export default async function FacultyPage() {
 
         {awaitingProfiles ? (
           <Card tone="paper" className="mt-10">
-            <h2 className="text-h4 font-semibold">Profiles are being verified</h2>
+            <h2 className="text-h4 font-bold">Profiles are being verified</h2>
             <p className="mt-3 max-w-3xl text-body text-ink-secondary">
               vidyantIAS publishes a faculty member&apos;s name, qualifications and experience
               only after verifying them. Until each profile is confirmed, the cards above

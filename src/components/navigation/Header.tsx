@@ -88,17 +88,17 @@ export function Header({ notice }: { notice?: ReactNode }) {
   return (
     <header
       ref={headerRef}
+      // Swiss bar: solid white, a hard 2px indigo rule underneath. No blur,
+      // no shadow — scrolling only firms the rule, it never changes the fill.
       className={cn(
-        "sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-200",
-        scrolled
-          ? "border-b border-line bg-white/85 backdrop-blur-md"
-          : "border-b border-transparent bg-white",
+        "sticky top-0 z-50 border-b-2 bg-white transition-colors duration-150",
+        scrolled ? "border-indigo" : "border-indigo/90",
       )}
     >
       {notice}
       <ContactBar />
       <Container size="wide">
-        <div className="flex h-16 items-center justify-between gap-4 sm:h-20 lg:h-24 lg:gap-8">
+        <div className="flex h-16 items-center justify-between gap-4 sm:h-18 lg:h-20 lg:gap-8">
           <span className="flex items-center">
             <Logo size="md" priority />
           </span>
@@ -113,19 +113,21 @@ export function Header({ notice }: { notice?: ReactNode }) {
                     href={item.href}
                     aria-current={isActive(item.href) ? "page" : undefined}
                     className={cn(
-                      "relative whitespace-nowrap text-small font-medium transition-colors",
+                      "relative whitespace-nowrap text-small font-bold tracking-[-0.005em] transition-colors",
                       isActive(item.href)
                         ? "text-indigo"
-                        : "text-ink-secondary hover:text-indigo",
+                        : "text-ink hover:text-indigo",
                     )}
                   >
                     {dict.nav[item.key]}
-                    {isActive(item.href) ? (
-                      <span
-                        aria-hidden
-                        className="absolute -bottom-1.5 left-0 h-0.5 w-full bg-kesar-600"
-                      />
-                    ) : null}
+                    {/* Active: a solid 4px indigo block under the label. */}
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "absolute -bottom-2 left-0 h-1 w-full bg-indigo transition-opacity duration-150",
+                        isActive(item.href) ? "opacity-100" : "opacity-0",
+                      )}
+                    />
                   </Link>
                 </li>
               ))}
@@ -138,7 +140,7 @@ export function Header({ notice }: { notice?: ReactNode }) {
             <Link
               href={ROUTES.search}
               aria-label={dict.common.search}
-              className="flex size-9 items-center justify-center rounded-md text-ink-secondary transition-colors hover:bg-paper hover:text-indigo"
+              className="flex size-10 items-center justify-center text-ink transition-colors hover:bg-indigo hover:text-white"
             >
               <Search aria-hidden className="size-4.5" />
             </Link>
@@ -169,7 +171,7 @@ export function Header({ notice }: { notice?: ReactNode }) {
             <Link
               href={ROUTES.search}
               aria-label={dict.common.search}
-              className="flex size-11 items-center justify-center rounded-md text-indigo transition-colors hover:bg-paper"
+              className="flex size-11 items-center justify-center text-indigo transition-colors hover:bg-indigo hover:text-white"
             >
               <Search aria-hidden className="size-5" />
             </Link>
@@ -195,11 +197,11 @@ export function Header({ notice }: { notice?: ReactNode }) {
         <div
           id="mobile-menu"
           style={{ top: drawerTop }}
-          className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-line bg-white sm:top-20 lg:top-24 xl:hidden"
+          className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-white sm:top-18 lg:top-20 xl:hidden"
         >
           <Container className="py-6">
             <nav aria-label={dict.nav.mobile}>
-              <ul className="divide-y divide-line">
+              <ul className="divide-y divide-line border-b border-line">
                 {MOBILE_NAV.map((item) => (
                   <li key={item.href}>
                     <Link
@@ -207,8 +209,10 @@ export function Header({ notice }: { notice?: ReactNode }) {
                       onClick={closeMenu}
                       aria-current={isActive(item.href) ? "page" : undefined}
                       className={cn(
-                        "flex items-center justify-between py-3.5 text-body font-medium",
-                        isActive(item.href) ? "text-kesar-600" : "text-indigo",
+                        "flex items-center justify-between border-l-4 py-3.5 pl-3 text-body font-bold",
+                        isActive(item.href)
+                          ? "border-indigo text-indigo"
+                          : "border-transparent text-ink hover:text-indigo",
                       )}
                     >
                       {dict.nav[item.key]}

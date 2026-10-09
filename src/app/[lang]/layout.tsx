@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Kalam, Noto_Sans_Devanagari, Source_Serif_4 } from "next/font/google";
+import { Inter, Noto_Sans_Devanagari, Source_Serif_4 } from "next/font/google";
 
 import { LOCALE_META, LOCALES } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/server";
@@ -35,19 +35,6 @@ const sourceSerif = Source_Serif_4({
   weight: ["400", "600"],
   display: "swap",
   variable: "--font-source-serif",
-});
-
-/**
- * Handwriting for the doodle notes inside homepage illustrations — decoration
- * only, never body copy. Not preloaded: the notes are aria-hidden and below
- * the fold, so they may swap in late on a slow connection.
- */
-const kalam = Kalam({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  preload: false,
-  variable: "--font-kalam",
 });
 
 /**
@@ -108,7 +95,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   return (
     <html
       lang={LOCALE_META[locale].htmlLang}
-      className={`${inter.variable} ${devanagari.variable} ${sourceSerif.variable} ${kalam.variable} h-full`}
+      className={`${inter.variable} ${devanagari.variable} ${sourceSerif.variable} h-full`}
     >
       <body className="flex min-h-full flex-col bg-white antialiased">
         <I18nProvider locale={locale} dict={dict}>

@@ -18,7 +18,7 @@ import { ResourcesSection } from "@/components/home/ResourcesSection";
 // import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { TrustBar } from "@/components/home/TrustBar";
 // import { WhyVidyantIas } from "@/components/home/WhyVidyantIas";
-import { SkylineIllustration } from "@/components/illustrations/SkylineIllustration";
+import { GeoComposition } from "@/components/ui/Geometry";
 import { CTASection } from "@/components/ui/CTASection";
 import { getLocale } from "@/i18n/server";
 import { BRAND } from "@/lib/constants/site";
@@ -74,7 +74,7 @@ export default async function HomePage() {
         title="Your UPSC preparation deserves a clear direction."
         description="Speak with our academic team to understand the right preparation path for your attempt."
         location="home-final"
-        illustration={<SkylineIllustration />}
+        illustration={<GeoComposition surface="dark" className="mx-auto size-56 sm:size-64 lg:size-80" />}
       />
       <script
         type="application/ld+json"

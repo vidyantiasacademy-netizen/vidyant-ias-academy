@@ -57,9 +57,9 @@ export function EventRegistrationForm({ events, mode }: EventRegistrationFormPro
       onSubmit={handleSubmit(async (values) => {
         await lead.submit(values, { source: "events-page", event: values.eventId });
       })}
-      className="rounded-lg border border-line bg-white p-6 sm:p-8"
+      className="border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8"
     >
-      <h2 className="text-h3 font-semibold">
+      <h2 className="text-h3 font-bold tracking-tight">
         {isInterest ? "Register your interest" : "Reserve your seat"}
       </h2>
       <p className="mt-3 text-body text-ink-secondary">

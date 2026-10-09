@@ -91,7 +91,7 @@ export default async function ProgrammePage({
   return (
     <>
       <div>
-        <h1 className="text-h2 font-semibold">{course.title}</h1>
+        <h1 className="text-h2 font-bold">{course.title}</h1>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <Badge>{COURSE_CATEGORY_LABELS[course.category]}</Badge>
@@ -111,7 +111,7 @@ export default async function ProgrammePage({
       </div>
 
       <section aria-labelledby="papers" className="mt-10">
-        <h2 id="papers" className="text-h3 font-semibold">
+        <h2 id="papers" className="text-h3 font-bold">
           Test calendar
         </h2>
 
@@ -173,7 +173,7 @@ export default async function ProgrammePage({
       </section>
 
       <section aria-labelledby="material" className="mt-10">
-        <h2 id="material" className="text-h3 font-semibold">
+        <h2 id="material" className="text-h3 font-bold">
           Classes and material
         </h2>
 

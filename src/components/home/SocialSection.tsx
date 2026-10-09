@@ -26,21 +26,24 @@ export function SocialSection() {
 
   return (
     <Section tone="paper" id="social" containerSize="wide">
-      <div className="grid gap-8 lg:grid-cols-[1fr_0.75fr] lg:items-start lg:gap-12">
-        <div>
+      <div className="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12">
+        <div className="border-t-2 border-indigo pt-5 lg:col-span-7">
           <Eyebrow>YouTube &amp; Social</Eyebrow>
-          <h2 className="mt-4 text-h2 font-semibold text-indigo lg:text-h2-lg">
+          <h2 className="mt-4 text-h2 font-bold text-indigo lg:text-h2-lg">
             Watch a class before you ever speak to us.
           </h2>
           <p className="mt-5 max-w-xl text-body text-ink-secondary sm:text-body-lg">
-            Our teaching is public. Current affairs analysis, subject explainers and answer
-            writing sessions go up on YouTube, free, for anyone preparing — enrolled or not.
+            Our teaching is public. Current affairs analysis, subject explainers and answer writing
+            sessions go up on YouTube, free, for anyone preparing — enrolled or not.
           </p>
 
-          <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+          <ul className="mt-7 grid sm:grid-cols-2 sm:gap-x-8">
             {CHANNEL_CONTENT.map((item) => (
-              <li key={item} className="flex gap-3 text-body text-ink-secondary">
-                <span aria-hidden className="mt-2.5 size-1.5 shrink-0 rounded-full bg-kesar" />
+              <li
+                key={item}
+                className="flex gap-3 border-t border-line py-3 text-body text-ink-secondary"
+              >
+                <span aria-hidden className="mt-2.5 size-2 shrink-0 bg-chilli" />
                 {item}
               </li>
             ))}
@@ -52,18 +55,18 @@ export function SocialSection() {
             rel="noreferrer"
             event={ANALYTICS_EVENTS.socialClick}
             payload={{ network: "youtube", location: "home-social" }}
-            className="mt-7 inline-flex h-13 items-center justify-center gap-2 rounded-md bg-indigo-gradient px-6 text-body font-semibold text-white transition-[filter] hover:brightness-125"
+            className="mt-7 inline-flex h-13 items-center justify-center gap-2 bg-indigo px-6 text-body font-semibold text-white transition-colors hover:bg-indigo-900"
           >
             <Play aria-hidden className="size-4.5" />
             Subscribe on YouTube
           </TrackedAnchor>
         </div>
 
-        <div>
+        <div className="lg:col-span-5">
           {videoIds.length > 0 ? (
             <ul className="grid gap-4">
               {videoIds.map((id) => (
-                <li key={id} className="overflow-hidden rounded-lg border border-line">
+                <li key={id} className="overflow-hidden border border-line">
                   <iframe
                     title={`${BRAND.name} on YouTube`}
                     src={`https://www.youtube-nocookie.com/embed/${id}`}
@@ -77,17 +80,14 @@ export function SocialSection() {
               ))}
             </ul>
           ) : (
-            <div className="rounded-lg border border-dashed border-line-strong bg-white p-7">
-              <span className="flex size-12 items-center justify-center rounded-full bg-kesar-100 text-kesar-700">
+            <div className="border-2 border-indigo bg-white p-7">
+              <span className="flex size-12 items-center justify-center bg-indigo text-white">
                 <Play aria-hidden className="size-5" />
               </span>
-              <h3 className="mt-5 text-h4 font-semibold text-indigo">
-                The channel is just starting
-              </h3>
+              <h3 className="mt-5 text-h4 font-bold text-indigo">The channel is just starting</h3>
               <p className="mt-3 text-body text-ink-secondary">
-                We would rather link you to an empty channel honestly than embed someone
-                else&apos;s video here. Subscribe now and the first sessions reach you as they
-                are published.
+                We would rather link you to an empty channel honestly than embed someone else&apos;s
+                video here. Subscribe now and the first sessions reach you as they are published.
               </p>
               <p className="mt-5 text-small text-ink-secondary">{YOUTUBE.handle}</p>
             </div>
@@ -101,8 +101,11 @@ export function SocialSection() {
                   target="_blank"
                   rel="noreferrer"
                   event={ANALYTICS_EVENTS.socialClick}
-                  payload={{ network: social.label.toLowerCase(), location: "home-social" }}
-                  className="flex items-center justify-between gap-2 rounded-md border border-line bg-white px-4 py-3 text-small font-medium text-indigo transition-colors hover:border-kesar hover:text-kesar-700"
+                  payload={{
+                    network: social.label.toLowerCase(),
+                    location: "home-social",
+                  }}
+                  className="flex items-center justify-between gap-2 border border-line bg-white px-4 py-3 text-small font-medium text-indigo transition-colors hover:border-indigo hover:bg-indigo hover:text-white"
                 >
                   <span className="flex items-center gap-2.5">
                     <SocialIcon name={social.icon as SocialIconName} />

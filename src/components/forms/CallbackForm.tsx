@@ -73,11 +73,11 @@ export function CallbackForm({
         await lead.submit(values, { source });
       })}
       className={cn(
-        "scroll-mt-28 rounded-lg border border-line bg-white p-6 sm:p-8",
+        "scroll-mt-28 border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8",
         className,
       )}
     >
-      <Heading className="text-h3 font-semibold">Request a callback</Heading>
+      <Heading className="text-h3 font-bold tracking-tight">Request a callback</Heading>
       <p className="mt-3 text-body text-ink-secondary">
         Leave a number and a time that suits you. No email needed, and no obligation to
         enrol.

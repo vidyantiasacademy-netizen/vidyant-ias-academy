@@ -28,7 +28,7 @@ export default async function EditQuestionPage({
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">Edit question</h1>
+      <h1 className="text-h2 font-bold">Edit question</h1>
       <p className="mt-2 text-body text-ink-secondary">
         {test.title}
         {question.testIds.length > 1

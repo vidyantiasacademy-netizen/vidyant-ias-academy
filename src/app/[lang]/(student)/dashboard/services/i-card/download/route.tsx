@@ -129,7 +129,7 @@ function CardArt({ card }: { card: CardData }) {
                 width: 200,
                 height: 200,
                 objectFit: "cover",
-                borderRadius: 12,
+                borderRadius: 0,
                 border: `2px solid ${WHITE_25}`,
               }}
             />
@@ -141,7 +141,7 @@ function CardArt({ card }: { card: CardData }) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                borderRadius: 12,
+                borderRadius: 0,
                 backgroundColor: INDIGO_DEEP,
                 border: `2px solid ${WHITE_25}`,
                 fontSize: 84,

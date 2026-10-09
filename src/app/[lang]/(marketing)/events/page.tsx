@@ -73,7 +73,7 @@ export default function EventsPage() {
           <EventRegistrationForm events={events} mode={hasEvents ? "register" : "interest"} />
 
           <Card>
-            <h2 className="text-h4 font-semibold">What the orientation covers</h2>
+            <h2 className="text-h4 font-bold">What the orientation covers</h2>
             <ul className="mt-5 space-y-3">
               {AGENDA.map((item) => (
                 <li key={item} className="flex gap-3 text-body text-ink-secondary">

@@ -59,7 +59,7 @@ export function CounsellingForm() {
       onSubmit={handleSubmit(async (values) => {
         await lead.submit(values, { source: "counselling-page" });
       })}
-      className="relative rounded-lg border border-line bg-white p-6 sm:p-8"
+      className="relative border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8"
     >
       <Honeypot registration={register("honeypot")} />
 

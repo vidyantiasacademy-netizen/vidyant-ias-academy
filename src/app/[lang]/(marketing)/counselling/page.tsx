@@ -54,7 +54,7 @@ export default function CounsellingPage() {
 
           <aside className="flex flex-col gap-4">
             <Card tone="paper">
-              <h2 className="text-h4 font-semibold">What to expect</h2>
+              <h2 className="text-h4 font-bold">What to expect</h2>
               <ul className="mt-5 space-y-5">
                 {WHAT_TO_EXPECT.map(({ icon: Icon, title, description }) => (
                   <li key={title} className="flex gap-3">
@@ -69,7 +69,7 @@ export default function CounsellingPage() {
             </Card>
 
             <Card>
-              <h2 className="text-h4 font-semibold">Prefer to talk now?</h2>
+              <h2 className="text-h4 font-bold">Prefer to talk now?</h2>
               <p className="mt-3 text-small text-ink-secondary">
                 Call or message the centre during working hours.
               </p>
@@ -78,7 +78,7 @@ export default function CounsellingPage() {
                   href={`tel:${CONTACT.phoneHref}`}
                   event={ANALYTICS_EVENTS.phoneClick}
                   payload={{ location: "counselling-page" }}
-                  className="inline-flex items-center gap-2.5 text-body font-semibold text-indigo hover:text-kesar-600"
+                  className="inline-flex items-center gap-2.5 text-body font-semibold text-indigo hover:text-indigo-900 hover:underline underline-offset-4"
                 >
                   <Phone aria-hidden className="size-4.5 text-kesar-600" />
                   {CONTACT.phoneDisplay}
@@ -89,7 +89,7 @@ export default function CounsellingPage() {
                   rel="noreferrer"
                   event={ANALYTICS_EVENTS.whatsappClick}
                   payload={{ location: "counselling-page" }}
-                  className="inline-flex items-center gap-2.5 text-body font-semibold text-indigo hover:text-kesar-600"
+                  className="inline-flex items-center gap-2.5 text-body font-semibold text-indigo hover:text-indigo-900 hover:underline underline-offset-4"
                 >
                   <MessageCircle aria-hidden className="size-4.5 text-kesar-600" />
                   WhatsApp us

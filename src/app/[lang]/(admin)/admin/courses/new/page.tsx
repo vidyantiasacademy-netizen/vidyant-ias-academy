@@ -14,7 +14,7 @@ export default async function NewCoursePage() {
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">New course</h1>
+      <h1 className="text-h2 font-bold">New course</h1>
       <p className="mt-2 text-body text-ink-secondary">
         The record students are enrolled into and tests are attached to. The public course page
         is written separately, in Sanity Studio.

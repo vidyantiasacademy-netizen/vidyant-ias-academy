@@ -13,18 +13,18 @@ const tones = {
   light: "text-kesar",
 } as const;
 
-/** Small uppercase label that opens a section. */
+/** Small uppercase label that opens a section, keyed by a solid square. */
 export function Eyebrow({ tone = "kesar", className, children, ...props }: EyebrowProps) {
   return (
     <p
       className={cn(
-        "flex items-center gap-2.5 text-eyebrow font-semibold uppercase",
+        "flex items-center gap-2.5 text-eyebrow font-bold uppercase",
         tones[tone],
         className,
       )}
       {...props}
     >
-      <span aria-hidden className="h-px w-6 bg-current opacity-60" />
+      <span aria-hidden className="size-2 shrink-0 bg-current" />
       {children}
     </p>
   );

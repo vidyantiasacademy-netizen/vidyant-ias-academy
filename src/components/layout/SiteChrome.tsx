@@ -23,7 +23,7 @@ export async function SiteChrome({ children }: { children: ReactNode }) {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-indigo-gradient focus:px-4 focus:py-2.5 focus:text-small focus:font-semibold focus:text-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-indigo focus:px-4 focus:py-2.5 focus:text-small focus:font-bold focus:text-white"
       >
         {dict.common.skipToContent}
       </a>

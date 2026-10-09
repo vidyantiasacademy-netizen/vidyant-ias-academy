@@ -33,11 +33,11 @@ export function FacultyCard({ member, className }: FacultyCardProps) {
           <div
             role="img"
             aria-label={`Photograph pending for ${member.subject} faculty`}
-            className="absolute inset-0 border-b border-line bg-[radial-gradient(110%_90%_at_20%_0%,#ffffff_0%,var(--color-paper-200)_70%)]"
+            className="absolute inset-0 flex items-center justify-center border-b border-line bg-paper-200"
           >
             <GraduationCap
               aria-hidden
-              className="absolute left-1/2 top-1/2 size-10 -translate-x-1/2 -translate-y-1/2 text-kesar-600/60"
+              className="size-10 text-indigo/50"
             />
           </div>
         )}
@@ -49,7 +49,7 @@ export function FacultyCard({ member, className }: FacultyCardProps) {
       </div>
 
       <div className="flex flex-1 flex-col p-6">
-        <h3 className="text-h4 font-semibold">{member.name}</h3>
+        <h3 className="text-h4 font-bold">{member.name}</h3>
         <p className="mt-1.5 text-small font-medium uppercase tracking-[0.08em] text-kesar-600">
           {member.subject}
         </p>
@@ -64,12 +64,12 @@ export function FacultyCard({ member, className }: FacultyCardProps) {
         ) : null}
         <Link
           href={`/faculty/${member.slug}`}
-          className="group mt-6 inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-kesar-600"
+          className="group mt-6 inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-indigo-900 hover:underline underline-offset-4"
         >
           View Profile
           <ArrowRight
             aria-hidden
-            className="size-4 transition-transform duration-200 ease-[var(--ease-brand)] group-hover:translate-x-1"
+            className="size-4"
           />
         </Link>
       </div>

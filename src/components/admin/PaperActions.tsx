@@ -95,7 +95,7 @@ export function RemoveQuestionButton({
       type="button"
       onClick={run}
       disabled={pending}
-      className="flex size-10 items-center justify-center rounded-md text-ink-secondary hover:bg-paper hover:text-danger disabled:opacity-40"
+      className="flex size-10 items-center justify-center text-ink-secondary hover:bg-paper hover:text-danger disabled:opacity-40"
       aria-label={`Remove ${label}`}
     >
       <Trash2 aria-hidden className="size-4" />

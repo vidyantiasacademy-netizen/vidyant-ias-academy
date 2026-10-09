@@ -27,13 +27,13 @@ export default async function AdminOverviewPage() {
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">Overview</h1>
+      <h1 className="text-h2 font-bold">Overview</h1>
       <p className="mt-2 text-body text-ink-secondary">
         Signed in as {session.role.replace("_", " ").toLowerCase()}.
       </p>
 
       <section aria-labelledby="new-enquiries" className="mt-10">
-        <h2 id="new-enquiries" className="text-h3 font-semibold">
+        <h2 id="new-enquiries" className="text-h3 font-bold">
           New enquiries
         </h2>
 

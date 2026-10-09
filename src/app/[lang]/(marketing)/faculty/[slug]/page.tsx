@@ -85,14 +85,14 @@ export default async function FacultyProfilePage({ params }: PageProps<"/[lang]/
               <GraduationCap aria-hidden className="size-5 text-kesar-600" />
               {member.experience ? (
                 <>
-                  <h2 className="mt-4 text-h4 font-semibold">Experience</h2>
+                  <h2 className="mt-4 text-h4 font-bold">Experience</h2>
                   <p className="mt-2.5 text-small text-ink-secondary">{member.experience}</p>
                 </>
               ) : null}
 
               {member.qualifications.length > 0 ? (
                 <>
-                  <h2 className="mt-6 text-h4 font-semibold">Qualifications</h2>
+                  <h2 className="mt-6 text-h4 font-bold">Qualifications</h2>
                   <ul className="mt-2.5 space-y-2 text-small text-ink-secondary">
                     {member.qualifications.map((item) => (
                       <li key={item}>{item}</li>
@@ -120,7 +120,7 @@ export default async function FacultyProfilePage({ params }: PageProps<"/[lang]/
                   eyebrow="Teaching philosophy"
                   title="How this subject is taught"
                 />
-                <blockquote className="mt-6 border-l-2 border-kesar pl-6">
+                <blockquote className="mt-6 border-l-2 border-indigo pl-6">
                   <Quote aria-hidden className="size-6 text-kesar/70" />
                   <p className="mt-3 text-body text-ink sm:text-body-lg">
                     {member.teachingPhilosophy}
@@ -131,7 +131,7 @@ export default async function FacultyProfilePage({ params }: PageProps<"/[lang]/
 
             {member.specialisations.length > 0 ? (
               <>
-                <h2 className="mt-10 text-h4 font-semibold">Specialises in</h2>
+                <h2 className="mt-10 text-h4 font-bold">Specialises in</h2>
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {member.specialisations.map((item) => (
                     <li key={item}>

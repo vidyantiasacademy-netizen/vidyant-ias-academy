@@ -13,7 +13,7 @@ import { BRAND, CONTACT, CTA, ROUTES, whatsappUrl } from "@/lib/constants/site";
 /** Centre information plus the shortest conversion on the page: a callback. */
 export function ContactSection() {
   return (
-    <Section tone="cameo" id="contact" containerSize="wide">
+    <Section tone="paper" id="contact" containerSize="wide">
       <SectionHeader
         accent="chilli"
         eyebrow="Visit or Call"

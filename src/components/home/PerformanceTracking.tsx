@@ -36,9 +36,18 @@ const SAMPLE_STREAK = 12;
 const SAMPLE_FOCUS = ["Economy", "Mains answer structure", "Current affairs"];
 
 const POINTS = [
-  { icon: LineChart, text: "Every mock plotted, so you watch the line move — not guess at it" },
-  { icon: Crosshair, text: "Subject-wise splits that show exactly where your marks leak" },
-  { icon: MessageSquareText, text: "A focus list you and your mentor actually come back to" },
+  {
+    icon: LineChart,
+    text: "Every mock plotted, so you watch the line move — not guess at it",
+  },
+  {
+    icon: Crosshair,
+    text: "Subject-wise splits that show exactly where your marks leak",
+  },
+  {
+    icon: MessageSquareText,
+    text: "A focus list you and your mentor actually come back to",
+  },
 ];
 
 export function PerformanceTracking() {
@@ -48,21 +57,21 @@ export function PerformanceTracking() {
 
   return (
     <Section id="performance-tracking" containerSize="wide">
-      <div className="grid items-center gap-8 lg:grid-cols-[0.9fr_1.2fr] lg:gap-12">
-        <div>
+      <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+        <div className="border-t-2 border-indigo pt-5 lg:col-span-5">
           <Eyebrow>Performance Tracking</Eyebrow>
-          <h2 className="mt-4 text-h2 font-semibold lg:text-h2-lg">
+          <h2 className="mt-4 text-h2 font-bold lg:text-h2-lg">
             Vibes don&apos;t clear Prelims. <span className="text-indigo">Data does.</span>
           </h2>
           <p className="mt-5 text-body text-ink-secondary sm:text-body-lg">
-            Every test, every evaluated answer and every review feeds one live view of your
-            prep. No more &ldquo;I think it&apos;s going okay&rdquo; — you and your mentor read
-            the same numbers and watch them move.
+            Every test, every evaluated answer and every review feeds one live view of your prep. No
+            more &ldquo;I think it&apos;s going okay&rdquo; — you and your mentor read the same
+            numbers and watch them move.
           </p>
-          <ul className="mt-6 space-y-3 text-body text-ink">
+          <ul className="mt-6 text-body text-ink">
             {POINTS.map(({ icon: Icon, text }) => (
-              <li key={text} className="flex gap-3.5">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo">
+              <li key={text} className="flex gap-3.5 border-t border-line py-3">
+                <span className="flex size-9 shrink-0 items-center justify-center border border-indigo text-indigo">
                   <Icon aria-hidden className="size-[18px]" />
                 </span>
                 <span className="pt-1">{text}</span>
@@ -74,14 +83,11 @@ export function PerformanceTracking() {
           </ButtonLink>
         </div>
 
-        <figure className="rounded-xl border border-line bg-paper p-3 shadow-[var(--shadow-panel)] sm:p-4">
+        <figure className="border-2 border-indigo bg-paper p-3 sm:p-4 lg:col-span-7">
           {/* Header */}
           <div className="flex items-center justify-between gap-3 px-2 pb-3 pt-1">
             <div className="flex items-center gap-2.5">
-              <span aria-hidden className="relative flex size-2.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60" />
-                <span className="relative inline-flex size-2.5 rounded-full bg-success" />
-              </span>
+              <span aria-hidden className="inline-flex size-2.5 rounded-full bg-success" />
               <p className="text-small font-semibold text-indigo">Your prep, at a glance</p>
             </div>
             <Badge tone="neutral" className="bg-white">
@@ -91,32 +97,38 @@ export function PerformanceTracking() {
 
           {/* KPI tiles */}
           <dl className="grid grid-cols-3 gap-2 sm:gap-3">
-            <div className="rounded-lg border border-line bg-white p-3 sm:p-4">
+            <div className="border border-line bg-white p-3 sm:p-4">
               <dt className="text-eyebrow font-semibold uppercase text-ink-muted">Syllabus</dt>
               <dd className="mt-2 flex items-center gap-2">
                 <svg viewBox="0 0 36 36" aria-hidden className="hidden size-9 -rotate-90 sm:block">
-                  <circle cx="18" cy="18" r="15" fill="none" strokeWidth="4" className="stroke-paper-200" />
                   <circle
                     cx="18"
                     cy="18"
                     r="15"
                     fill="none"
                     strokeWidth="4"
-                    strokeLinecap="round"
+                    className="stroke-paper-200"
+                  />
+                  <circle
+                    cx="18"
+                    cy="18"
+                    r="15"
+                    fill="none"
+                    strokeWidth="4"
                     pathLength={100}
                     strokeDasharray={`${SAMPLE_SYLLABUS} 100`}
                     className="stroke-indigo"
                   />
                 </svg>
-                <span className="text-h4 font-semibold tabular-nums text-indigo">
+                <span className="text-h4 font-bold tabular-nums text-indigo">
                   {SAMPLE_SYLLABUS}%
                 </span>
               </dd>
             </div>
-            <div className="rounded-lg border border-line bg-white p-3 sm:p-4">
+            <div className="border border-line bg-white p-3 sm:p-4">
               <dt className="text-eyebrow font-semibold uppercase text-ink-muted">Last mock</dt>
               <dd className="mt-2">
-                <span className="text-h4 font-semibold tabular-nums text-indigo">{latest}</span>
+                <span className="text-h4 font-bold tabular-nums text-indigo">{latest}</span>
                 <span className="text-small tabular-nums text-ink-muted">/200</span>
                 <span className="mt-0.5 flex items-center gap-0.5 text-small font-semibold tabular-nums text-success">
                   <ArrowUpRight aria-hidden className="size-4" />+{lift}
@@ -124,13 +136,11 @@ export function PerformanceTracking() {
                 </span>
               </dd>
             </div>
-            <div className="rounded-lg border border-line bg-white p-3 sm:p-4">
+            <div className="border border-line bg-white p-3 sm:p-4">
               <dt className="text-eyebrow font-semibold uppercase text-ink-muted">Streak</dt>
               <dd className="mt-2 flex flex-wrap items-center gap-x-1.5">
                 <Flame aria-hidden className="size-5 shrink-0 text-kesar-600" />
-                <span className="text-h4 font-semibold tabular-nums text-indigo">
-                  {SAMPLE_STREAK}
-                </span>
+                <span className="text-h4 font-bold tabular-nums text-indigo">{SAMPLE_STREAK}</span>
                 <span className="text-small text-ink-muted">days</span>
               </dd>
             </div>
@@ -138,7 +148,7 @@ export function PerformanceTracking() {
 
           {/* Trend + subject split */}
           <div className="mt-2 grid gap-2 sm:mt-3 sm:gap-3 md:grid-cols-[1.25fr_1fr]">
-            <div className="rounded-lg border border-line bg-white p-4">
+            <div className="border border-line bg-white p-4">
               <div className="flex items-baseline justify-between gap-3">
                 <p className="text-small font-semibold text-indigo">Prelims mock trend</p>
                 <p className="text-eyebrow uppercase text-ink-muted">GS I · /200</p>
@@ -154,7 +164,7 @@ export function PerformanceTracking() {
             </div>
 
             {/* Secondary panels are kept to md+ so the mock stays one screen tall on phones. */}
-            <div className="hidden rounded-lg border border-line bg-white p-4 md:block">
+            <div className="hidden border border-line bg-white p-4 md:block">
               <p className="text-small font-semibold text-indigo">Accuracy by subject</p>
               <dl className="mt-4 space-y-3.5">
                 {SAMPLE_PAPERS.map((paper) => {
@@ -165,7 +175,7 @@ export function PerformanceTracking() {
                         <dt className="flex items-center gap-2 text-small text-ink">
                           {paper.label}
                           {isWeakest ? (
-                            <span className="rounded-full bg-kesar-100 px-2 text-[13px] font-semibold text-kesar-700">
+                            <span className="bg-kesar-100 px-2 text-[13px] font-semibold text-kesar-700">
                               needs reps
                             </span>
                           ) : null}
@@ -174,14 +184,8 @@ export function PerformanceTracking() {
                           {paper.value}%
                         </dd>
                       </div>
-                      <div
-                        aria-hidden
-                        className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-paper-200"
-                      >
-                        <div
-                          className="h-full rounded-full bg-indigo-gradient"
-                          style={{ width: `${paper.value}%` }}
-                        />
+                      <div aria-hidden className="mt-1.5 h-2 w-full overflow-hidden bg-paper-200">
+                        <div className="h-full bg-indigo" style={{ width: `${paper.value}%` }} />
                       </div>
                     </div>
                   );
@@ -192,7 +196,7 @@ export function PerformanceTracking() {
 
           {/* Focus + mentor note */}
           <div className="mt-3 hidden gap-3 md:grid md:grid-cols-2">
-            <div className="rounded-lg border border-line bg-white p-4">
+            <div className="border border-line bg-white p-4">
               <p className="text-eyebrow font-semibold uppercase text-ink-muted">
                 This week&apos;s focus
               </p>
@@ -204,19 +208,19 @@ export function PerformanceTracking() {
                 ))}
               </ul>
             </div>
-            <div className="rounded-lg bg-indigo-gradient p-4 text-white">
-              <p className="text-eyebrow font-semibold uppercase text-white/80">Mentor note</p>
+            <div className="bg-indigo p-4 text-white">
+              <p className="text-eyebrow font-semibold uppercase text-kesar">Mentor note</p>
               <p className="mt-2 text-small leading-snug">
-                &ldquo;Six mocks, steady climb — love that. {weakest.label} is the leak now: two
-                PYQ sets before Sunday, then we review.&rdquo;
+                &ldquo;Six mocks, steady climb — love that. {weakest.label} is the leak now: two PYQ
+                sets before Sunday, then we review.&rdquo;
               </p>
             </div>
           </div>
 
           <figcaption className="mt-3 flex gap-2.5 px-2 pb-1 text-small text-ink-muted">
-            <Info aria-hidden className="mt-0.5 size-4 shrink-0" />
-            A sample interface built to show what the tracking view contains. The figures
-            are illustrative and are not any student&apos;s results.
+            <Info aria-hidden className="mt-0.5 size-4 shrink-0" />A sample interface built to show
+            what the tracking view contains. The figures are illustrative and are not any
+            student&apos;s results.
           </figcaption>
         </figure>
       </div>

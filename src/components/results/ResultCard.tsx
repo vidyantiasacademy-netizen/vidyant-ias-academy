@@ -24,7 +24,7 @@ export function ResultCard({ result, className }: { result: Result; className?: 
           </span>
         ) : null}
       </div>
-      <h3 className="mt-4 text-h4 font-semibold">{result.studentName}</h3>
+      <h3 className="mt-4 text-h4 font-bold">{result.studentName}</h3>
       <p className="mt-1 text-small font-medium uppercase tracking-[0.08em] text-kesar-600">
         {stageLabels[result.stage]}
         {result.rank ? ` • AIR ${result.rank}` : ""}

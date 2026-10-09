@@ -56,7 +56,7 @@ export default async function UsersPage({ searchParams }: PageProps<"/[lang]/adm
     <>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-h2 font-semibold">Users</h1>
+          <h1 className="text-h2 font-bold">Users</h1>
           <p className="mt-2 text-body text-ink-secondary">
             Every account, newest first — those added here and those who signed up on the website.
           </p>
@@ -74,7 +74,7 @@ export default async function UsersPage({ searchParams }: PageProps<"/[lang]/adm
             href={listHref(value)}
             aria-current={value === role ? "page" : undefined}
             className={cn(
-              "rounded-full border px-3 py-1 text-small font-medium transition-colors",
+              "inline-flex h-10 items-center border px-3 text-small font-medium transition-colors",
               value === role
                 ? "border-indigo bg-indigo text-white"
                 : "border-line text-ink-secondary hover:border-indigo hover:text-indigo",

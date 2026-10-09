@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils/cn";
 export type PaletteState = "answered" | "marked" | "seen" | "untouched";
 
 const STATE_STYLES: Record<PaletteState, string> = {
-  answered: "bg-indigo-gradient text-white border-indigo",
+  answered: "bg-indigo text-white border-indigo",
   marked: "bg-indigo-100 text-indigo-900 border-indigo-700 ring-2 ring-indigo-700/30",
   seen: "bg-white text-ink border-line-strong",
   untouched: "bg-paper text-ink-secondary border-paper-200",
@@ -52,7 +52,7 @@ export function QuestionPalette({
               aria-current={index === current ? "true" : undefined}
               aria-label={`Question ${index + 1}, ${STATE_LABELS[state]}`}
               className={cn(
-                "flex size-10 items-center justify-center rounded-md border text-small font-semibold tabular-nums",
+                "flex size-10 items-center justify-center border text-small font-semibold tabular-nums",
                 "transition-[background-color,border-color,transform] duration-150",
                 "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
                 STATE_STYLES[state],
@@ -68,7 +68,7 @@ export function QuestionPalette({
       <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2 text-eyebrow uppercase text-ink-secondary">
         {(Object.keys(STATE_STYLES) as PaletteState[]).map((state) => (
           <div key={state} className="flex items-center gap-2">
-            <dt aria-hidden className={cn("size-3.5 rounded border", STATE_STYLES[state])} />
+            <dt aria-hidden className={cn("size-3.5 border", STATE_STYLES[state])} />
             <dd>{STATE_LABELS[state]}</dd>
           </div>
         ))}

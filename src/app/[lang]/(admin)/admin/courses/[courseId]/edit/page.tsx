@@ -22,7 +22,7 @@ export default async function EditCoursePage({
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">Edit course</h1>
+      <h1 className="text-h2 font-bold">Edit course</h1>
       <p className="mt-2 text-body text-ink-secondary">{course.title}</p>
 
       <div className="mt-8 max-w-4xl">

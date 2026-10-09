@@ -15,7 +15,7 @@ const MAINS_KINDS: readonly TestKind[] = ["mains-descriptive"];
 export default function MainsPage() {
   return (
     <>
-      <h1 className="text-h2 font-semibold">Mains Test Series</h1>
+      <h1 className="text-h2 font-bold">Mains Test Series</h1>
       <p className="mt-2 text-body text-ink-secondary">
         Descriptive papers and the evaluation that follows each one.
       </p>

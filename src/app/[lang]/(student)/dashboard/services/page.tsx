@@ -90,7 +90,7 @@ const SERVICES: ServiceTileProps[] = [
 export default function ServicesPage() {
   return (
     <>
-      <h1 className="text-h2 font-semibold">Services</h1>
+      <h1 className="text-h2 font-bold">Services</h1>
       <p className="mt-2 text-body text-ink-secondary">
         Everything that supports your preparation, in one place.
       </p>

@@ -52,7 +52,7 @@ export function QuestionPanel({
   }
 
   return (
-    <div className="relative overflow-hidden rounded-lg border border-line bg-white p-6 sm:p-8">
+    <div className="relative overflow-hidden border border-line bg-white p-6 sm:p-8">
       {watermark ? (
         // Deterrent, not protection: it survives a photograph of the screen and
         // makes the source of a leaked paper obvious. Low contrast so it does
@@ -93,7 +93,7 @@ export function QuestionPanel({
             width={960}
             height={540}
             unoptimized
-            className="mt-5 h-auto w-full max-w-xl rounded-md border border-line"
+            className="mt-5 h-auto w-full max-w-xl border border-line"
           />
         ) : null}
 
@@ -105,7 +105,7 @@ export function QuestionPanel({
               <li key={option.id}>
                 <label
                   className={cn(
-                    "flex cursor-pointer items-start gap-3 rounded-md border p-4 transition-[background-color,border-color] duration-150",
+                    "flex cursor-pointer items-start gap-3 border p-4 transition-[background-color,border-color] duration-150",
                     isSelected
                       ? "border-indigo bg-indigo-100"
                       : "border-line bg-white hover:border-line-strong",

@@ -50,7 +50,7 @@ export default async function CoursePage({ params }: PageProps<"/[lang]/admin/co
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-h2 font-semibold">{course.title}</h1>
+            <h1 className="text-h2 font-bold">{course.title}</h1>
             <Badge tone={course.status === "published" ? "success" : "neutral"}>
               {course.status}
             </Badge>
@@ -77,7 +77,7 @@ export default async function CoursePage({ params }: PageProps<"/[lang]/admin/co
       </div>
 
       <section aria-labelledby="roster-heading" className="mt-10">
-        <h2 id="roster-heading" className="text-h3 font-semibold">
+        <h2 id="roster-heading" className="text-h3 font-bold">
           Enrolled students
         </h2>
 

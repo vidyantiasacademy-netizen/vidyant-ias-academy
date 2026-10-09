@@ -68,14 +68,14 @@ export default async function EnrolPage() {
             <li key={title}>
               <Card className="h-full">
                 <div className="flex items-center gap-3">
-                  <span className="flex size-10 items-center justify-center rounded-md bg-paper text-kesar-600">
+                  <span className="flex size-10 shrink-0 items-center justify-center border border-line bg-white text-kesar-600">
                     <Icon aria-hidden className="size-5" />
                   </span>
                   <span className="text-eyebrow font-semibold uppercase text-ink-muted">
                     Step {index + 1}
                   </span>
                 </div>
-                <h3 className="mt-4 text-h4 font-semibold">{title}</h3>
+                <h3 className="mt-4 text-h4 font-bold">{title}</h3>
                 <p className="mt-3 text-body text-ink-secondary">{description}</p>
               </Card>
             </li>
@@ -121,7 +121,7 @@ export default async function EnrolPage() {
 
           <aside className="flex flex-col gap-4">
             <Card tone="paper">
-              <h2 className="text-h4 font-semibold">About fees</h2>
+              <h2 className="text-h4 font-bold">About fees</h2>
               <p className="mt-3 text-body text-ink-secondary">
                 Fees differ by programme and batch, so we share the full structure — including
                 instalments and what is covered — during the admission call rather than
@@ -134,7 +134,7 @@ export default async function EnrolPage() {
             </Card>
 
             <Card>
-              <h2 className="text-h4 font-semibold">Not ready to enrol?</h2>
+              <h2 className="text-h4 font-bold">Not ready to enrol?</h2>
               <p className="mt-3 text-body text-ink-secondary">
                 Attend a free demo class or book a counselling session first. Neither commits
                 you to anything.

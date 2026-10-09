@@ -87,8 +87,8 @@ export default async function ExamPage({ params }: PageProps<"/[lang]/exam/[test
 function ExamUnavailable({ message }: { message: string }) {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-paper p-6">
-      <div className="w-full max-w-lg rounded-lg border border-line bg-white p-7 text-center sm:p-9">
-        <h1 className="text-h3 font-semibold">This paper cannot be opened</h1>
+      <div className="w-full max-w-lg border border-line bg-white p-7 text-center sm:p-9">
+        <h1 className="text-h3 font-bold">This paper cannot be opened</h1>
         <p className="mt-3 text-body text-ink-secondary">{message}</p>
         <div className="mt-7">
           <ButtonLink href="/dashboard/prelims" variant="secondary">

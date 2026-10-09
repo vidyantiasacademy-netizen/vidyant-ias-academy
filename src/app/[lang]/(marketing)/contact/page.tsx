@@ -39,7 +39,7 @@ export default function ContactPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <Card>
               <MapPin aria-hidden className="size-5 text-kesar-600" />
-              <h2 className="mt-4 text-h4 font-semibold">Visit us</h2>
+              <h2 className="mt-4 text-h4 font-bold">Visit us</h2>
               <address className="mt-3 text-body not-italic text-ink-secondary">
                 {CONTACT.addressLines.map((line) => (
                   <span key={line} className="block">
@@ -51,7 +51,7 @@ export default function ContactPage() {
                 href={CONTACT.mapsDirectionsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-4 inline-block text-small font-semibold text-indigo hover:text-kesar-600"
+                className="mt-4 inline-block text-small font-semibold text-indigo hover:text-indigo-900 hover:underline underline-offset-4"
               >
                 Get directions
               </a>
@@ -59,12 +59,12 @@ export default function ContactPage() {
 
             <Card>
               <Phone aria-hidden className="size-5 text-kesar-600" />
-              <h2 className="mt-4 text-h4 font-semibold">Call us</h2>
+              <h2 className="mt-4 text-h4 font-bold">Call us</h2>
               <TrackedAnchor
                 href={`tel:${CONTACT.phoneHref}`}
                 event={ANALYTICS_EVENTS.phoneClick}
                 payload={{ location: "contact-page" }}
-                className="mt-3 inline-block text-body font-semibold text-indigo hover:text-kesar-600"
+                className="mt-3 inline-block text-body font-semibold text-indigo hover:text-indigo-900 hover:underline underline-offset-4"
               >
                 {CONTACT.phoneDisplay}
               </TrackedAnchor>
@@ -75,14 +75,14 @@ export default function ContactPage() {
 
             <Card>
               <MessageCircle aria-hidden className="size-5 text-kesar-600" />
-              <h2 className="mt-4 text-h4 font-semibold">WhatsApp</h2>
+              <h2 className="mt-4 text-h4 font-bold">WhatsApp</h2>
               <TrackedAnchor
                 href={whatsappUrl()}
                 target="_blank"
                 rel="noreferrer"
                 event={ANALYTICS_EVENTS.whatsappClick}
                 payload={{ location: "contact-page" }}
-                className="mt-3 inline-block text-body font-semibold text-indigo hover:text-kesar-600"
+                className="mt-3 inline-block text-body font-semibold text-indigo hover:text-indigo-900 hover:underline underline-offset-4"
               >
                 Message us on WhatsApp
               </TrackedAnchor>
@@ -93,10 +93,10 @@ export default function ContactPage() {
 
             <Card>
               <Mail aria-hidden className="size-5 text-kesar-600" />
-              <h2 className="mt-4 text-h4 font-semibold">Email</h2>
+              <h2 className="mt-4 text-h4 font-bold">Email</h2>
               <a
                 href={`mailto:${CONTACT.email}`}
-                className="mt-3 inline-block text-body font-semibold text-indigo hover:text-kesar-600"
+                className="mt-3 inline-block text-body font-semibold text-indigo hover:text-indigo-900 hover:underline underline-offset-4"
               >
                 {CONTACT.email}
               </a>
@@ -107,7 +107,7 @@ export default function ContactPage() {
 
             <Card className="sm:col-span-2">
               <Clock aria-hidden className="size-5 text-kesar-600" />
-              <h2 className="mt-4 text-h4 font-semibold">Opening hours</h2>
+              <h2 className="mt-4 text-h4 font-bold">Opening hours</h2>
               <dl className="mt-3 max-w-md space-y-2">
                 {CONTACT.openingHours.map((entry) => (
                   <div key={entry.days} className="flex justify-between gap-6 text-body">
@@ -127,7 +127,7 @@ export default function ContactPage() {
       </Section>
 
       <Section tone="paper" containerSize="wide" spacing="tight">
-        <div className="overflow-hidden rounded-xl border border-line">
+        <div className="overflow-hidden border border-line">
           <iframe
             title={`Map showing ${BRAND.name} in ${BRAND.city}`}
             src={mapSrc}

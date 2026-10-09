@@ -60,17 +60,17 @@ function dateLine(iso: string) {
   }).format(new Date(iso));
 }
 
-/** Square tile with a speech-bubble notch, as on a wall calendar. */
+/** Solid indigo square holding the day or an icon — a flat Swiss block. */
 function Tile({ children }: { children: React.ReactNode }) {
   return (
-    <span className="relative flex size-10 shrink-0 items-center justify-center rounded-md bg-indigo-gradient text-body font-bold text-white after:absolute after:-bottom-1 after:left-1.5 after:size-2.5 after:rotate-45 after:bg-indigo">
-      <span className="relative">{children}</span>
+    <span className="flex size-10 shrink-0 items-center justify-center bg-indigo text-body font-bold tabular-nums text-white">
+      {children}
     </span>
   );
 }
 
 const rowClass =
-  "group flex gap-4 border-b-2 border-dotted border-indigo/25 py-3 first:pt-0 last:border-b-0";
+  "group flex gap-4 border-b border-line py-3 first:pt-0 last:border-b-0";
 
 /**
  * Homepage "What's new" panel beside the banner. Dated announcements lead when
@@ -82,10 +82,10 @@ export async function WhatsNewPanel() {
   return (
     <section
       aria-labelledby="whats-new"
-      className="flex h-full flex-col overflow-hidden rounded-xl border border-line bg-paper shadow-sm"
+      className="flex h-full flex-col overflow-hidden border-2 border-indigo bg-white"
     >
-      <header className="flex items-center justify-between gap-3 border-b border-line bg-white px-5 py-3">
-        <h2 id="whats-new" className="text-h4 font-semibold text-indigo">
+      <header className="flex items-center justify-between gap-3 border-b-2 border-indigo bg-white px-5 py-3">
+        <h2 id="whats-new" className="text-h4 font-bold text-indigo">
           What&apos;s new
         </h2>
         <ChevronDown aria-hidden className="size-6 text-chilli-600" strokeWidth={3} />
@@ -100,9 +100,9 @@ export async function WhatsNewPanel() {
                   <time dateTime={notice.startsAt} className="text-small font-medium text-ink-muted">
                     {dateLine(notice.startsAt)}
                   </time>
-                  <p className="mt-0.5 text-body font-semibold text-indigo">
+                  <p className="mt-0.5 text-body font-bold text-indigo">
                     {notice.href ? (
-                      <Link href={notice.href} className="hover:text-kesar-600">
+                      <Link href={notice.href} className="hover:text-chilli-600">
                         {notice.title}
                       </Link>
                     ) : (
@@ -118,12 +118,12 @@ export async function WhatsNewPanel() {
                   <Icon aria-hidden className="size-5" />
                 </Tile>
                 <div className="min-w-0">
-                  <p className="text-eyebrow font-semibold uppercase tracking-wide text-kesar-600">
+                  <p className="text-eyebrow font-bold uppercase tracking-wide text-kesar-600">
                     {label}
                   </p>
                   <Link
                     href={href}
-                    className="mt-0.5 block text-body font-semibold text-indigo hover:text-kesar-600"
+                    className="mt-0.5 block text-body font-bold text-indigo hover:text-chilli-600"
                   >
                     {title}
                   </Link>
@@ -134,12 +134,12 @@ export async function WhatsNewPanel() {
 
       <Link
         href={ROUTES.events}
-        className="group flex min-h-12 items-center justify-between gap-3 border-t border-line bg-white px-5 text-body font-semibold text-indigo hover:bg-kesar-100"
+        className="flex min-h-12 items-center justify-between gap-3 border-t-2 border-indigo bg-white px-5 text-body font-bold text-indigo transition-colors duration-150 hover:bg-indigo hover:text-white"
       >
         All announcements
         <ArrowRight
           aria-hidden
-          className="size-4 transition-transform duration-200 ease-[var(--ease-brand)] group-hover:translate-x-1"
+          className="size-4"
         />
       </Link>
     </section>

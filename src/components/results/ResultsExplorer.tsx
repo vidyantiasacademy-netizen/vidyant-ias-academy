@@ -46,10 +46,10 @@ export function ResultsExplorer({ results }: { results: Result[] }) {
                 aria-selected={isActive}
                 onClick={() => setStage(filter.id)}
                 className={cn(
-                  "rounded-full px-4 py-2 text-small font-medium transition-colors",
+                  "inline-flex h-10 items-center border px-4 text-small font-medium transition-colors",
                   isActive
-                    ? "bg-indigo-gradient text-white"
-                    : "border border-line text-ink-secondary hover:border-indigo hover:text-indigo",
+                    ? "border-indigo bg-indigo text-white"
+                    : "border-line text-ink-secondary hover:border-indigo hover:text-indigo",
                 )}
               >
                 {filter.label}
@@ -63,7 +63,7 @@ export function ResultsExplorer({ results }: { results: Result[] }) {
           <select
             value={year}
             onChange={(event) => setYear(event.target.value)}
-            className="rounded-md border border-line-strong bg-white px-3 py-2 text-small"
+            className="h-10 border border-line-strong bg-white px-3 text-small"
           >
             <option value="all">All years</option>
             {years.map((option) => (

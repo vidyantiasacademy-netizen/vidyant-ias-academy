@@ -130,7 +130,7 @@ export function TestForm({
   return (
     <form onSubmit={submit} noValidate className="space-y-6">
       {lockReason ? (
-        <p className="rounded-md border border-line-strong bg-paper px-4 py-3 text-small text-ink">
+        <p className="border border-line-strong bg-paper px-4 py-3 text-small text-ink">
           {lockReason}
         </p>
       ) : null}

@@ -22,28 +22,22 @@ const NOTICE_TONE: Record<Announcement["tone"], { label: string; tone: "neutral"
 };
 
 /**
- * One accent per board, the same trio the Programs tiles use, so the two
- * sections read as one system: a hard offset shadow, a header wash and an
- * icon chip. Written out in full for Tailwind.
+ * One primary per board, the same trio the Programs tiles use, so the two
+ * sections read as one system: a hard bar across the board's head and the
+ * colour of its numbered index. Written out in full for Tailwind.
  */
 const ACCENT = {
   chilli: {
-    shadow: "shadow-[5px_5px_0_0_var(--color-chilli)]",
-    wash: "bg-chilli-100",
-    chip: "bg-white text-chilli-600",
-    number: "bg-chilli-100 text-chilli-700",
+    bar: "bg-chilli",
+    number: "text-chilli-600",
   },
-  cameo: {
-    shadow: "shadow-[5px_5px_0_0_var(--color-cameo)]",
-    wash: "bg-cameo-100",
-    chip: "bg-white text-indigo",
-    number: "bg-cameo-100 text-indigo",
+  indigo: {
+    bar: "bg-indigo",
+    number: "text-indigo",
   },
   kesar: {
-    shadow: "shadow-[5px_5px_0_0_var(--color-kesar)]",
-    wash: "bg-kesar-100",
-    chip: "bg-white text-kesar-700",
-    number: "bg-kesar-100 text-kesar-700",
+    bar: "bg-kesar",
+    number: "text-kesar-700",
   },
 } as const;
 type Accent = keyof typeof ACCENT;
@@ -61,7 +55,7 @@ function isFresh(iso: string, now = Date.now()) {
   return age >= 0 && age < 3 * 24 * 60 * 60 * 1000;
 }
 
-/** A tear-off calendar leaf: day big, month small. Faster to scan than "9 Oct". */
+/** A flat calendar block: day big, month small. Faster to scan than "9 Oct". */
 function DateTile({ iso }: { iso: string }) {
   const date = new Date(iso);
   const day = new Intl.DateTimeFormat("en-IN", { day: "2-digit" }).format(date);
@@ -70,20 +64,20 @@ function DateTile({ iso }: { iso: string }) {
   return (
     <time
       dateTime={iso}
-      className="flex w-14 shrink-0 flex-col self-start items-center overflow-hidden rounded-lg border-2 border-indigo bg-white text-indigo"
+      className="flex w-14 shrink-0 flex-col self-start items-center overflow-hidden border-2 border-indigo bg-white text-indigo"
     >
-      <span className="w-full bg-indigo-gradient py-0.5 text-center text-eyebrow font-bold uppercase text-white">
+      <span className="w-full bg-indigo py-0.5 text-center text-eyebrow font-bold uppercase text-white">
         {month}
       </span>
-      <span className="py-1 text-h4 font-black leading-none tracking-tight">{day}</span>
+      <span className="py-1 text-h4 font-bold leading-none tabular-nums tracking-tight">{day}</span>
     </time>
   );
 }
 
 /**
- * One of the three boards: a bordered card with a hard accent shadow, a
- * tinted header that opens on a question, and a full-width, thumb-sized link
- * at the foot. The status sticker sits on the edge, outside the clipped card.
+ * One of the three boards: a 2px indigo frame with a primary bar across its
+ * head, a header that opens on a question, and a full-width, thumb-sized link
+ * at the foot. The status tag is locked into the top-right corner.
  */
 function Board({
   icon,
@@ -103,9 +97,9 @@ function Board({
   hook: string;
   title: string;
   description: string;
-  /** Short state shown in the sticker — a count, or what is coming. */
+  /** Short state shown in the corner tag — a count, or what is coming. */
   status: string;
-  /** Pulses the sticker dot. Only the announcements board earns it. */
+  /** Marks the tag with a chilli square. Only the announcements board earns it. */
   live?: boolean;
   accent: Accent;
   href: string;
@@ -113,46 +107,25 @@ function Board({
   index: 1 | 2 | 3;
   children: ReactNode;
 }) {
-  const { shadow, wash, chip } = ACCENT[accent];
+  const { bar } = ACCENT[accent];
 
   return (
     <div className={cn("reveal relative h-full", `reveal-delay-${index}`)}>
-      <span
-        className={cn(
-          "pointer-events-none absolute -top-3 right-4 z-10 inline-flex items-center gap-1.5 rounded-md border-2 border-indigo bg-white px-2 py-0.5 text-eyebrow font-bold uppercase text-indigo shadow-[2px_2px_0_0_var(--color-indigo)]",
-          index % 2 === 0 ? "-rotate-3" : "rotate-3",
-        )}
-      >
-        {live ? (
-          <span aria-hidden className="relative flex size-2">
-            <span className="absolute inline-flex size-full animate-ping rounded-full bg-chilli opacity-75" />
-            <span className="relative inline-flex size-2 rounded-full bg-chilli" />
-          </span>
-        ) : null}
+      <span className="pointer-events-none absolute right-0 top-0 z-10 inline-flex items-center gap-1.5 bg-indigo px-2 py-1 text-eyebrow font-bold uppercase text-white">
+        {live ? <span aria-hidden className="size-2 shrink-0 bg-chilli" /> : null}
         {status}
       </span>
 
-      <section
-        className={cn(
-          "group/board flex h-full flex-col overflow-hidden rounded-xl border-2 border-indigo bg-white",
-          "transition-[transform,box-shadow] duration-150 ease-out hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[7px_7px_0_0_var(--color-indigo)]",
-          shadow,
-        )}
-      >
-        <header className={cn("border-b-2 border-indigo px-5 pt-6 pb-5 sm:px-6", wash)}>
+      <section className="flex h-full flex-col overflow-hidden border-2 border-indigo bg-white">
+        <span aria-hidden className={cn("block h-1.5", bar)} />
+        <header className="border-b-2 border-indigo px-5 pt-6 pb-5 sm:px-6">
           <div className="flex items-center gap-3">
-            <span
-              className={cn(
-                "flex size-11 shrink-0 items-center justify-center rounded-lg border-2 border-indigo shadow-[2px_2px_0_0_var(--color-indigo)]",
-                "transition-transform duration-200 ease-[var(--ease-brand)] group-hover/board:-rotate-6",
-                chip,
-              )}
-            >
+            <span className="flex size-11 shrink-0 items-center justify-center border-2 border-indigo text-indigo">
               {icon}
             </span>
             <div>
-              <p className="text-small font-semibold text-ink-secondary">{hook}</p>
-              <h3 className="text-h3 font-black leading-tight tracking-tight text-indigo">{title}</h3>
+              <p className="text-small font-bold text-ink-secondary">{hook}</p>
+              <h3 className="text-h3 font-bold leading-tight tracking-tight text-indigo">{title}</h3>
             </div>
           </div>
           <p className="mt-3 text-small text-ink-secondary">{description}</p>
@@ -162,10 +135,10 @@ function Board({
 
         <Link
           href={href}
-          className="group/link flex h-14 items-center justify-between gap-3 border-t-2 border-indigo px-5 text-body font-bold text-indigo transition-colors duration-150 hover:bg-cameo-100 sm:px-6"
+          className="flex h-14 items-center justify-between gap-3 border-t-2 border-indigo px-5 text-body font-bold text-indigo transition-colors duration-150 hover:bg-indigo hover:text-white sm:px-6"
         >
           {linkLabel}
-          <span className="flex size-9 items-center justify-center rounded-full border-2 border-indigo bg-white transition-[background-color,transform] duration-150 ease-out group-hover/link:translate-x-1 group-hover/link:bg-kesar">
+          <span className="flex size-9 items-center justify-center border-2 border-current">
             <ArrowRight aria-hidden className="size-4.5" />
           </span>
         </Link>
@@ -174,8 +147,8 @@ function Board({
   );
 }
 
-/** Feed rows: dashed rules between entries, like a pinned-up sheet. */
-const FEED = "divide-y-2 divide-dashed divide-line";
+/** Feed rows: hard hairline rules between entries. */
+const FEED = "divide-y divide-line";
 
 /** Numbered row used by the empty-state lists — bigger than a bullet, easier to scan. */
 function PlanItem({
@@ -193,90 +166,15 @@ function PlanItem({
     <li className="flex gap-4 py-4">
       <span
         aria-hidden
-        className={cn(
-          "flex size-10 shrink-0 items-center justify-center rounded-lg border-2 border-indigo text-small font-black",
-          ACCENT[accent].number,
-        )}
+        className={cn("w-8 shrink-0 pt-0.5 text-small font-bold tabular-nums", ACCENT[accent].number)}
       >
         {String(n).padStart(2, "0")}
       </span>
-      <div className="pt-1.5">
-        <p className="text-body font-semibold leading-snug text-indigo">{title}</p>
+      <div>
+        <p className="text-body font-bold leading-snug text-indigo">{title}</p>
         {note ? <p className="mt-1 text-small text-ink-secondary">{note}</p> : null}
       </div>
     </li>
-  );
-}
-
-/**
- * Abstract line-art behind the three boards: a wide cameo ribbon, a looping
- * chilli pen line and a dashed indigo rule, with a kesar ring and a sparkle
- * pinned to the corners. The cards are opaque, so the lines only show in the
- * gaps and margins — texture, never behind text. The strokes stretch with the
- * row (`non-scaling-stroke` keeps their weight); the ring and sparkle sit in
- * their own SVGs so they stay round.
- */
-function BoardLines() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute -inset-x-4 inset-y-0 sm:-inset-x-6 lg:-inset-x-16">
-      <svg
-        focusable="false"
-        viewBox="0 0 1200 600"
-        preserveAspectRatio="none"
-        fill="none"
-        className="absolute inset-0 size-full"
-      >
-        <path
-          className="kesar-draw"
-          pathLength={1}
-          d="M-20 400C200 270 360 540 600 390S1000 230 1220 350"
-          stroke="var(--color-cameo)"
-          strokeWidth="26"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-        />
-        <path
-          className="kesar-draw kesar-draw-delay"
-          pathLength={1}
-          d="M-20 190C150 110 270 290 420 215C520 165 505 85 435 105C365 125 400 240 560 250C760 262 880 110 1220 150"
-          stroke="var(--color-chilli)"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-          opacity="0.8"
-        />
-        <path
-          d="M-20 530C300 470 500 590 800 505S1100 445 1220 475"
-          stroke="var(--color-indigo)"
-          strokeWidth="2"
-          strokeDasharray="2 10"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-          opacity="0.45"
-        />
-      </svg>
-
-      {/* Kesar ring, half-hidden behind the first board. */}
-      <svg
-        focusable="false"
-        viewBox="0 0 100 100"
-        fill="none"
-        className="absolute -top-2 left-0 size-24 lg:-top-6 lg:size-32"
-      >
-        <circle cx="50" cy="50" r="40" stroke="var(--color-kesar)" strokeWidth="6" />
-        <circle cx="50" cy="50" r="26" stroke="var(--color-kesar)" strokeWidth="2" strokeDasharray="3 7" strokeLinecap="round" />
-      </svg>
-
-      {/* Four-point sparkle off the last board's lower corner. */}
-      <svg
-        focusable="false"
-        viewBox="0 0 40 40"
-        className="absolute right-2 bottom-4 size-10 rotate-12 text-chilli lg:right-4 lg:bottom-10 lg:size-14"
-      >
-        <path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="currentColor" />
-      </svg>
-    </div>
   );
 }
 
@@ -304,7 +202,7 @@ export async function NoticeboardSection() {
         title={
           <>
             What&apos;s new,{" "}
-            <span className="-mx-1 box-decoration-clone rounded-sm bg-cameo px-1">
+            <span className="-mx-1 box-decoration-clone bg-kesar-100 px-1">
               this week.
             </span>
           </>
@@ -313,10 +211,7 @@ export async function NoticeboardSection() {
       />
 
       <div className="relative mt-4 lg:mt-6">
-        <BoardLines />
-
-        {/* pt-4 keeps the stickers clear of the rail's scroll clip on phones. */}
-        <div className={cn(railList[3], "relative items-start pt-4 lg:items-stretch [&>*]:w-[88%] [&>*]:shrink-0 [&>*]:snap-start sm:[&>*]:w-[60%] lg:[&>*]:w-auto")}>
+        <div className={cn(railList[3], "relative items-start lg:items-stretch [&>*]:w-[88%] [&>*]:shrink-0 [&>*]:snap-start sm:[&>*]:w-[60%] lg:[&>*]:w-auto")}>
           <Board
             index={1}
             live
@@ -340,7 +235,7 @@ export async function NoticeboardSection() {
                         <div className="flex flex-wrap items-center gap-2">
                           <Badge tone={tone.tone}>{tone.label}</Badge>
                           {isFresh(notice.startsAt) ? (
-                            <span className="-rotate-3 rounded-md bg-chilli-100 px-1.5 py-0.5 text-eyebrow font-bold uppercase text-chilli-700 ring-2 ring-chilli">
+                            <span className="border border-chilli bg-chilli-100 px-1.5 py-0.5 text-eyebrow font-bold uppercase text-chilli-700">
                               New
                             </span>
                           ) : null}
@@ -349,7 +244,7 @@ export async function NoticeboardSection() {
                           {notice.href ? (
                             <Link
                               href={notice.href}
-                              className="underline decoration-cameo decoration-2 underline-offset-4 transition-colors hover:text-chilli-600 hover:decoration-chilli"
+                              className="underline decoration-kesar decoration-2 underline-offset-4 transition-colors hover:text-chilli-600 hover:decoration-chilli"
                             >
                               {notice.title}
                             </Link>
@@ -380,7 +275,7 @@ export async function NoticeboardSection() {
 
           <Board
             index={2}
-            accent="cameo"
+            accent="indigo"
             icon={<Newspaper aria-hidden className="size-5.5" />}
             hook="Worth a read"
             title="Articles"
@@ -397,7 +292,7 @@ export async function NoticeboardSection() {
                     <h4 className="mt-2 text-body font-bold leading-snug text-indigo">
                       <Link
                         href={`${ROUTES.blog}/${post.slug}`}
-                        className="underline decoration-cameo decoration-2 underline-offset-4 transition-colors hover:text-chilli-600 hover:decoration-chilli"
+                        className="underline decoration-kesar decoration-2 underline-offset-4 transition-colors hover:text-chilli-600 hover:decoration-chilli"
                       >
                         {post.title}
                       </Link>
@@ -445,7 +340,7 @@ export async function NoticeboardSection() {
                       {quiz.href ? (
                         <Link
                           href={quiz.href}
-                          className="underline decoration-cameo decoration-2 underline-offset-4 transition-colors hover:text-chilli-600 hover:decoration-chilli"
+                          className="underline decoration-kesar decoration-2 underline-offset-4 transition-colors hover:text-chilli-600 hover:decoration-chilli"
                         >
                           {quiz.title}
                         </Link>
@@ -456,7 +351,7 @@ export async function NoticeboardSection() {
                     <p className="mt-2 text-small font-medium text-ink-muted">
                       {quiz.questionCount} questions • {quiz.durationMinutes} min
                       {quiz.href ? null : (
-                        <span className="font-semibold text-kesar-700"> • Opens {formatDate(quiz.publishedAt)}</span>
+                        <span className="font-bold text-kesar-700"> • Opens {formatDate(quiz.publishedAt)}</span>
                       )}
                     </p>
                   </li>

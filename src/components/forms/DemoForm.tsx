@@ -66,7 +66,7 @@ export function DemoForm({ courses }: { courses: Course[] }) {
           course: values.course,
         });
       })}
-      className="relative rounded-lg border border-line bg-white p-6 sm:p-8"
+      className="relative border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8"
     >
       <Honeypot registration={register("honeypot")} />
 

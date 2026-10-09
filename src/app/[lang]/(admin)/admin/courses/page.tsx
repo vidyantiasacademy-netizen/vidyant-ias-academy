@@ -25,7 +25,7 @@ export default async function CoursesPage() {
     <>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-h2 font-semibold">Courses</h1>
+          <h1 className="text-h2 font-bold">Courses</h1>
           <p className="mt-2 text-body text-ink-secondary">
             Open a course to enrol students in it. Tests are attached to a course, and only its
             enrolled students can sit them.
@@ -57,7 +57,7 @@ export default async function CoursesPage() {
           <ul className="space-y-3">
             {courses.map((course) => (
               <li key={course.id}>
-                <Link href={`/admin/courses/${course.id}`} className="block rounded-lg">
+                <Link href={`/admin/courses/${course.id}`} className="block">
                   <Card
                     interactive
                     padding="sm"

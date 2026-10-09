@@ -4,6 +4,7 @@ import Link from "@/i18n/Link";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { GeoTriad } from "@/components/ui/Geometry";
 import { getCurrentStudent } from "@/lib/auth/server";
 import { ROUTES } from "@/lib/constants/site";
 import { courseService } from "@/services/courses/course.service";
@@ -28,9 +29,10 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-end justify-between gap-4 border-t-2 border-indigo pt-6">
         <div>
-          <h1 className="text-h2 font-semibold">Welcome back, {firstName}.</h1>
+          <GeoTriad className="mb-4 hidden lg:inline-flex" />
+          <h1 className="text-h2 font-bold tracking-tight">Welcome back, {firstName}.</h1>
           <p className="mt-2 text-body text-ink-secondary">
             {student?.rollNumber
               ? `Roll number ${student.rollNumber}`
@@ -38,14 +40,14 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <span className="flex items-center gap-2 rounded-md bg-white px-3 py-2 text-small font-medium ring-1 ring-line">
+        <span className="flex h-10 items-center gap-2 border border-line bg-white px-3 text-small font-medium">
           <Bell aria-hidden className="size-4 text-kesar-600" />
           {unread} unread
         </span>
       </div>
 
       <section aria-labelledby="my-courses" className="mt-10">
-        <h2 id="my-courses" className="text-h3 font-semibold">
+        <h2 id="my-courses" className="text-h3 font-bold tracking-tight">
           My programmes
         </h2>
 
@@ -64,13 +66,13 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <ul className="mt-5 grid gap-4 sm:grid-cols-2">
-            {enrolled.map(({ course, enrollment }) => (
+            {enrolled.map(({ course, enrollment }, index) => (
               <li key={enrollment.id}>
-                <Card tone="white" padding="md">
-                  <span className="flex size-10 items-center justify-center rounded-md bg-white text-kesar-600 ring-1 ring-line">
-                    <BookOpen aria-hidden className="size-5" />
+                <Card tone="white" padding="md" className="border-t-2 border-t-indigo">
+                  <span aria-hidden className="block text-small font-bold tabular-nums text-indigo">
+                    {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="mt-4 text-body-lg font-semibold">{course.title}</h3>
+                  <h3 className="mt-3 text-body-lg font-bold">{course.title}</h3>
                   <p className="mt-2 text-small text-ink-secondary">
                     {course.stats.lessonCount} lessons · {course.stats.testCount} tests
                   </p>

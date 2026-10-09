@@ -194,7 +194,7 @@ export function QuestionImport({
 
           <label
             className={cn(
-              "inline-flex h-10 cursor-pointer items-center gap-2 rounded-md bg-indigo-gradient px-4 text-small font-semibold text-white hover:brightness-125",
+              "inline-flex h-10 cursor-pointer items-center gap-2 bg-indigo px-4 text-small font-semibold text-white transition-colors hover:bg-indigo-900",
               "focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo",
             )}
           >
@@ -229,7 +229,7 @@ export function QuestionImport({
           <Card padding="md" className="grid gap-4 sm:grid-cols-3">
             <div>
               <p className="text-small text-ink-secondary">In this file</p>
-              <p className="text-h3 font-semibold">
+              <p className="text-h3 font-bold">
                 {good.length} <span className="text-body font-normal">ready</span>
                 {bad.length > 0 ? (
                   <span className="text-body font-normal text-danger"> · {bad.length} with problems</span>
@@ -239,14 +239,14 @@ export function QuestionImport({
             </div>
             <div>
               <p className="text-small text-ink-secondary">Paper target</p>
-              <p className="text-h3 font-semibold">{paper.questionCount} questions</p>
+              <p className="text-h3 font-bold">{paper.questionCount} questions</p>
               <p className="text-small text-ink-secondary">{paper.totalMarks} marks</p>
             </div>
             <div>
               <p className="text-small text-ink-secondary">Published after import</p>
               <p
                 className={cn(
-                  "text-h3 font-semibold",
+                  "text-h3 font-bold",
                   afterCount > paper.questionCount && "text-danger",
                 )}
               >
@@ -300,7 +300,7 @@ export function QuestionImport({
 
           {good.length > 0 ? (
             <section aria-labelledby="preview-heading">
-              <h2 id="preview-heading" className="text-h3 font-semibold">
+              <h2 id="preview-heading" className="text-h3 font-bold">
                 Preview
               </h2>
               <ol className="mt-4 space-y-3">

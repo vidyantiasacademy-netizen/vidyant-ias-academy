@@ -25,7 +25,7 @@
      Black      #111111   photocopies, stamps, body ink
 
      Chilli     #DD4027   hot accent — "new" badges, stamps, pen marks
-     Cameo      #E0B3B6   soft wash — an alternate section surface
+     (Cameo #E0B3B6 was retired by the Swiss pass — its tokens alias paper.)
 
    The accents come from Sanzo Wada's "A Dictionary of Color
    Combinations": combination 164 (Red Orange · Orange Yellow ·
@@ -53,6 +53,18 @@
      - the phone number is a first-class call to action, because a
        large part of this audience would rather call than fill a
        form.
+
+   STYLE: Swiss (International Typographic Style) + Minimalism, with
+   selective Bauhaus elements.
+     - Swiss: a 12-column grid, flush-left ragged-right type, one
+       grotesk (Inter) in bold, tight display sizes, numbered sections,
+       hard rules (2px indigo) instead of boxes and shadows.
+     - Minimalism: flat colour, square corners, no gradients, no soft
+       shadows, no hand-drawn doodles, generous white space.
+     - Bauhaus (selectively, never behind copy): the three primary forms —
+       circle, square, triangle — in the three primaries this palette
+       already has: indigo (blue), kesar (yellow), chilli (red). Used as
+       one composition per hero/band, built by `components/ui/Geometry`.
 
    Contrast (WCAG 2.1) of the pairings this system allows:
      ink (#111111)       on white    18.9:1
@@ -116,12 +128,11 @@
   --color-chilli-100: #fdece8;
 
   /* ---- Cameo (Wada 116 "Cameo Pink") --------------------- */
-  /* Decorative fill — blobs, card tops; indigo text only. */
-  --color-cameo: #e0b3b6;
-  /* Borders and rules on the cameo-100 surface. */
-  --color-cameo-200: #f3dcdd;
-  /* Alternate section surface to `paper`. */
-  --color-cameo-100: #fbf0f0;
+  /* Retired by the Swiss/Bauhaus pass: aliases of the paper family so
+     any stray class stays neutral. Do not use in new code. */
+  --color-cameo: var(--color-paper-200);
+  --color-cameo-200: var(--color-line);
+  --color-cameo-100: var(--color-paper);
 
   /* ---- Semantic surfaces --------------------------------- */
   --color-background: #ffffff;
@@ -154,29 +165,27 @@
   --font-sans: var(--font-inter), var(--font-devanagari), ui-sans-serif, system-ui, -apple-system, sans-serif;
   /* Logotype only — the drawn name in the Kalam lockup. */
   --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
-  /* Doodle notes inside illustrations only — never for copy a student must read. */
-  --font-hand: var(--font-kalam), "Comic Sans MS", cursive;
 
-  --text-hero: 2.5rem;            /* 40px mobile */
-  --text-hero--line-height: 1.08;
-  --text-hero--letter-spacing: -0.025em;
+  --text-hero: 2.25rem;           /* 36px mobile */
+  --text-hero--line-height: 1.02;
+  --text-hero--letter-spacing: -0.035em;
   --text-hero-lg: 4rem;           /* 64px desktop */
-  --text-hero-lg--line-height: 1.05;
-  --text-hero-lg--letter-spacing: -0.03em;
+  --text-hero-lg--line-height: 0.98;
+  --text-hero-lg--letter-spacing: -0.045em;
 
-  --text-h1: 2.25rem;             /* 36px mobile */
+  --text-h1: 2rem;                /* 32px mobile */
   --text-h1--line-height: 1.12;
   --text-h1--letter-spacing: -0.022em;
   --text-h1-lg: 3.25rem;          /* 52px */
-  --text-h1-lg--line-height: 1.1;
-  --text-h1-lg--letter-spacing: -0.026em;
+  --text-h1-lg--line-height: 1.05;
+  --text-h1-lg--letter-spacing: -0.04em;
 
   --text-h2: 1.875rem;            /* 30px mobile */
   --text-h2--line-height: 1.15;
   --text-h2--letter-spacing: -0.02em;
-  --text-h2-lg: 2.5rem;           /* 40px */
-  --text-h2-lg--line-height: 1.15;
-  --text-h2-lg--letter-spacing: -0.022em;
+  --text-h2-lg: 2.75rem;          /* 44px */
+  --text-h2-lg--line-height: 1.08;
+  --text-h2-lg--letter-spacing: -0.03em;
 
   --text-h3: 1.5rem;              /* 24px mobile */
   --text-h3--line-height: 1.2;
@@ -202,19 +211,33 @@
      panel, so eyebrows are bigger and tracked less than usual. */
   --text-eyebrow: 0.8125rem;      /* 13px */
   --text-eyebrow--line-height: 1.4;
-  --text-eyebrow--letter-spacing: 0.08em;
+  --text-eyebrow--letter-spacing: 0.12em;
 
-  /* Radii */
-  --radius-sm: 6px;
-  --radius-md: 10px;   /* buttons, inputs */
-  --radius-lg: 14px;   /* cards */
-  --radius-xl: 20px;   /* large panels */
+  /* Radii — Swiss: every edge is square. Tailwind's own steps are zeroed
+     too, so `rounded-lg` anywhere renders a hard corner. Circles
+     (`rounded-full`) stay: the circle is one of the three Bauhaus forms. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+  --radius: 0px;
 
-  /* Elevation — used sparingly, borders do most of the work.
-     Shadows are tinted with Ink Indigo, never neutral grey. */
-  --shadow-card: 0 1px 2px 0 rgb(29 36 112 / 0.07);
-  --shadow-card-hover: 0 8px 24px -12px rgb(29 36 112 / 0.22);
-  --shadow-panel: 0 24px 64px -32px rgb(29 36 112 / 0.32);
+  /* Elevation — none. Swiss surfaces are flat; structure comes from rules,
+     the grid and blocks of colour. Tailwind's steps are flattened too. */
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
+  --shadow-card: none;
+  --shadow-card-hover: none;
+  --shadow-panel: none;
 
   /* Motion */
   --ease-brand: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -261,11 +284,11 @@
   :focus-visible {
     outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
-    border-radius: 2px;
   }
 
   h1, h2, h3, h4 {
     color: var(--color-indigo);
+    font-weight: 700;
     text-wrap: balance;
   }
 
@@ -274,43 +297,19 @@
   }
 }
 
-/* Indigo surfaces carry a soft diagonal light: a touch of indigo-700 in the
-   top-left corner falling to indigo-900 bottom-right. The lighter stop is
-   mixed halfway so kesar text on it stays above 4.5:1. Every indigo fill —
-   bands, cards, buttons, chips — uses one of these instead of flat
-   `bg-indigo`. They are @utility rules so `hover:`/`focus:` variants work;
-   a gradient hides background-color, so interactive fills lift with
-   `hover:brightness-125` instead of switching to indigo-700. */
+/* Flat indigo fills. The Swiss pass removed the diagonal light: colour is
+   a solid block. The names stay so existing callers render flat; new code
+   uses plain `bg-indigo` / `bg-indigo-900` with `hover:bg-indigo-700`. */
 @utility bg-indigo-gradient {
   background-color: var(--color-indigo);
-  background-image: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--color-indigo-700) 55%, var(--color-indigo)) 0%,
-    var(--color-indigo) 50%,
-    var(--color-indigo-900) 100%
-  );
 }
 
-/* The darker step, where indigo-900 sat: tiles on a band, deep panels. */
 @utility bg-indigo-gradient-deep {
   background-color: var(--color-indigo-900);
-  background-image: linear-gradient(
-    135deg,
-    var(--color-indigo) 0%,
-    var(--color-indigo-900) 50%,
-    var(--color-indigo-950) 100%
-  );
 }
 
-/* The notice strip: darker, and running left to right along its length. */
 @utility bg-indigo-strip {
   background-color: var(--color-indigo-900);
-  background-image: linear-gradient(
-    90deg,
-    var(--color-indigo-950) 0%,
-    var(--color-indigo-900) 45%,
-    var(--color-indigo) 100%
-  );
 }
 
 @layer utilities {
@@ -389,24 +388,17 @@
 
   .grid-lines {
     background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+      linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
     background-size: 64px 64px;
   }
 
-  /* Both set background-image; stack the grid over the gradient. */
-  .grid-lines.bg-indigo-gradient {
-    background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-      linear-gradient(
-        135deg,
-        color-mix(in oklab, var(--color-indigo-700) 55%, var(--color-indigo)) 0%,
-        var(--color-indigo) 50%,
-        var(--color-indigo-900) 100%
-      );
-    background-size: 64px 64px, 64px 64px, 100% 100%;
+  /* The Swiss grid made visible on light surfaces — 12 columns of hairline. */
+  .grid-lines-light {
+    background-image: linear-gradient(to right, var(--color-line) 1px, transparent 1px);
+    background-size: calc(100% / 12) 100%;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

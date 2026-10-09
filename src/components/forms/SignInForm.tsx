@@ -83,8 +83,8 @@ function SignIn({
   }
 
   return (
-    <div className="rounded-lg border border-line bg-white p-6 sm:p-8">
-      <h2 className="text-h3 font-semibold">Sign in</h2>
+    <div className="border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8">
+      <h2 className="text-h3 font-bold tracking-tight">Sign in</h2>
       <p className="mt-3 text-body text-ink-secondary">
         Use the email address the centre registered for you.
       </p>
@@ -145,7 +145,7 @@ function SignIn({
       <button
         type="button"
         onClick={onForgotPassword}
-        className="mt-6 text-small font-semibold text-indigo underline underline-offset-4 hover:text-kesar-600"
+        className="mt-6 min-h-10 text-small font-bold text-indigo underline decoration-2 underline-offset-4 hover:text-indigo-900 hover:decoration-kesar"
       >
         Forgot your password?
       </button>
@@ -167,8 +167,8 @@ function ResetPassword({ onBack }: { onBack: () => void }) {
   });
 
   return (
-    <div className="rounded-lg border border-line bg-white p-6 sm:p-8">
-      <h2 className="text-h3 font-semibold">Reset your password</h2>
+    <div className="border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8">
+      <h2 className="text-h3 font-bold tracking-tight">Reset your password</h2>
 
       {sentTo ? (
         <>

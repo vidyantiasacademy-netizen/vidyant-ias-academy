@@ -53,7 +53,7 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-h2 font-semibold">{test.title}</h1>
+            <h1 className="text-h2 font-bold">{test.title}</h1>
             <Badge tone={STATUS_TONE[test.status]}>{test.status}</Badge>
           </div>
           <p className="mt-2 text-body text-ink-secondary">
@@ -76,7 +76,7 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
       </div>
 
       {!isMcq ? (
-        <p className="mt-6 rounded-md border border-line-strong bg-paper px-4 py-3 text-small">
+        <p className="mt-6 border border-line-strong bg-paper px-4 py-3 text-small">
           Mains papers are evaluated by faculty rather than sat in the online runner, so they are
           not authored here.
         </p>
@@ -105,18 +105,18 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
       </dl>
 
       {lockReason ? (
-        <p className="mt-6 rounded-md border border-line-strong bg-paper px-4 py-3 text-small">
+        <p className="mt-6 border border-line-strong bg-paper px-4 py-3 text-small">
           {lockReason}
         </p>
       ) : blocker ? (
-        <p className="mt-6 rounded-md border border-line-strong bg-paper px-4 py-3 text-small">
+        <p className="mt-6 border border-line-strong bg-paper px-4 py-3 text-small">
           Not ready to publish: {blocker}
         </p>
       ) : null}
 
       <section aria-labelledby="questions-heading" className="mt-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h2 id="questions-heading" className="text-h3 font-semibold">
+          <h2 id="questions-heading" className="text-h3 font-bold">
             Questions
           </h2>
           {isMcq && !lockReason ? (
@@ -191,7 +191,7 @@ export default async function TestPage({ params }: PageProps<"/[lang]/admin/test
                           <div className="flex shrink-0 items-center">
                             <Link
                               href={`/admin/tests/${test.id}/questions/${question.id}`}
-                              className="flex size-10 items-center justify-center rounded-md text-ink-secondary hover:bg-paper hover:text-indigo"
+                              className="flex size-10 items-center justify-center text-ink-secondary hover:bg-paper hover:text-indigo"
                               aria-label={`Edit ${label}`}
                             >
                               <Pencil aria-hidden className="size-4" />

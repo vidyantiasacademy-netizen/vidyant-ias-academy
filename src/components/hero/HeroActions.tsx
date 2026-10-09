@@ -16,8 +16,8 @@ type HeroAction = {
   external?: boolean;
   /** The single kesar element of the row — the one that stands for the student. */
   kesar?: boolean;
-  /** Cameo wash instead of indigo-100, so the row is not two identical tiles. */
-  cameo?: boolean;
+  /** Paper fill instead of white, so the row is not two identical tiles. */
+  paper?: boolean;
 };
 
 const ACTIONS: HeroAction[] = [
@@ -37,7 +37,7 @@ const ACTIONS: HeroAction[] = [
     href: whatsappUrl(),
     event: ANALYTICS_EVENTS.whatsappClick,
     external: true,
-    cameo: true,
+    paper: true,
   },
   {
     id: "enrol",
@@ -53,16 +53,16 @@ const ACTIONS: HeroAction[] = [
 /** Three big action tiles under the banner: one verb, two short lines, one icon. */
 export function HeroActions() {
   return (
-    <ul className="grid gap-4 sm:grid-cols-3 sm:gap-5 xl:gap-8">
-      {ACTIONS.map(({ id, verb, lines, icon: Icon, href, event, external, kesar, cameo }) => {
+    <ul className="grid gap-4 sm:grid-cols-3 sm:gap-6 xl:gap-8">
+      {ACTIONS.map(({ id, verb, lines, icon: Icon, href, event, external, kesar, paper }) => {
         const className = cn(
-          "group flex h-full items-start justify-between gap-4 rounded-xl px-5 py-4 transition-[transform,box-shadow] duration-200 ease-[var(--ease-brand)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)] lg:px-6 lg:py-5",
-          kesar ? "bg-kesar text-indigo-900" : cameo ? "bg-cameo text-indigo-900" : "bg-indigo-100 text-indigo",
+          "group flex h-full items-start justify-between gap-4 border-2 border-indigo px-5 py-4 transition-colors duration-150 hover:bg-indigo hover:text-white lg:px-6 lg:py-5",
+          kesar ? "bg-kesar text-indigo-900" : paper ? "bg-paper text-indigo" : "bg-white text-indigo",
         );
         const body = (
           <>
             <span>
-              <span className="block text-h2 font-black uppercase leading-none tracking-tight lg:text-h2-lg">
+              <span className="block text-h2 font-bold uppercase leading-none tracking-tight lg:text-h2-lg">
                 {verb}
               </span>
               <span className="mt-2 block text-small font-bold uppercase leading-snug tracking-wide">
@@ -73,7 +73,7 @@ export function HeroActions() {
             </span>
             <Icon
               aria-hidden
-              className="size-8 shrink-0 transition-transform duration-200 ease-[var(--ease-brand)] group-hover:-rotate-6 lg:size-9"
+              className="size-8 shrink-0 lg:size-9"
               strokeWidth={2.25}
             />
           </>
