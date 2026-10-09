@@ -141,12 +141,12 @@ function GoalRing({ percent }: { percent: number }) {
  */
 export function AppDownloadSection() {
   return (
-    <Section tone="paper" id="app" containerSize="wide" className="relative overflow-hidden">
+    <Section tone="cameo" id="app" containerSize="wide" className="relative overflow-hidden">
       {/* Hand-drawn margin doodles, from lg where there is room for them. */}
       <svg
         aria-hidden
         viewBox="0 0 120 120"
-        className="pointer-events-none absolute top-10 right-10 hidden w-24 text-indigo lg:block"
+        className="pointer-events-none absolute top-10 right-10 hidden w-24 text-chilli lg:block"
       >
         <Sparkle x={70} y={30} size={10} />
         <Sparkle x={98} y={56} size={6} />
@@ -155,7 +155,7 @@ export function AppDownloadSection() {
 
       <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12">
         <div>
-          <Eyebrow>Plan • Practice • Progress</Eyebrow>
+          <Eyebrow tone="chilli">Plan • Practice • Progress</Eyebrow>
           <h2 className="mt-4 text-h2 font-semibold lg:text-h2-lg">
             A smarter study experience
             <span className="block text-ink-secondary">— on web and mobile.</span>

@@ -24,7 +24,7 @@ const FEATURES = [
 
 export function MentorshipSection() {
   return (
-    <Section tone="paper" id="mentorship" containerSize="wide">
+    <Section tone="cameo" id="mentorship" containerSize="wide">
       <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
         <PlaceholderVisual
           imageKey="mentorshipSession"
@@ -33,7 +33,7 @@ export function MentorshipSection() {
         />
 
         <div>
-          <Eyebrow>Mentorship</Eyebrow>
+          <Eyebrow tone="chilli">Mentorship</Eyebrow>
           <h2 className="mt-4 text-h2 font-semibold lg:text-h2-lg">
             You shouldn&apos;t have to prepare alone.
           </h2>
@@ -46,7 +46,7 @@ export function MentorshipSection() {
           <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 sm:gap-x-6">
             {FEATURES.map(({ icon: Icon, label, note }) => (
               <li key={label} className="flex gap-3">
-                <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-kesar-600" />
+                <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-chilli-600" />
                 <span>
                   <span className="block text-body font-semibold text-indigo">{label}</span>
                   <span className="text-small text-ink-secondary">{note}</span>

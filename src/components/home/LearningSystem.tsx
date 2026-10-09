@@ -12,6 +12,7 @@ import {
 
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { cn } from "@/lib/utils/cn";
 
 const STAGES: { label: string; description: string; icon: LucideIcon }[] = [
   { label: "Learn", description: "Build conceptual clarity.", icon: BookOpen },
@@ -36,7 +37,7 @@ export function LearningSystem() {
         title={
           <>
             A preparation system built around{" "}
-            <span className="-mx-1 box-decoration-clone rounded-sm bg-kesar px-1 text-indigo-900">
+            <span className="-mx-1 box-decoration-clone rounded-sm bg-cameo px-1 text-indigo-900">
               improvement.
             </span>
           </>
@@ -54,7 +55,12 @@ export function LearningSystem() {
               className="reveal relative"
               style={{ animationDelay: `${index * 70}ms` }}
             >
-              <div className="relative flex h-full flex-col overflow-hidden rounded-xl border-2 border-white bg-white p-4 text-ink shadow-[5px_5px_0_0_var(--color-kesar)] sm:p-5">
+              <div
+                className={cn(
+                  "relative flex h-full flex-col overflow-hidden rounded-xl border-2 border-white bg-white p-4 text-ink sm:p-5",
+                  index % 2 ? "shadow-[5px_5px_0_0_var(--color-cameo)]" : "shadow-[5px_5px_0_0_var(--color-kesar)]",
+                )}
+              >
                 {/* Oversized step number — texture, not information. */}
                 <span
                   aria-hidden

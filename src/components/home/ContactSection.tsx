@@ -13,8 +13,9 @@ import { BRAND, CONTACT, CTA, ROUTES, whatsappUrl } from "@/lib/constants/site";
 /** Centre information plus the shortest conversion on the page: a callback. */
 export function ContactSection() {
   return (
-    <Section tone="paper" id="contact" containerSize="wide">
+    <Section tone="cameo" id="contact" containerSize="wide">
       <SectionHeader
+        accent="chilli"
         eyebrow="Visit or Call"
         title={`Our centre in ${BRAND.city}.`}
         description="Come and see the classroom, meet the academic team and ask whatever you need to before enrolling. Or leave a number and we will call you."
@@ -109,7 +110,7 @@ function ContactRow({
 }) {
   return (
     <div className="flex gap-4 px-5 py-4">
-      <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-kesar-600" />
+      <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-chilli-600" />
       <div className="min-w-0 text-small">
         <h3 className="font-semibold text-indigo">{label}</h3>
         <div className="mt-1">{children}</div>

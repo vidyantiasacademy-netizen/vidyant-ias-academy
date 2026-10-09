@@ -75,7 +75,7 @@ export function OrientationSection() {
 
           <h2 className="mt-6 text-h1 font-bold text-white lg:text-h1-lg">
             UPSC feels huge.{" "}
-            <span className="mt-2 inline-block -rotate-1 rounded-lg bg-white px-3 pb-1 text-indigo motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:rotate-0">
+            <span className="mt-2 inline-block -rotate-1 rounded-lg bg-white px-3 pb-1 text-indigo underline decoration-chilli decoration-wavy decoration-2 underline-offset-[0.3em] motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:rotate-0">
               Let&rsquo;s make it make sense.
             </span>
           </h2>
@@ -119,7 +119,7 @@ export function OrientationSection() {
           {isFree && (
             <span
               aria-hidden
-              className="absolute -top-1 right-4 z-10 grid size-20 rotate-12 place-items-center rounded-full border-4 border-indigo bg-white text-center font-hand text-h4 font-bold leading-none text-indigo shadow-lg lg:-top-7 lg:-right-5"
+              className="absolute -top-1 right-4 z-10 grid size-20 rotate-12 place-items-center rounded-full border-4 border-chilli bg-white text-center font-hand text-h4 font-bold leading-none text-chilli-600 shadow-lg lg:-top-7 lg:-right-5"
             >
               free!
             </span>

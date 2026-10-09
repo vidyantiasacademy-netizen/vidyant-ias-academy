@@ -15,6 +15,7 @@ export async function FacultySection() {
   return (
     <Section tone="paper" id="faculty" containerSize="wide">
       <SectionHeader
+        accent="chilli"
         eyebrow="Faculty"
         title="Learn from people who understand the examination."
         description="Teaching at vidyantIAS is handled by subject faculty who stay close to how the paper is set — and who also read and evaluate the answers you write."

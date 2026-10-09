@@ -13,6 +13,7 @@ export function ResourcesSection({ resources }: { resources: Resource[] }) {
   return (
     <Section id="resources" containerSize="wide">
       <SectionHeader
+        accent="chilli"
         eyebrow="Free Resources"
         title="Start learning before you enrol."
         description="Useful preparation material, free and without conditions. Read the syllabus, follow the roadmap, and decide for yourself whether our approach suits you."

@@ -10,7 +10,7 @@ import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CONTACT, whatsappUrl } from "@/lib/constants/site";
 
 const linkClass =
-  "flex min-h-10 items-center gap-2 whitespace-nowrap font-semibold text-indigo underline-offset-4 transition-colors hover:text-indigo-700 hover:underline";
+  "flex min-h-10 items-center gap-2 whitespace-nowrap font-semibold text-indigo underline-offset-4 transition-colors hover:text-chilli-600 hover:underline hover:decoration-chilli";
 
 /**
  * Contact strip at the top of the header. Phone and WhatsApp show at every
@@ -37,7 +37,7 @@ export function ContactBar() {
                 aria-label={format(dict.common.call, { phone: CONTACT.phoneDisplay })}
                 className={linkClass}
               >
-                <Phone aria-hidden className="size-4 shrink-0" />
+                <Phone aria-hidden className="size-4 shrink-0 text-chilli-600" />
                 {CONTACT.phoneDisplay}
               </TrackedAnchor>
             </li>
@@ -51,20 +51,20 @@ export function ContactBar() {
                 aria-label={dict.common.whatsappChat}
                 className={linkClass}
               >
-                <MessageCircle aria-hidden className="size-4 shrink-0" />
+                <MessageCircle aria-hidden className="size-4 shrink-0 text-chilli-600" />
                 {dict.common.whatsappShort}
               </TrackedAnchor>
             </li>
             <li className="hidden sm:block">
               <a href={`mailto:${CONTACT.email}`} className={linkClass}>
-                <Mail aria-hidden className="size-4 shrink-0" />
+                <Mail aria-hidden className="size-4 shrink-0 text-chilli-600" />
                 {CONTACT.email}
               </a>
             </li>
           </ul>
 
           <p className="hidden items-center gap-2 whitespace-nowrap text-ink-secondary lg:flex">
-            <Clock aria-hidden className="size-4 shrink-0" />
+            <Clock aria-hidden className="size-4 shrink-0 text-chilli-600" />
             {hours.days}, {hours.hours}
           </p>
         </div>

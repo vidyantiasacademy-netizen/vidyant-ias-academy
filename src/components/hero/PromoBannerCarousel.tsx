@@ -93,7 +93,7 @@ export function PromoBannerCarousel() {
           <div
             key={`${index}-${isRotating}`}
             className={cn(
-              "h-full bg-kesar",
+              "h-full bg-chilli",
               isRotating ? "promo-progress" : "w-full opacity-50",
             )}
             style={isRotating ? { animationDuration: `${ROTATION_MS}ms` } : undefined}
@@ -120,7 +120,7 @@ export function PromoBannerCarousel() {
               >
                 <p className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   {banner.tag ? (
-                    <span className="inline-flex items-center rounded-full bg-kesar-100 px-3 py-1 text-eyebrow font-semibold uppercase text-kesar-700">
+                    <span className="inline-flex items-center rounded-full bg-chilli-100 px-3 py-1 text-eyebrow font-semibold uppercase text-chilli-700">
                       {banner.tag}
                     </span>
                   ) : null}
@@ -134,7 +134,7 @@ export function PromoBannerCarousel() {
                   {banner.titleAccent ? (
                     <>
                       <br />
-                      <span className="text-kesar-600">{banner.titleAccent}</span>
+                      <span className="text-chilli-600">{banner.titleAccent}</span>
                     </>
                   ) : null}
                 </h2>
@@ -157,7 +157,7 @@ export function PromoBannerCarousel() {
                   {banner.secondary ? (
                     <Link
                       href={banner.secondary.href}
-                      className="inline-flex items-center gap-1.5 rounded-md px-1 py-2 text-small font-semibold text-indigo underline decoration-kesar decoration-2 underline-offset-4 transition-colors duration-200 hover:text-kesar-700"
+                      className="inline-flex items-center gap-1.5 rounded-md px-1 py-2 text-small font-semibold text-indigo underline decoration-chilli decoration-2 underline-offset-4 transition-colors duration-200 hover:text-chilli-700"
                     >
                       {banner.secondary.label}
                     </Link>

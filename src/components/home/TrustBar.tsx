@@ -27,7 +27,7 @@ export function TrustBar() {
         <ul className="grid grid-cols-2 gap-x-6 gap-y-5 py-7 sm:grid-cols-3 lg:flex lg:items-center lg:justify-between lg:py-6">
           {PILLARS.map(({ icon: Icon, label }) => (
             <li key={label} className="flex items-center gap-2.5">
-              <Icon aria-hidden className="size-4.5 shrink-0 text-kesar-600" />
+              <Icon aria-hidden className="size-4.5 shrink-0 text-chilli-600" />
               <span className="text-small font-medium text-indigo">{label}</span>
             </li>
           ))}

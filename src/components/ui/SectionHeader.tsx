@@ -9,6 +9,8 @@ interface SectionHeaderProps {
   description?: ReactNode;
   align?: "left" | "center";
   tone?: "dark" | "light";
+  /** Eyebrow colour on light surfaces; light-tone headers always use kesar. */
+  accent?: "kesar" | "chilli";
   /** Rendered to the right of the heading on large screens. */
   action?: ReactNode;
   className?: string;
@@ -22,6 +24,7 @@ export function SectionHeader({
   description,
   align = "left",
   tone = "dark",
+  accent = "kesar",
   action,
   className,
   as: Heading = "h2",
@@ -44,7 +47,7 @@ export function SectionHeader({
       >
         {eyebrow ? (
           <Eyebrow
-            tone={tone === "light" ? "light" : "kesar"}
+            tone={tone === "light" ? "light" : accent}
             className={cn("mb-3", centered && "justify-center")}
           >
             {eyebrow}

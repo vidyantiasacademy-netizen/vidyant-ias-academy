@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils/cn";
 
 interface SectionProps extends ComponentProps<"section"> {
   /** Background treatment. Keeps the 70/20/10 neutral-indigo-kesar balance. */
-  tone?: "white" | "paper" | "indigo";
+  tone?: "white" | "paper" | "cameo" | "indigo";
   containerSize?: "default" | "narrow" | "wide";
   /** Turn off the built-in container when a section needs full-bleed children. */
   bleed?: boolean;
@@ -16,6 +16,8 @@ interface SectionProps extends ComponentProps<"section"> {
 const tones = {
   white: "bg-white",
   paper: "bg-paper",
+  /** Soft pink wash (Wada 116) — use in place of one `paper` section per page. */
+  cameo: "bg-cameo-100",
   indigo: "relative overflow-hidden bg-indigo-gradient text-white focus-invert",
 } as const;
 

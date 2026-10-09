@@ -17,14 +17,24 @@
    rationed to a hairline reads as beige on a cheap panel — that
    is the one mistake this palette exists to avoid.
 
-   Four brand colours, nothing else:
+   Four brand colours, plus two accents for a younger feel:
 
      Ink Indigo #1D2470   authority, ink, bands, headings
      Kesar      #F39A1E   the student — the call to action, once
      White      #FFFFFF   breathing room
      Black      #111111   photocopies, stamps, body ink
 
-   Everything below is one of those four, a tint or shade of them,
+     Chilli     #DD4027   hot accent — "new" badges, stamps, pen marks
+     Cameo      #E0B3B6   soft wash — an alternate section surface
+
+   The accents come from Sanzo Wada's "A Dictionary of Color
+   Combinations": combination 164 (Red Orange · Orange Yellow ·
+   Violet) is our kesar + indigo with Chilli as its third colour,
+   and combination 116 (Cameo Pink · Blue Violet) pairs Cameo with
+   the indigo family. Chilli never competes with the kesar CTA: it
+   is for small labels and marks, never a button fill.
+
+   Everything below is one of those colours, a tint or shade of them,
    or a desaturated indigo used for secondary text and rules.
    Never hardcode a colour in a component — use a token. The only
    non-palette colours are `danger` and `success`, which are
@@ -58,6 +68,11 @@
      kesar               on indigo    6.1:1
      indigo-900          on kesar     7.3:1   <- kesar button label
      indigo              on kesar-100 12.2:1
+     chilli-600          on white     6.0:1   <- text-grade chilli
+     chilli-700          on chilli-100 7.6:1
+     indigo              on cameo     7.3:1
+     indigo              on cameo-100 12.1:1
+     ink-secondary       on cameo-100  8.1:1
 
    Base Kesar is only 2.2:1 on white, so it is reserved for fills,
    rules and decoration on white, and for text only on indigo.
@@ -90,6 +105,23 @@
   --color-kesar-700: #6f4800;
   /* The wash that sits behind highlights, stats and badges. */
   --color-kesar-100: #fdf1dd;
+
+  /* ---- Chilli (Wada 164 "Red Orange") -------------------- */
+  /* 4.3:1 on white — decoration, dots and stamp rings only. */
+  --color-chilli: #dd4027;
+  /* Text-grade chilli: >= 4.5:1 on white and on cameo-100. */
+  --color-chilli-600: #b8321c;
+  /* Text-grade chilli for use on the chilli-100 wash. */
+  --color-chilli-700: #8f2414;
+  --color-chilli-100: #fdece8;
+
+  /* ---- Cameo (Wada 116 "Cameo Pink") --------------------- */
+  /* Decorative fill — blobs, card tops; indigo text only. */
+  --color-cameo: #e0b3b6;
+  /* Borders and rules on the cameo-100 surface. */
+  --color-cameo-200: #f3dcdd;
+  /* Alternate section surface to `paper`. */
+  --color-cameo-100: #fbf0f0;
 
   /* ---- Semantic surfaces --------------------------------- */
   --color-background: #ffffff;
@@ -328,24 +360,6 @@
   @keyframes notice-ticker {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
-  }
-
-  /* Noticeboard sheen. A soft light sweeps across each board's indigo header
-     every few seconds so the eye keeps returning; rests most of the cycle. */
-  .board-sheen::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.14) 50%, transparent 65%);
-    transform: translateX(-100%);
-    animation: board-sheen 7s var(--ease-brand) infinite;
-    animation-delay: var(--sheen-delay, 0s);
-  }
-
-  @keyframes board-sheen {
-    0%, 65% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
   }
 
   /* Toast entrance. One short slide so the message is noticed arriving;

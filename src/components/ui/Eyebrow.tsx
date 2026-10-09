@@ -3,11 +3,12 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils/cn";
 
 interface EyebrowProps extends ComponentProps<"p"> {
-  tone?: "kesar" | "indigo" | "light";
+  tone?: "kesar" | "chilli" | "indigo" | "light";
 }
 
 const tones = {
   kesar: "text-kesar-600",
+  chilli: "text-chilli-600",
   indigo: "text-indigo",
   light: "text-kesar",
 } as const;

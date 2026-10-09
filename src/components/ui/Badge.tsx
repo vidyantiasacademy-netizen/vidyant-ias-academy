@@ -3,11 +3,12 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils/cn";
 
 interface BadgeProps extends ComponentProps<"span"> {
-  tone?: "kesar" | "indigo" | "neutral" | "light" | "success";
+  tone?: "kesar" | "chilli" | "indigo" | "neutral" | "light" | "success";
 }
 
 const tones = {
   kesar: "bg-kesar-100 text-kesar-700",
+  chilli: "bg-chilli-100 text-chilli-700",
   indigo: "bg-indigo-gradient text-white",
   neutral: "bg-paper text-ink-secondary",
   light: "bg-white/10 text-white ring-1 ring-white/20",

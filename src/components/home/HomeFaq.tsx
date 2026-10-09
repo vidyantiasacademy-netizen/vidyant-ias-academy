@@ -14,6 +14,7 @@ export function HomeFaq({ faqs }: { faqs: Faq[] }) {
       <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-12">
         <div>
           <SectionHeader
+            accent="chilli"
             eyebrow="FAQ"
             title="Questions aspirants ask us"
             description="If your question is not here, ask it directly — nothing important is kept behind a form."

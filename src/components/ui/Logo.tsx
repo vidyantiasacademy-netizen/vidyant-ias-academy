@@ -49,9 +49,26 @@ export function Logo({
       {/* `w-auto` keeps the 40:64 aspect; the height classes drive the size. */}
       <NibMark className={cn("w-auto shrink-0", MARK[size])} />
 
-      <span className={cn("font-serif leading-none tracking-[-0.01em]", NAME[size])}>
-        <span className="font-semibold">{BRAND.logotype.lead}</span>
-        <span className="font-normal">{BRAND.logotype.trail}</span>
+      {/* Serif "Vidyant" for the scholarship, spaced sans caps "IAS" for the
+          service, joined by one kesar pen stroke under the whole word —
+          hairline at the V, widening to a nib-cut end under IAS, the way a
+          Kalam stroke lands. Colour comes from `tone`; the stroke is kesar on
+          both, which holds on white and on indigo. */}
+      <span className={cn("relative inline-flex items-baseline pb-[0.28em] leading-none", NAME[size])}>
+        <span className="font-serif font-semibold tracking-[-0.015em]">
+          {BRAND.logotype.lead}
+        </span>
+        <span className="ml-[0.14em] font-sans text-[0.74em] font-extrabold tracking-[0.12em]">
+          {BRAND.logotype.trail}
+        </span>
+        <svg
+          aria-hidden
+          viewBox="0 0 200 8"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute bottom-0 left-[0.04em] h-[0.2em] w-[calc(100%-0.16em)] text-kesar"
+        >
+          <polygon points="0,7 150,2.2 200,0 193,8 0,8" fill="currentColor" />
+        </svg>
       </span>
     </span>
   );

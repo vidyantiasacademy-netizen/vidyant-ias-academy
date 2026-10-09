@@ -50,7 +50,7 @@ export default async function HomePage() {
         Section order answers the four questions a visitor arrives with, in order:
         who are you → what do you offer → why trust you → what do I do next.
       */}
-      <HomeHero courses={courses} />
+      <HomeHero />
       <TrustBar />
       <NoticeboardSection />
       {/* <BatchesSection /> */}

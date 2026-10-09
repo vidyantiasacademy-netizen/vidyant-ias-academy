@@ -88,7 +88,7 @@ export async function WhatsNewPanel() {
         <h2 id="whats-new" className="text-h4 font-semibold text-indigo">
           What&apos;s new
         </h2>
-        <ChevronDown aria-hidden className="size-6 text-kesar-600" strokeWidth={3} />
+        <ChevronDown aria-hidden className="size-6 text-chilli-600" strokeWidth={3} />
       </header>
 
       <ul className="flex-1 px-5 py-4">

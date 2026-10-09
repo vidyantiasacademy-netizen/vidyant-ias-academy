@@ -16,6 +16,8 @@ type HeroAction = {
   external?: boolean;
   /** The single kesar element of the row — the one that stands for the student. */
   kesar?: boolean;
+  /** Cameo wash instead of indigo-100, so the row is not two identical tiles. */
+  cameo?: boolean;
 };
 
 const ACTIONS: HeroAction[] = [
@@ -35,6 +37,7 @@ const ACTIONS: HeroAction[] = [
     href: whatsappUrl(),
     event: ANALYTICS_EVENTS.whatsappClick,
     external: true,
+    cameo: true,
   },
   {
     id: "enrol",
@@ -51,10 +54,10 @@ const ACTIONS: HeroAction[] = [
 export function HeroActions() {
   return (
     <ul className="grid gap-4 sm:grid-cols-3 sm:gap-5 xl:gap-8">
-      {ACTIONS.map(({ id, verb, lines, icon: Icon, href, event, external, kesar }) => {
+      {ACTIONS.map(({ id, verb, lines, icon: Icon, href, event, external, kesar, cameo }) => {
         const className = cn(
           "group flex h-full items-start justify-between gap-4 rounded-xl px-5 py-4 transition-[transform,box-shadow] duration-200 ease-[var(--ease-brand)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)] lg:px-6 lg:py-5",
-          kesar ? "bg-kesar text-indigo-900" : "bg-indigo-100 text-indigo",
+          kesar ? "bg-kesar text-indigo-900" : cameo ? "bg-cameo text-indigo-900" : "bg-indigo-100 text-indigo",
         );
         const body = (
           <>
