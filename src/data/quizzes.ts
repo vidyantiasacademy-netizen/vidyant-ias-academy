@@ -23,7 +23,7 @@ import type { Quiz, QuizStage } from "@/types";
  *   status: "published",
  * }
  */
-export const quizzes: Quiz[] = [];
+const quizzes: Quiz[] = [];
 
 export const QUIZ_STAGE_LABELS: Record<QuizStage, string> = {
   prelims: "Prelims",
@@ -32,21 +32,13 @@ export const QUIZ_STAGE_LABELS: Record<QuizStage, string> = {
   "current-affairs": "Current Affairs",
 };
 
-export const publishedQuizzes = quizzes.filter((quiz) => quiz.status === "published");
+const publishedQuizzes = quizzes.filter((quiz) => quiz.status === "published");
 
 /** Newest first — the board shows the most recent few. */
 export function latestQuizzes(count = publishedQuizzes.length) {
   return [...publishedQuizzes]
     .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
     .slice(0, count);
-}
-
-export function quizzesForStage(stage: QuizStage) {
-  return latestQuizzes().filter((quiz) => quiz.stage === stage);
-}
-
-export function quizBySlug(slug: string) {
-  return quizzes.find((quiz) => quiz.slug === slug);
 }
 
 /** The planned cadence, shown while no quiz is published yet. */

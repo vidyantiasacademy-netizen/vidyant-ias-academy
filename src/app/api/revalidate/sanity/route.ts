@@ -19,7 +19,7 @@ import { SANITY_TAG, SANITY_TAGS } from "@/lib/sanity/queries";
  *   URL      https://www.vidyantias.com/api/revalidate/sanity
  *   Dataset  production
  *   Trigger  Create, Update, Delete
- *   Filter   _type in ["blog","currentAffair","faculty","course","demoClass","freeResource","faq","announcement"]
+ *   Filter   _type in ["blog","currentAffair","faculty","course","demoClass","freeResource","faq","announcement","category","subject","tag","author","translation.metadata"]
  *   Projection  {_type, "slug": slug.current}
  *   Secret   the value of SANITY_REVALIDATE_SECRET
  */
@@ -59,6 +59,11 @@ function tagsFor({ _type, slug }: WebhookPayload): string[] {
     case "subject":
     case "tag":
     case "author":
+      return ALL_TAGS;
+    // Linking or unlinking a translation decides which language version every
+    // list shows (see `IN_LOCALE` in queries.ts). The metadata document does
+    // not name its type cheaply, so invalidate everything.
+    case "translation.metadata":
       return ALL_TAGS;
     default:
       return [];

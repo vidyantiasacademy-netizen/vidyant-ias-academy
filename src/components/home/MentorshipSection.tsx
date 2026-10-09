@@ -25,12 +25,11 @@ const FEATURES = [
 export function MentorshipSection() {
   return (
     <Section tone="paper" id="mentorship" containerSize="wide">
-      <div className="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+      <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
         <PlaceholderVisual
           imageKey="mentorshipSession"
           tone="paper"
-          label="Mentor and student in a test review — photography coming soon"
-          className="aspect-4/3 w-full lg:aspect-4/5"
+          className="mx-auto aspect-4/5 w-full max-w-md lg:max-w-none"
         />
 
         <div>
@@ -44,7 +43,7 @@ export function MentorshipSection() {
             they are struggling and what to do next.
           </p>
 
-          <ul className="mt-9 grid gap-x-6 gap-y-5 sm:grid-cols-2">
+          <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 sm:gap-x-6">
             {FEATURES.map(({ icon: Icon, label, note }) => (
               <li key={label} className="flex gap-3">
                 <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-kesar-600" />
@@ -56,7 +55,7 @@ export function MentorshipSection() {
             ))}
           </ul>
 
-          <ButtonLink href={`${ROUTES.about}#philosophy`} variant="secondary" className="mt-9">
+          <ButtonLink href={`${ROUTES.about}#philosophy`} variant="secondary" className="mt-7">
             Understand Our Mentorship
           </ButtonLink>
         </div>

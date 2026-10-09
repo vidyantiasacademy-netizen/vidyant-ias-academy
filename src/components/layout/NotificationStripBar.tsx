@@ -6,17 +6,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Megaphone,
-  X,
 } from "lucide-react";
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import type { StripNotice } from "@/data/strip-notices";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { cn } from "@/lib/utils/cn";
-
-/** Dismissal lasts for the browsing session, not forever — a new notice matters. */
-const DISMISS_KEY = "vidyantias:strip-dismissed";
 
 /**
  * Ticker speed, in seconds per character of the strip's text.
@@ -32,30 +28,6 @@ const MIN_DURATION_SECONDS = 14;
 
 /** How long one notice holds the strip when the ticker is off (reduced motion). */
 const STEP_MS = 6000;
-
-/**
- * Dismissal lives in session storage, which React does not own — read it
- * through a store subscription rather than an effect, so the first client
- * render already knows, and a dismissal in another tab lands here too.
- */
-function subscribeToDismissal(onChange: () => void) {
-  window.addEventListener("storage", onChange);
-  return () => window.removeEventListener("storage", onChange);
-}
-
-function readDismissal() {
-  try {
-    return window.sessionStorage.getItem(DISMISS_KEY);
-  } catch {
-    // Private mode or blocked storage: show the strip.
-    return null;
-  }
-}
-
-/** The server has no session storage, so it renders the strip. */
-function noDismissal() {
-  return null;
-}
 
 /** Tone carries an icon as well as a word, so colour is never the only signal. */
 const TONE_ICON = {
@@ -91,9 +63,8 @@ function NoticeLine({ notice }: { notice: StripNotice }) {
  * continuous ticker, end to end, and start again.
  *
  * Shape of the thing:
- *  - it scrolls away with the page. The header below it is sticky; stacking a
- *    permanent strip on top of it would cost a phone a tenth of its screen on
- *    every scroll.
+ *  - it lives inside the sticky header, so it stays pinned with the navigation
+ *    on scroll. It cannot be dismissed: the notices are always on show.
  *  - the ticker is the notice list rendered twice inside one track that slides
  *    by exactly half its width, so the loop has no seam and no gap. The second
  *    copy is `inert` and hidden from assistive tech — it is the same text.
@@ -102,8 +73,6 @@ function NoticeLine({ notice }: { notice: StripNotice }) {
  *  - a visitor who prefers reduced motion gets no ticker at all: the strip
  *    falls back to one notice at a time with chevrons to step through, which
  *    is also what the site-wide reduced-motion rule would otherwise break.
- *  - dismissal is remembered in `sessionStorage` under a signature of the
- *    current notice ids, so adding or changing a notice brings the strip back.
  *
  * `notices` is computed on the server (see `stripNotices`) so the announcement
  * window is evaluated once, against one clock.
@@ -114,19 +83,8 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
   // Assume motion is allowed: that is the common case, and it keeps the markup
   // the server sent — the effect below switches the strip over if it is not.
   const [allowsMotion, setAllowsMotion] = useState(true);
-  const [dismissedHere, setDismissedHere] = useState(false);
 
   const count = notices.length;
-  const signature = notices.map((notice) => notice.id).join("|");
-
-  const storedSignature = useSyncExternalStore(
-    subscribeToDismissal,
-    readDismissal,
-    noDismissal,
-  );
-  // A dismissal is remembered against the notices that were dismissed, so
-  // editing or adding a notice brings the strip back.
-  const isDismissed = dismissedHere || storedSignature === signature;
 
   const goTo = useCallback(
     (next: number) => setIndex(((next % count) + count) % count),
@@ -150,15 +108,6 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
     return () => window.clearTimeout(timer);
   }, [goTo, index, isStepping]);
 
-  function dismiss() {
-    setDismissedHere(true);
-    try {
-      window.sessionStorage.setItem(DISMISS_KEY, signature);
-    } catch {
-      // Nothing to do — the strip stays dismissed for this page view.
-    }
-  }
-
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (allowsMotion || count < 2) return;
     if (event.key === "ArrowRight") {
@@ -169,8 +118,6 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
       goTo(index - 1);
     }
   }
-
-  if (isDismissed) return null;
 
   const characters = notices.reduce(
     (total, notice) => total + notice.text.length + (notice.linkLabel?.length ?? 0),
@@ -183,7 +130,7 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
       role="region"
       aria-label="Site notices"
       data-paused={isPaused}
-      className="group/strip bg-indigo-900 text-white"
+      className="group/strip bg-indigo-strip text-white"
       onKeyDown={handleKeyDown}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -271,15 +218,6 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
             </p>
           </>
         )}
-
-        <button
-          type="button"
-          onClick={dismiss}
-          aria-label="Dismiss notices"
-          className="inline-flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-        >
-          <X aria-hidden className="size-4" />
-        </button>
       </div>
     </div>
   );

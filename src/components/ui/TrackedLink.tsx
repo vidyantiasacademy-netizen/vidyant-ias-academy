@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import type { ComponentProps, MouseEvent } from "react";
 
+import Link from "@/i18n/Link";
 import { ButtonLink, type ButtonVariants } from "@/components/ui/Button";
 import { track, type AnalyticsEvent, type AnalyticsPayload } from "@/lib/analytics";
 

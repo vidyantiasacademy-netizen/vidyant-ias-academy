@@ -1,9 +1,11 @@
 "use client";
 
 import { MessageCircle, Phone } from "lucide-react";
-import { usePathname } from "next/navigation";
 
+import { usePathnameWithoutLocale } from "@/i18n/usePathnameWithoutLocale";
 import { TrackedAnchor, TrackedButtonLink } from "@/components/ui/TrackedLink";
+import { format } from "@/i18n/dictionaries";
+import { useI18n } from "@/i18n/I18nProvider";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CONTACT, CTA, ROUTES, whatsappUrl } from "@/lib/constants/site";
 
@@ -11,7 +13,8 @@ import { CONTACT, CTA, ROUTES, whatsappUrl } from "@/lib/constants/site";
 const HIDDEN_ON: string[] = [ROUTES.counselling, ROUTES.demo, ROUTES.contact];
 
 export function StickyMobileCta() {
-  const pathname = usePathname();
+  const pathname = usePathnameWithoutLocale();
+  const { dict } = useI18n();
   if (HIDDEN_ON.includes(pathname)) return null;
 
   return (
@@ -25,7 +28,7 @@ export function StickyMobileCta() {
           event={ANALYTICS_EVENTS.counsellingClick}
           payload={{ location: "sticky-mobile" }}
         >
-          {CTA.counselling.label}
+          {dict.cta.counselling}
         </TrackedButtonLink>
         <TrackedAnchor
           href={whatsappUrl()}
@@ -33,7 +36,7 @@ export function StickyMobileCta() {
           rel="noreferrer"
           event={ANALYTICS_EVENTS.whatsappClick}
           payload={{ location: "sticky-mobile" }}
-          aria-label="Chat with vidyantIAS on WhatsApp"
+          aria-label={dict.common.whatsappChat}
           className="flex size-11 shrink-0 items-center justify-center rounded-md border border-line-strong text-indigo transition-colors hover:border-indigo"
         >
           <MessageCircle aria-hidden className="size-5" />
@@ -42,7 +45,7 @@ export function StickyMobileCta() {
           href={`tel:${CONTACT.phoneHref}`}
           event={ANALYTICS_EVENTS.phoneClick}
           payload={{ location: "sticky-mobile" }}
-          aria-label={`Call ${CONTACT.phoneDisplay}`}
+          aria-label={format(dict.common.call, { phone: CONTACT.phoneDisplay })}
           className="flex size-11 shrink-0 items-center justify-center rounded-md border border-line-strong text-indigo transition-colors hover:border-indigo"
         >
           <Phone aria-hidden className="size-5" />

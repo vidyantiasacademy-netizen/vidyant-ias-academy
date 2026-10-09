@@ -1,13 +1,13 @@
-import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 
+import Link from "@/i18n/Link";
 import { cn } from "@/lib/utils/cn";
 
 export const buttonStyles = cva(
   [
     "inline-flex items-center justify-center gap-2 rounded-md font-semibold",
-    "transition-[transform,background-color,border-color,color,box-shadow] duration-200 ease-[var(--ease-brand)]",
+    "transition-[transform,background-color,border-color,color,box-shadow,filter] duration-200 ease-[var(--ease-brand)]",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
     "disabled:pointer-events-none disabled:opacity-55",
     "active:translate-y-px",
@@ -16,7 +16,7 @@ export const buttonStyles = cva(
     variants: {
       variant: {
         primary:
-          "bg-indigo text-white hover:bg-indigo-700 hover:-translate-y-0.5 shadow-[0_1px_2px_rgb(11_63_49/0.18)]",
+          "bg-indigo-gradient text-white hover:brightness-125 hover:-translate-y-0.5 shadow-[0_1px_2px_rgb(11_63_49/0.18)]",
         secondary:
           "bg-white text-indigo border border-line-strong hover:border-indigo hover:-translate-y-0.5",
         kesar: "bg-kesar text-indigo-900 hover:bg-kesar-600 hover:text-white hover:-translate-y-0.5",

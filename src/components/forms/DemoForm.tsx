@@ -10,7 +10,6 @@ import { Field } from "@/components/ui/Field";
 import { Honeypot } from "@/components/ui/Honeypot";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
-import { publishedCourses } from "@/data/courses";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { ROUTES } from "@/lib/constants/site";
 import {
@@ -20,13 +19,14 @@ import {
   demoRegistrationSchema,
   type DemoRegistrationInput,
 } from "@/lib/validation/schemas";
+import type { Course } from "@/types";
 
 /** Today, in the yyyy-mm-dd format the date input expects. */
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function DemoForm() {
+export function DemoForm({ courses }: { courses: Course[] }) {
   const lead = useLeadForm(LEAD_FORMS.demo, ANALYTICS_EVENTS.demoSubmit);
 
   const {
@@ -160,7 +160,7 @@ export function DemoForm() {
             <option value="" disabled>
               Select
             </option>
-            {publishedCourses.map((course) => (
+            {courses.map((course) => (
               <option key={course.id} value={course.title}>
                 {course.title}
               </option>

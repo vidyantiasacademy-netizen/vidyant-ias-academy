@@ -8,7 +8,7 @@ interface BadgeProps extends ComponentProps<"span"> {
 
 const tones = {
   kesar: "bg-kesar-100 text-kesar-700",
-  indigo: "bg-indigo text-white",
+  indigo: "bg-indigo-gradient text-white",
   neutral: "bg-paper text-ink-secondary",
   light: "bg-white/10 text-white ring-1 ring-white/20",
   success: "bg-success-50 text-success",

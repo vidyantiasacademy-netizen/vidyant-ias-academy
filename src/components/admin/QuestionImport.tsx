@@ -194,7 +194,7 @@ export function QuestionImport({
 
           <label
             className={cn(
-              "inline-flex h-10 cursor-pointer items-center gap-2 rounded-md bg-indigo px-4 text-small font-semibold text-white hover:bg-indigo-700",
+              "inline-flex h-10 cursor-pointer items-center gap-2 rounded-md bg-indigo-gradient px-4 text-small font-semibold text-white hover:brightness-125",
               "focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo",
             )}
           >

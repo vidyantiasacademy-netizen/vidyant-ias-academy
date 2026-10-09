@@ -38,7 +38,7 @@ export function ResourceFilters({ resources, filters }: ResourceFiltersProps) {
               className={cn(
                 "rounded-full px-4 py-2 text-small font-medium transition-colors",
                 isActive
-                  ? "bg-indigo text-white"
+                  ? "bg-indigo-gradient text-white"
                   : "border border-line text-ink-secondary hover:border-indigo hover:text-indigo",
               )}
             >

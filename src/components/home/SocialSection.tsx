@@ -26,7 +26,7 @@ export function SocialSection() {
 
   return (
     <Section tone="paper" id="social" containerSize="wide">
-      <div className="grid gap-10 lg:grid-cols-[1fr_0.75fr] lg:items-start lg:gap-16">
+      <div className="grid gap-8 lg:grid-cols-[1fr_0.75fr] lg:items-start lg:gap-12">
         <div>
           <Eyebrow>YouTube &amp; Social</Eyebrow>
           <h2 className="mt-4 text-h2 font-semibold text-indigo lg:text-h2-lg">
@@ -37,7 +37,7 @@ export function SocialSection() {
             writing sessions go up on YouTube, free, for anyone preparing — enrolled or not.
           </p>
 
-          <ul className="mt-9 grid gap-3 sm:grid-cols-2">
+          <ul className="mt-7 grid gap-3 sm:grid-cols-2">
             {CHANNEL_CONTENT.map((item) => (
               <li key={item} className="flex gap-3 text-body text-ink-secondary">
                 <span aria-hidden className="mt-2.5 size-1.5 shrink-0 rounded-full bg-kesar" />
@@ -52,7 +52,7 @@ export function SocialSection() {
             rel="noreferrer"
             event={ANALYTICS_EVENTS.socialClick}
             payload={{ network: "youtube", location: "home-social" }}
-            className="mt-9 inline-flex h-13 items-center justify-center gap-2 rounded-md bg-indigo px-6 text-body font-semibold text-white transition-colors hover:bg-indigo-700"
+            className="mt-7 inline-flex h-13 items-center justify-center gap-2 rounded-md bg-indigo-gradient px-6 text-body font-semibold text-white transition-[filter] hover:brightness-125"
           >
             <Play aria-hidden className="size-4.5" />
             Subscribe on YouTube

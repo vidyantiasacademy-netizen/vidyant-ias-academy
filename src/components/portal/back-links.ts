@@ -29,6 +29,7 @@ export const STUDENT_BACK_LINKS: PortalBackLink[] = [
 export const ADMIN_BACK_LINKS: PortalBackLink[] = [
   { prefix: "/admin/courses/", href: "/admin/courses", label: "Back to courses" },
   { prefix: "/admin/tests/", href: "/admin/tests", label: "Back to tests" },
+  { prefix: "/admin/users/", href: "/admin/users", label: "Back to users" },
 ];
 
 /** Longest prefix wins, so a deeper section can override a shallower one. */

@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
 
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  LOCALE_META,
+  localizeHref,
+  type Locale,
+} from "@/i18n/config";
+import { getLocale } from "@/i18n/server";
 import { BRAND, SITE_URL } from "@/lib/constants/site";
 
 const DEFAULT_OG_IMAGE = {
@@ -12,32 +20,56 @@ const DEFAULT_OG_IMAGE = {
 interface PageMetadataInput {
   title: string;
   description: string;
-  /** Path beginning with "/" — used for the canonical URL. */
+  /** Locale-free path beginning with "/" — used for the canonical URL. */
   path: string;
   keywords?: string[];
   noIndex?: boolean;
 }
 
-/** Builds per-page metadata with canonical, Open Graph and X/Twitter tags. */
-export function pageMetadata({
+/**
+ * Canonical plus `hreflang` alternates for a locale-free `path`. Each language
+ * version is its own canonical, and `x-default` points at the English page.
+ */
+export function localizedAlternates(path: string, locale: Locale): Metadata["alternates"] {
+  const absolute = (target: Locale) =>
+    new URL(localizeHref(path, target), SITE_URL).toString();
+
+  return {
+    canonical: absolute(locale),
+    languages: {
+      ...Object.fromEntries(LOCALES.map((l) => [LOCALE_META[l].htmlLang, absolute(l)])),
+      "x-default": absolute(DEFAULT_LOCALE),
+    },
+  };
+}
+
+/**
+ * Builds per-page metadata with canonical, `hreflang`, Open Graph and X/Twitter
+ * tags. Async because it reads the request's locale, so pages export it as
+ * `generateMetadata` rather than a static `metadata` object.
+ */
+export async function pageMetadata({
   title,
   description,
   path,
   keywords,
   noIndex,
-}: PageMetadataInput): Metadata {
-  const url = new URL(path, SITE_URL).toString();
+}: PageMetadataInput): Promise<Metadata> {
+  const locale = await getLocale();
+  const alternates = localizedAlternates(path, locale);
+  const url = alternates?.canonical as string;
 
   return {
     title,
     description,
     keywords,
-    alternates: { canonical: url },
+    alternates,
     robots: noIndex ? { index: false, follow: false } : undefined,
     openGraph: {
       type: "website",
       siteName: BRAND.name,
-      locale: "en_IN",
+      locale: LOCALE_META[locale].ogLocale,
+      alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => LOCALE_META[l].ogLocale),
       title,
       description,
       url,

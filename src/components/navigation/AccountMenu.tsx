@@ -1,9 +1,9 @@
 "use client";
 
 import { ChevronDown, LayoutDashboard, LogOut, UserRound } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import Link from "@/i18n/Link";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { AUTH_CHANGED_EVENT } from "@/lib/auth/events";
@@ -138,7 +138,7 @@ export function AccountMenu({
         onClick={() => setOpen((value) => !value)}
         className="flex items-center gap-2 rounded-md py-1.5 pl-1.5 pr-2 text-small font-medium text-indigo transition-colors hover:bg-paper"
       >
-        <span className="flex size-8 items-center justify-center rounded-full bg-indigo text-small font-semibold text-white">
+        <span className="flex size-8 items-center justify-center rounded-full bg-indigo-gradient text-small font-semibold text-white">
           {initial(account.displayName)}
         </span>
         <span className="max-w-28 truncate">{shortName(account.displayName)}</span>
@@ -162,6 +162,10 @@ export function AccountMenu({
           <Link
             role="menuitem"
             href={account.homeRoute}
+            // The portal opens beside the public site, so the page the reader
+            // was on stays where they left it.
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setOpen(false)}
             className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-small font-semibold text-indigo hover:bg-paper"
           >
@@ -209,7 +213,7 @@ export function AccountDrawerLinks({
         <Link
           href={account.homeRoute}
           onClick={onNavigate}
-          className="rounded-md bg-indigo px-4 py-3 text-center text-small font-semibold text-white"
+          className="rounded-md bg-indigo-gradient px-4 py-3 text-center text-small font-semibold text-white"
         >
           {account.isStaff ? "Admin portal" : "Student portal"}
         </Link>

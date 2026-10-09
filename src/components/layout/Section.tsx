@@ -1,6 +1,7 @@
 import type { ComponentProps } from "react";
 
 import { Container } from "@/components/ui/Container";
+import { KesarLines } from "@/components/ui/KesarLines";
 import { cn } from "@/lib/utils/cn";
 
 interface SectionProps extends ComponentProps<"section"> {
@@ -15,12 +16,12 @@ interface SectionProps extends ComponentProps<"section"> {
 const tones = {
   white: "bg-white",
   paper: "bg-paper",
-  indigo: "bg-indigo text-white focus-invert",
+  indigo: "relative overflow-hidden bg-indigo-gradient text-white focus-invert",
 } as const;
 
 const spacings = {
-  default: "py-14 sm:py-18 lg:py-24",
-  tight: "py-10 sm:py-12 lg:py-16",
+  default: "py-10 sm:py-12 lg:py-16",
+  tight: "py-8 sm:py-10 lg:py-12",
   none: "",
 } as const;
 
@@ -44,7 +45,14 @@ export function Section({
       )}
       {...props}
     >
-      {bleed ? children : <Container size={containerSize}>{children}</Container>}
+      {tone === "indigo" ? <KesarLines /> : null}
+      {bleed ? (
+        children
+      ) : (
+        <Container size={containerSize} className={tone === "indigo" ? "relative" : undefined}>
+          {children}
+        </Container>
+      )}
     </section>
   );
 }

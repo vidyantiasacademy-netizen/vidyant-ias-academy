@@ -1,11 +1,14 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+import { isUniquePerLanguage, languageField } from "./i18n";
+
 /** Editorial posts: strategy, subject explainers, topper interviews. */
 export const blog = defineType({
   name: "blog",
   title: "Blog post",
   type: "document",
   fields: [
+    languageField,
     defineField({
       name: "title",
       type: "string",
@@ -14,7 +17,7 @@ export const blog = defineType({
     defineField({
       name: "slug",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: { source: "title", maxLength: 96, isUnique: isUniquePerLanguage },
       description: "Part of the public URL. Changing it breaks existing links.",
       validation: (rule) => rule.required(),
     }),

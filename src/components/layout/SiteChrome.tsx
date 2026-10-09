@@ -5,6 +5,7 @@ import { FloatingActions } from "@/components/layout/FloatingActions";
 import { NotificationStrip } from "@/components/layout/NotificationStrip";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
 import { Header } from "@/components/navigation/Header";
+import { getDictionary } from "@/i18n/server";
 
 /**
  * Public-website chrome: header, footer and the conversion CTAs.
@@ -15,17 +16,18 @@ import { Header } from "@/components/navigation/Header";
  * the `(marketing)` layout when they render, so they would otherwise lose the
  * header and footer.
  */
-export function SiteChrome({ children }: { children: ReactNode }) {
+export async function SiteChrome({ children }: { children: ReactNode }) {
+  const dict = await getDictionary();
+
   return (
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-indigo focus:px-4 focus:py-2.5 focus:text-small focus:font-semibold focus:text-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-indigo-gradient focus:px-4 focus:py-2.5 focus:text-small focus:font-semibold focus:text-white"
       >
-        Skip to main content
+        {dict.common.skipToContent}
       </a>
-      <NotificationStrip />
-      <Header />
+      <Header notice={<NotificationStrip />} />
       <main id="main" className="flex-1 pb-20 lg:pb-0">
         {children}
       </main>

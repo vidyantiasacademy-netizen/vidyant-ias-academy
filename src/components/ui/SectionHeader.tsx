@@ -31,7 +31,7 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between",
+        "flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between",
         centered && "lg:flex-col lg:items-center",
         className,
       )}
@@ -45,7 +45,7 @@ export function SectionHeader({
         {eyebrow ? (
           <Eyebrow
             tone={tone === "light" ? "light" : "kesar"}
-            className={cn("mb-4", centered && "justify-center")}
+            className={cn("mb-3", centered && "justify-center")}
           >
             {eyebrow}
           </Eyebrow>
@@ -61,7 +61,7 @@ export function SectionHeader({
         {description ? (
           <p
             className={cn(
-              "mt-4 text-body sm:text-body-lg",
+              "mt-3 text-body sm:text-body-lg",
               tone === "light" ? "text-white/75" : "text-ink-secondary",
             )}
           >

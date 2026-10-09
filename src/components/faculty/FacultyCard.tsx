@@ -1,7 +1,7 @@
 import { ArrowRight, GraduationCap } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
+import Link from "@/i18n/Link";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/utils/cn";

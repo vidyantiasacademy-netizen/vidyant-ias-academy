@@ -1,5 +1,7 @@
 import { defineField, defineType } from "sanity";
 
+import { languageField } from "./i18n";
+
 /**
  * Site-wide banner: admission deadlines, batch starts, result announcements.
  *
@@ -12,6 +14,7 @@ export const announcement = defineType({
   title: "Announcement",
   type: "document",
   fields: [
+    languageField,
     defineField({
       name: "title",
       type: "string",

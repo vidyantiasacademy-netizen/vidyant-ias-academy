@@ -27,7 +27,7 @@ export function TestimonialsSection() {
       />
 
       {testimonials.length > 0 ? (
-        <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-5">
+        <ul className="mt-7 grid gap-4 md:grid-cols-2 lg:mt-9 lg:grid-cols-3 lg:gap-5">
           {testimonials.map((testimonial) => (
             <li key={testimonial.id}>
               <TestimonialCard testimonial={testimonial} />
@@ -36,7 +36,7 @@ export function TestimonialsSection() {
         </ul>
       ) : (
         <EmptyState
-          className="mt-12"
+          className="mt-8"
           icon={<MessageSquareQuote aria-hidden className="size-5" />}
           title="Our first cohort is preparing right now"
           description="vidyantIAS is a new institute, so there are no student testimonials to show yet — and we would rather leave this space empty than fill it with words no student said. Until then, judge us the way you should judge any institute: attend a class and speak to the faculty."

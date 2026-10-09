@@ -76,7 +76,7 @@ sanity.io/manage → **API** → **Webhooks** → Create webhook:
 | URL | `https://www.vidyantias.com/api/revalidate/sanity` |
 | Dataset | `production` |
 | Trigger on | Create, Update, Delete |
-| Filter | `_type in ["blog","currentAffair","faculty","course","demoClass","freeResource","faq","announcement","category","subject","tag","author"]` |
+| Filter | `_type in ["blog","currentAffair","faculty","course","demoClass","freeResource","faq","announcement","category","subject","tag","author","translation.metadata"]` |
 | Projection | `{_type, "slug": slug.current}` |
 | HTTP method | POST |
 | API version | `v2021-03-25` |
@@ -116,6 +116,73 @@ spellings in the filters forever.
 `faculty.slug` ↔ `faculty/{uid}.sanitySlug` and `course.slug` ↔
 `courses/{courseId}.sanitySlug`. Set both sides when creating a pair, or the
 public page and the operational record will not find each other.
+
+#### Courses
+
+`src/lib/courses/catalogue.ts` builds the public catalogue from both halves:
+
+| Firestore `courses/{courseId}` (admin panel) | Sanity `course` (Studio) |
+| --- | --- |
+| whether it is listed (`status: published`) | title, summary, description |
+| category — drives the `/courses` filter | highlights, audience, outcomes |
+| delivery modes, duration in months | curriculum, tests, mentorship, study material |
+| price (null → "shared during counselling") | schedule, duration text, faculty, sort order |
+
+A course is listed only when the Firestore record is published **and** a Sanity
+document's slug equals its `sanitySlug`. To add one: create it in the admin
+panel with **Sanity slug** filled in, then publish a Course (content) document
+with that slug in the Studio. Admin edits show within seconds (the actions
+revalidate the `firestore:courses` tag); Studio edits arrive through the
+webhook below, or within the hour.
+
+The launch catalogue is seeded by two idempotent scripts reading
+`scripts/seed/courses.mjs`:
+
+```bash
+npm run seed:courses:firestore   # creates missing records, links existing ones
+npx sanity login                 # once
+npm run seed:courses:sanity      # creates missing documents (--replace to overwrite)
+```
+
+#### Everything else
+
+FAQs, free resources, blog posts, current affairs and announcements are read
+from Sanity through `src/lib/content/site.ts`, which maps them onto the
+`@/types` shapes the components already use. `src/data/` keeps only page copy
+(labels, empty-state text) and the content with no Sanity schema yet: faculty
+placeholders, events, quizzes, results, testimonials and batches.
+
+```bash
+npm run seed:content:sanity      # FAQs + resources (migrated), taxonomy, sample posts,
+                                 # current affairs and an announcement
+```
+
+The samples are real content, published: evergreen blog posts, current-affairs
+analyses of dated developments with official sources, and an undated
+announcement. Edit or unpublish them in the Studio like any other document.
+
+> Without the webhook (§5), a published change can take up to an hour to show,
+> and `next dev` keeps the stale result in memory until it restarts.
+
+## Translations
+
+English and Hindi, configured from `src/i18n/config.ts`. Two strategies:
+
+- **Document per language** — blog, current affairs, announcements, faculty,
+  courses, demo classes, free resources, FAQs. Each list in the Studio splits
+  into *All / English / Hindi*. Open an English document, use the
+  **Translations** menu to create the Hindi version, translate it, publish.
+  Translations keep the English slug, so `/blog/x` and `/hi/blog/x` are the
+  same article. The `@sanity/document-internationalization` plugin links them
+  through a `translation.metadata` document.
+- **Field per language** — categories, subjects, tags (`titleI18n.hi`) and the
+  author designation (`designationI18n.hi`). Fill the Hindi field in the
+  collapsed *translations* group under the English one.
+
+Untranslated content falls back to English on the Hindi site: a list shows the
+English document until a Hindi translation is **published**, and an empty Hindi
+label shows the English one. Documents from before localisation have no
+`language` field and count as English.
 
 ## What must never go in Sanity
 

@@ -1,23 +1,17 @@
 import { toPlainText } from "next-sanity";
 
-import { publishedFaculty } from "@/data/faculty";
 import { projectedImageUrl } from "@/lib/sanity/image";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
 import { getFaculty } from "@/lib/sanity/queries";
 import type { FacultyMember, PortableTextBlocks } from "@/lib/sanity/types";
 import type { Faculty, FacultyArea } from "@/types";
 
 /**
- * The faculty list the public site renders.
- *
- * Two sources, deliberately: Sanity holds the verified profiles the institute
- * publishes, and `src/data/faculty.ts` holds the placeholder role cards that
- * keep the page from looking empty while profiles are still being verified.
- * Sanity entries come first and win on slug collision, so replacing a
- * placeholder is a matter of publishing a document with the same slug.
+ * The faculty list the public site renders, read from Sanity.
  *
  * Mapping happens here rather than in the components so that `FacultyCard`,
  * `FacultyFilters` and the profile page keep taking one `Faculty` shape and do
- * not need to know which source an entry came from.
+ * not need to know the CMS projection.
  */
 
 /**
@@ -57,12 +51,8 @@ function plainText(blocks: PortableTextBlocks): string {
 }
 
 /**
- * Sanity profile → the `Faculty` shape the UI renders.
- *
- * Fields the CMS has no equivalent for are left empty rather than filled with
- * plausible text: `courseIds` (the course→faculty link runs the other way in
- * Sanity) and `teachingPhilosophy`. Every consumer treats an empty value as
- * "nothing to show" instead of rendering a blank heading.
+ * Sanity profile → the `Faculty` shape the UI renders. Every consumer treats an
+ * empty value as "nothing to show" instead of rendering a blank heading.
  */
 export function toFacultyProfile(member: FacultyMember): Faculty {
   return {
@@ -75,29 +65,23 @@ export function toFacultyProfile(member: FacultyMember): Faculty {
     specialisations: member.subjects ?? [],
     bio: member.bio ? plainText(member.bio) : "",
     qualifications: member.achievements ?? [],
-    teachingPhilosophy: "",
-    courseIds: [],
+    teachingPhilosophy: member.teachingPhilosophy ?? "",
     image: projectedImageUrl(member.photo, { width: 800, height: 1000 }),
-    // A document in Sanity is only reachable here once published, and the
-    // institute does not publish a profile it has not verified.
-    isPlaceholder: false,
+    isPlaceholder: member.profilePending,
     status: "published",
   };
 }
 
-/** Sanity profiles first, then any placeholder whose slug is still unused. */
-export async function getFacultyRoster(): Promise<Faculty[]> {
-  const published = (await getFaculty())
-    .filter((member) => member.slug)
-    .map(toFacultyProfile);
-
-  const taken = new Set(published.map((member) => member.slug));
-
-  return [...published, ...publishedFaculty.filter((member) => !taken.has(member.slug))];
+/** Published profiles in `locale`, or in English where a translation is missing. */
+export async function getFacultyRoster(locale: Locale = DEFAULT_LOCALE): Promise<Faculty[]> {
+  return (await getFaculty(locale)).filter((member) => member.slug).map(toFacultyProfile);
 }
 
-export async function getFacultyProfile(slug: string): Promise<Faculty | null> {
-  const roster = await getFacultyRoster();
+export async function getFacultyProfile(
+  slug: string,
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<Faculty | null> {
+  const roster = await getFacultyRoster(locale);
 
   return roster.find((member) => member.slug === slug) ?? null;
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import { Check, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import Link from "@/i18n/Link";
 import { PROMO_BANNERS } from "@/components/hero/promo-banners";
 import { TrackedButtonLink } from "@/components/ui/TrackedLink";
 import { cn } from "@/lib/utils/cn";
@@ -230,7 +230,7 @@ export function PromoBannerCarousel() {
                     className={cn(
                       "h-1 w-full rounded-full transition-colors duration-200",
                       slide === index
-                        ? "bg-indigo"
+                        ? "bg-indigo-gradient"
                         : "bg-line-strong group-hover:bg-ink-secondary",
                     )}
                   />

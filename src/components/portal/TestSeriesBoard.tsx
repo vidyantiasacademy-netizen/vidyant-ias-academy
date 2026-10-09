@@ -1,6 +1,6 @@
 import { CalendarClock, ClipboardList } from "lucide-react";
-import Link from "next/link";
 
+import Link from "@/i18n/Link";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";

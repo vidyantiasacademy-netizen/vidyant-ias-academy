@@ -1,8 +1,9 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+
+import Link from "@/i18n/Link";
+import { usePathnameWithoutLocale } from "@/i18n/usePathnameWithoutLocale";
 
 import { resolveBackLink, type PortalBackLink as BackLink } from "./back-links";
 
@@ -18,7 +19,7 @@ import { resolveBackLink, type PortalBackLink as BackLink } from "./back-links";
  * decides whether there is anything to go back to.
  */
 export function PortalBackLink({ links }: { links: BackLink[] }) {
-  const pathname = usePathname();
+  const pathname = usePathnameWithoutLocale();
   const back = resolveBackLink(pathname, links);
 
   if (!back) return null;

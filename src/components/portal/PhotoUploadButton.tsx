@@ -94,7 +94,7 @@ export function PhotoUploadButton({ hasPhoto }: { hasPhoto: boolean }) {
         type="button"
         disabled={busy}
         onClick={() => inputRef.current?.click()}
-        className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-indigo px-5 text-small font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-55 sm:text-body"
+        className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-indigo-gradient px-5 text-small font-semibold text-white transition-[filter] hover:brightness-125 disabled:opacity-55 sm:text-body"
       >
         <Camera aria-hidden className="size-4" />
         {busy ? "Uploading…" : hasPhoto ? "Replace photo" : "Upload photo"}

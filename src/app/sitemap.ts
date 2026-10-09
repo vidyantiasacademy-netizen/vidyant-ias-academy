@@ -1,14 +1,40 @@
 import type { MetadataRoute } from "next";
 
-import { publishedBlogPosts } from "@/data/blog";
-import { publishedCourses } from "@/data/courses";
-import { publishedCurrentAffairs } from "@/data/current-affairs";
+import { LOCALES, LOCALE_META, localizeHref } from "@/i18n/config";
 import { ROUTES, SITE_URL } from "@/lib/constants/site";
+import { getSiteCurrentAffairs, getSitePosts } from "@/lib/content/site";
+import { getCourseCatalogue } from "@/lib/courses/catalogue";
 import { getFacultyRoster } from "@/lib/faculty/roster";
+
+type Entry = MetadataRoute.Sitemap[number];
+
+/**
+ * One URL per locale for a locale-free `path`, each listing every language
+ * version as an `hreflang` alternate — Google wants the full set on each URL.
+ */
+function localized(path: string, entry: Omit<Entry, "url" | "alternates">): Entry[] {
+  const absolute = (locale: (typeof LOCALES)[number]) =>
+    new URL(localizeHref(path, locale), SITE_URL).toString();
+
+  const languages = Object.fromEntries(
+    LOCALES.map((locale) => [LOCALE_META[locale].htmlLang, absolute(locale)]),
+  );
+
+  return LOCALES.map((locale) => ({
+    ...entry,
+    url: absolute(locale),
+    alternates: { languages },
+  }));
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-  const faculty = await getFacultyRoster();
+  const [faculty, courses, posts, affairs] = await Promise.all([
+    getFacultyRoster(),
+    getCourseCatalogue(),
+    getSitePosts(),
+    getSiteCurrentAffairs(undefined, 200),
+  ]);
 
   const staticRoutes: Array<{
     path: string;
@@ -38,35 +64,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   return [
-    ...staticRoutes.map((route) => ({
-      url: new URL(route.path, SITE_URL).toString(),
-      lastModified: now,
-      changeFrequency: route.changeFrequency,
-      priority: route.priority,
-    })),
-    ...publishedCourses.map((course) => ({
-      url: new URL(`/courses/${course.slug}`, SITE_URL).toString(),
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })),
-    ...faculty.map((member) => ({
-      url: new URL(`/faculty/${member.slug}`, SITE_URL).toString(),
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
-    ...publishedBlogPosts.map((post) => ({
-      url: new URL(`/blog/${post.slug}`, SITE_URL).toString(),
-      lastModified: new Date(post.publishedAt),
-      changeFrequency: "yearly" as const,
-      priority: 0.5,
-    })),
-    ...publishedCurrentAffairs.map((item) => ({
-      url: new URL(`/current-affairs/${item.slug}`, SITE_URL).toString(),
-      lastModified: new Date(item.publishedAt),
-      changeFrequency: "yearly" as const,
-      priority: 0.5,
-    })),
+    ...staticRoutes.flatMap((route) =>
+      localized(route.path, {
+        lastModified: now,
+        changeFrequency: route.changeFrequency,
+        priority: route.priority,
+      }),
+    ),
+    ...courses.flatMap((course) =>
+      localized(`/courses/${course.slug}`, {
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.8,
+      }),
+    ),
+    ...faculty.flatMap((member) =>
+      localized(`/faculty/${member.slug}`, {
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      }),
+    ),
+    ...posts.flatMap((post) =>
+      localized(`/blog/${post.slug}`, {
+        lastModified: new Date(post.publishedAt),
+        changeFrequency: "yearly",
+        priority: 0.5,
+      }),
+    ),
+    ...affairs.flatMap((item) =>
+      localized(`/current-affairs/${item.slug}`, {
+        lastModified: new Date(item.publishedAt),
+        changeFrequency: "yearly",
+        priority: 0.5,
+      }),
+    ),
   ];
 }

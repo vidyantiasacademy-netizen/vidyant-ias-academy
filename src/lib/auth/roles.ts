@@ -9,6 +9,16 @@ import { ROLES, type Role } from "@/types/db";
  * `firestore.rules`, because anything running in a browser can be edited.
  */
 
+/** How a role reads in the admin screens. */
+export const ROLE_LABELS: Record<Role, string> = {
+  STUDENT: "Student",
+  MENTOR: "Mentor",
+  FACULTY: "Faculty",
+  COUNSELLOR: "Counsellor",
+  ADMIN: "Admin",
+  SUPER_ADMIN: "Super admin",
+};
+
 /** Rank derived from declaration order in `ROLES`, least → most privileged. */
 const RANK: Record<Role, number> = Object.fromEntries(
   ROLES.map((role, index) => [role, index]),

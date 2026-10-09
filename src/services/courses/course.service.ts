@@ -26,8 +26,8 @@ import { enrollmentService } from "../enrollments/enrollment.service";
 /**
  * Courses, batches and lessons.
  *
- * The public course pages do not use this service — they render from
- * `src/data/courses.ts` today and from Sanity once content moves there. This is
+ * The public course pages do not use this service — they render the joined
+ * Firestore + Sanity catalogue in `src/lib/courses/catalogue.ts`. This is
  * the enrolled-student and admin view: what a learner may actually open.
  */
 

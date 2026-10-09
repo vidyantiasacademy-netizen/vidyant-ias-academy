@@ -100,27 +100,30 @@ export const ROUTES = {
   refund: "/refund-policy",
 } as const;
 
-/** Desktop primary navigation. */
+/**
+ * Desktop primary navigation. `label` is the English text; `key` indexes
+ * `dict.nav` in `src/i18n/dictionaries`, which is what the header renders.
+ */
 export const PRIMARY_NAV = [
-  { label: "Home", href: ROUTES.home },
-  { label: "About", href: ROUTES.about },
-  { label: "Courses", href: ROUTES.courses },
-  { label: "Faculty", href: ROUTES.faculty },
-  { label: "Results", href: ROUTES.results },
-  { label: "Resources", href: ROUTES.resources },
-  { label: "Current Affairs", href: ROUTES.currentAffairs },
+  { key: "home", label: "Home", href: ROUTES.home },
+  { key: "about", label: "About", href: ROUTES.about },
+  { key: "courses", label: "Courses", href: ROUTES.courses },
+  { key: "faculty", label: "Faculty", href: ROUTES.faculty },
+  { key: "results", label: "Results", href: ROUTES.results },
+  { key: "resources", label: "Resources", href: ROUTES.resources },
+  { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
 ] as const;
 
 /** Mobile drawer navigation — a superset of the desktop links. */
 export const MOBILE_NAV = [
   ...PRIMARY_NAV,
-  { label: "Admissions & Batches", href: ROUTES.enrol },
-  { label: "Quizzes", href: ROUTES.quizzes },
-  { label: "Events", href: ROUTES.events },
-  { label: "Testimonials", href: ROUTES.testimonials },
-  { label: "FAQ", href: ROUTES.faq },
-  { label: "Contact", href: ROUTES.contact },
-  { label: "Search", href: ROUTES.search },
+  { key: "enrol", label: "Admissions & Batches", href: ROUTES.enrol },
+  { key: "quizzes", label: "Quizzes", href: ROUTES.quizzes },
+  { key: "events", label: "Events", href: ROUTES.events },
+  { key: "testimonials", label: "Testimonials", href: ROUTES.testimonials },
+  { key: "faq", label: "FAQ", href: ROUTES.faq },
+  { key: "contact", label: "Contact", href: ROUTES.contact },
+  { key: "search", label: "Search", href: ROUTES.search },
 ] as const;
 
 export const CTA = {
@@ -180,26 +183,26 @@ export const YOUTUBE: {
 
 export const FOOTER_NAV = {
   explore: [
-    { label: "About", href: ROUTES.about },
-    { label: "Courses", href: ROUTES.courses },
-    { label: "Admissions & Batches", href: ROUTES.enrol },
-    { label: "Faculty", href: ROUTES.faculty },
-    { label: "Results", href: ROUTES.results },
-    { label: "Testimonials", href: ROUTES.testimonials },
+    { key: "about", label: "About", href: ROUTES.about },
+    { key: "courses", label: "Courses", href: ROUTES.courses },
+    { key: "enrol", label: "Admissions & Batches", href: ROUTES.enrol },
+    { key: "faculty", label: "Faculty", href: ROUTES.faculty },
+    { key: "results", label: "Results", href: ROUTES.results },
+    { key: "testimonials", label: "Testimonials", href: ROUTES.testimonials },
   ],
   resources: [
-    { label: "Current Affairs", href: ROUTES.currentAffairs },
-    { label: "Practice Quizzes", href: ROUTES.quizzes },
-    { label: "Blog", href: ROUTES.blog },
-    { label: "UPSC Starter Kit", href: `${ROUTES.resources}#upsc-starter-kit` },
-    { label: "PYQ Strategy", href: `${ROUTES.resources}#pyq-strategy` },
-    { label: "Download Brochure", href: ROUTES.brochure },
-    { label: "Events", href: ROUTES.events },
+    { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
+    { key: "practiceQuizzes", label: "Practice Quizzes", href: ROUTES.quizzes },
+    { key: "blog", label: "Blog", href: ROUTES.blog },
+    { key: "starterKit", label: "UPSC Starter Kit", href: `${ROUTES.resources}#upsc-starter-kit` },
+    { key: "pyqStrategy", label: "PYQ Strategy", href: `${ROUTES.resources}#pyq-strategy` },
+    { key: "brochure", label: "Download Brochure", href: ROUTES.brochure },
+    { key: "events", label: "Events", href: ROUTES.events },
   ],
   legal: [
-    { label: "Privacy Policy", href: ROUTES.privacy },
-    { label: "Terms & Conditions", href: ROUTES.terms },
-    { label: "Refund Policy", href: ROUTES.refund },
+    { key: "privacy", label: "Privacy Policy", href: ROUTES.privacy },
+    { key: "terms", label: "Terms & Conditions", href: ROUTES.terms },
+    { key: "refund", label: "Refund Policy", href: ROUTES.refund },
   ],
 } as const;
 

@@ -30,7 +30,7 @@ export function BatchesSection() {
       />
 
       {batches.length > 0 ? (
-        <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-5">
+        <ul className="mt-7 grid gap-4 md:grid-cols-2 lg:mt-9 lg:grid-cols-3 lg:gap-5">
           {batches.map((batch) => (
             <li key={batch.id}>
               <BatchCard batch={batch} />
@@ -39,7 +39,7 @@ export function BatchesSection() {
         </ul>
       ) : (
         <EmptyState
-          className="mt-12"
+          className="mt-8"
           icon={<CalendarClock aria-hidden className="size-5" />}
           title="The next batch calendar is being finalised"
           description="Rather than publish a date we cannot keep, we will tell you the moment it is confirmed. Ask for a callback and our academic team will walk you through the programme, the timings and the fee structure."

@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+import { isUniquePerLanguage, languageField } from "./i18n";
+
 /**
  * Public faculty profiles.
  *
@@ -13,6 +15,7 @@ export const faculty = defineType({
   title: "Faculty",
   type: "document",
   fields: [
+    languageField,
     defineField({
       name: "name",
       type: "string",
@@ -21,7 +24,7 @@ export const faculty = defineType({
     defineField({
       name: "slug",
       type: "slug",
-      options: { source: "name", maxLength: 96 },
+      options: { source: "name", maxLength: 96, isUnique: isUniquePerLanguage },
       description:
         "Must match `faculty/{uid}.sanitySlug` in Firestore for the profiles to link.",
       validation: (rule) => rule.required(),
@@ -59,6 +62,22 @@ export const faculty = defineType({
     defineField({
       name: "bio",
       type: "blockContent",
+    }),
+    defineField({
+      name: "teachingPhilosophy",
+      type: "text",
+      title: "Teaching philosophy",
+      rows: 3,
+      description: "One or two sentences, shown as a quote on the profile page.",
+    }),
+    defineField({
+      name: "profilePending",
+      type: "boolean",
+      title: "Profile pending verification",
+      description:
+        "On while this profile describes a teaching role rather than a verified person. " +
+        'Shows a "Profile pending" label and keeps the page out of search engines.',
+      initialValue: false,
     }),
     defineField({
       name: "achievements",

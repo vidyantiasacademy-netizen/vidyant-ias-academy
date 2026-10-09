@@ -43,7 +43,7 @@ export function ResultsSection() {
         </>
       ) : (
         <EmptyState
-          className="mt-12"
+          className="mt-8"
           icon={<BadgeCheck aria-hidden className="size-5" />}
           title="No results published yet"
           description="vidyantIAS has not completed an examination cycle, so there is nothing verified to publish. When there is, this page will list the stage cleared for each candidate — Prelims, Mains, Interview or Final Selection — with their consent. We will never publish a number we cannot substantiate."

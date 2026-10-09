@@ -23,9 +23,9 @@ import type { Event } from "@/types";
  *   status: "published",
  * }
  */
-export const events: Event[] = [];
+const events: Event[] = [];
 
-export const publishedEvents = events.filter((event) => event.status === "published");
+const publishedEvents = events.filter((event) => event.status === "published");
 
 export function upcomingEvents(now = new Date()) {
   return publishedEvents
@@ -35,8 +35,4 @@ export function upcomingEvents(now = new Date()) {
 
 export function nextOrientation(now = new Date()) {
   return upcomingEvents(now).find((event) => event.type === "orientation");
-}
-
-export function eventBySlug(slug: string) {
-  return events.find((event) => event.slug === slug);
 }

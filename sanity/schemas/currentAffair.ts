@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+import { isUniquePerLanguage, languageField } from "./i18n";
+
 /**
  * Daily current affairs.
  *
@@ -12,6 +14,7 @@ export const currentAffair = defineType({
   title: "Current affair",
   type: "document",
   fields: [
+    languageField,
     defineField({
       name: "title",
       type: "string",
@@ -20,7 +23,7 @@ export const currentAffair = defineType({
     defineField({
       name: "slug",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: { source: "title", maxLength: 96, isUnique: isUniquePerLanguage },
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -61,6 +64,15 @@ export const currentAffair = defineType({
       name: "content",
       type: "blockContent",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "relevance",
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
+      options: {
+        list: ["Prelims", "Mains", "Essay", "Interview"].map((value) => ({ title: value, value })),
+      },
+      description: "Which stages of the examination this analysis is useful for.",
     }),
     defineField({
       name: "relatedSubjects",

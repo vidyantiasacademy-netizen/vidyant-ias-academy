@@ -38,8 +38,11 @@ export interface Course {
   schedule: string;
   /** Kept as a string so "Shared on counselling call" is a valid, honest value. */
   fee: string;
-  facultyIds: string[];
+  /** Who teaches it. `subject` is enough for a card; the course page resolves full profiles by slug. */
+  faculty: { slug: string; subject: string }[];
   faqIds: string[];
+  /** Card photo: the Sanity hero image, or a stock stand-in for the stage until one is uploaded. */
+  image: { src: string; alt: string; lqip?: string };
   status: ContentStatus;
 }
 
@@ -57,7 +60,6 @@ export interface Faculty {
   bio: string;
   qualifications: string[];
   teachingPhilosophy: string;
-  courseIds: string[];
   image: string;
   /** True until the institute supplies verified profile details. */
   isPlaceholder: boolean;
@@ -177,7 +179,7 @@ export type BatchMode = "Classroom (Pune)" | "Live online" | "Hybrid";
 export interface Batch {
   id: string;
   slug: string;
-  /** Program this batch belongs to — see `data/courses.ts`. */
+  /** Program this batch belongs to — a `courses/{courseId}` id. */
   courseId: string;
   title: string;
   /** ISO date string for the first session. */

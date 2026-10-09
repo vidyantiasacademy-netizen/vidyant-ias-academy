@@ -1,4 +1,3 @@
-import { activeAnnouncements } from "@/data/announcements";
 import { CTA, EXAM_CYCLE, ROUTES } from "@/lib/constants/site";
 import type { Announcement } from "@/types";
 
@@ -34,7 +33,7 @@ const MAX_NOTICES = 6;
  * TODO(institute): edit as campaigns change. The strip adapts to any count,
  * and hides itself when the list is empty.
  */
-export const STANDING_STRIP_NOTICES: StripNotice[] = [
+const STANDING_STRIP_NOTICES: StripNotice[] = [
   {
     id: "admissions",
     tone: "success",
@@ -69,11 +68,11 @@ export const STANDING_STRIP_NOTICES: StripNotice[] = [
  * What the strip shows right now: dated notices first, newest at the front,
  * then the standing lines.
  *
- * Computed on the server and passed down as props, so the `now` used for the
- * announcement window is the server's clock and the markup matches on hydration.
+ * `active` is `getSiteAnnouncements()` — already windowed to now by the Sanity
+ * query, on the server, so the markup matches on hydration.
  */
-export function stripNotices(now = new Date()): StripNotice[] {
-  const dated: StripNotice[] = activeAnnouncements(now).map((notice) => ({
+export function stripNotices(active: Announcement[]): StripNotice[] {
+  const dated: StripNotice[] = active.map((notice) => ({
     id: `announcement-${notice.id}`,
     tone: notice.tone,
     text: notice.title,

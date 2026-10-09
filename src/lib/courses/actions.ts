@@ -1,9 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
+import { revalidateLocalizedPath } from "@/i18n/revalidate";
 import { action, roleGuard } from "@/lib/auth/guards";
+import { COURSES_CACHE_TAG } from "@/lib/courses/catalogue";
 import { AppError, ERROR_CODES } from "@/lib/errors";
 import { courseSchema } from "@/lib/validation/entities";
 import { courseService } from "@/services/courses/course.service";
@@ -47,7 +49,10 @@ export const createCourseAction = action(
       stats: { lessonCount: 0, testCount: 0, enrolledCount: 0 },
     });
 
-    revalidatePath("/admin/courses");
+    revalidateLocalizedPath("/admin/courses");
+    // The public catalogue caches published records; a price or status change
+    // should reach /courses without waiting out the hour.
+    revalidateTag(COURSES_CACHE_TAG, "max");
     return { id: course.id };
   },
 );
@@ -59,7 +64,8 @@ export const updateCourseAction = action(
     await assertSlugFree(fields.slug, courseId);
     await courseService.update(courseId, fields);
 
-    revalidatePath("/admin/courses", "layout");
+    revalidateLocalizedPath("/admin/courses", "layout");
+    revalidateTag(COURSES_CACHE_TAG, "max");
     return { id: courseId };
   },
 );
@@ -123,7 +129,7 @@ export const enrolStudentAction = action(
 
     await enrollmentService.enrollOffline({ studentUid, courseId, startsAt, endsAt });
 
-    revalidatePath(`/admin/courses/${courseId}`);
+    revalidateLocalizedPath(`/admin/courses/${courseId}`);
     return { studentUid };
   },
 );
@@ -138,7 +144,7 @@ export const setEnrollmentStatusAction = action(
   async ({ courseId, enrollmentId, status }) => {
     await enrollmentService.setStatus(enrollmentId, status);
 
-    revalidatePath(`/admin/courses/${courseId}`);
+    revalidateLocalizedPath(`/admin/courses/${courseId}`);
     return { status };
   },
 );

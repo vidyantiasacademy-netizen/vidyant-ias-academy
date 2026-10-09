@@ -1,25 +1,34 @@
 "use client";
 
-import { Menu, Phone, Search, X } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Menu, Search, X } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
+import Link from "@/i18n/Link";
+import { usePathnameWithoutLocale } from "@/i18n/usePathnameWithoutLocale";
 import {
   AccountDrawerLinks,
   AccountMenu,
   useAccount,
 } from "@/components/navigation/AccountMenu";
+import { ContactBar } from "@/components/navigation/ContactBar";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
-import { TrackedAnchor, TrackedButtonLink } from "@/components/ui/TrackedLink";
+import { TrackedButtonLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
-import { CONTACT, CTA, MOBILE_NAV, PRIMARY_NAV, ROUTES } from "@/lib/constants/site";
+import { LanguageSwitcher } from "@/components/navigation/LanguageSwitcher";
+import { useI18n } from "@/i18n/I18nProvider";
+import { CTA, MOBILE_NAV, PRIMARY_NAV, ROUTES } from "@/lib/constants/site";
 import { cn } from "@/lib/utils/cn";
 
-export function Header() {
-  const pathname = usePathname();
+/**
+ * `notice` is the notification strip. It renders inside the sticky header, so
+ * it stays pinned with the navigation on scroll. It is passed in rather than
+ * imported because it is a server component that reads the notice schedule.
+ */
+export function Header({ notice }: { notice?: ReactNode }) {
+  const pathname = usePathnameWithoutLocale();
+  const { dict } = useI18n();
   // One request per header render; both the dropdown and the drawer read it.
   const account = useAccount();
   const [scrolled, setScrolled] = useState(false);
@@ -36,9 +45,9 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // The drawer hangs off the bottom of the header, and the header does not
-  // always sit at the top of the viewport: the notification strip scrolls away
-  // above it. Measure instead of assuming a height, and re-measure on resize —
+  // The drawer hangs off the bottom of the header, and the header's height is
+  // not fixed: the notification strip inside it may or may not be showing.
+  // Measure instead of assuming a height, and re-measure on resize —
   // background scrolling is locked while the drawer is open, so nothing else
   // can move the header underneath it.
   useEffect(() => {
@@ -86,16 +95,18 @@ export function Header() {
           : "border-b border-transparent bg-white",
       )}
     >
+      {notice}
+      <ContactBar />
       <Container size="wide">
-        <div className="flex h-16 items-center justify-between gap-4 sm:h-20 lg:h-24 lg:gap-10 xl:gap-16">
+        <div className="flex h-16 items-center justify-between gap-4 sm:h-20 lg:h-24 lg:gap-8">
           <span className="flex items-center">
             <Logo size="md" priority />
           </span>
 
-          <nav aria-label="Primary" className="hidden lg:block">
-            {/* Seven links plus two buttons is a tight bar at exactly 1024px,
-                so the gaps open up only once there is room at xl. */}
-            <ul className="flex items-center gap-5 xl:gap-7">
+          <nav aria-label={dict.nav.primary} className="hidden xl:block">
+            {/* Seven links plus the actions need ~1070px even icon-only, so
+                the full bar starts at xl; below it the drawer takes over. */}
+            <ul className="flex items-center gap-6 2xl:gap-7">
               {PRIMARY_NAV.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -108,7 +119,7 @@ export function Header() {
                         : "text-ink-secondary hover:text-indigo",
                     )}
                   >
-                    {item.label}
+                    {dict.nav[item.key]}
                     {isActive(item.href) ? (
                       <span
                         aria-hidden
@@ -121,25 +132,27 @@ export function Header() {
             </ul>
           </nav>
 
-          <div className="hidden items-center gap-3 lg:flex xl:gap-5">
+          <div className="hidden shrink-0 items-center gap-4 xl:flex">
+            {/* Icon-only below 2xl: the bar has no room for the label until then. */}
+            <LanguageSwitcher labelClassName="sr-only 2xl:not-sr-only" />
             <Link
               href={ROUTES.search}
-              aria-label="Search vidyantIAS"
+              aria-label={dict.common.search}
               className="flex size-9 items-center justify-center rounded-md text-ink-secondary transition-colors hover:bg-paper hover:text-indigo"
             >
               <Search aria-hidden className="size-4.5" />
             </Link>
             <AccountMenu account={account} />
-            {/* Counselling is the softer ask, so it yields to Enroll Now when
-                the bar gets tight. */}
+            {/* Counselling is the softer ask, so it yields to Enroll Now until
+                2xl — below that the bar overflows the viewport with both. */}
             <TrackedButtonLink
               href={CTA.counselling.href}
               variant="secondary"
-              className="hidden whitespace-nowrap xl:inline-flex"
+              className="hidden whitespace-nowrap 2xl:inline-flex"
               event={ANALYTICS_EVENTS.counsellingClick}
               payload={{ location: "header" }}
             >
-              Free Counselling
+              {dict.cta.counsellingShort}
             </TrackedButtonLink>
             <TrackedButtonLink
               href={CTA.enrol.href}
@@ -148,32 +161,23 @@ export function Header() {
               event={ANALYTICS_EVENTS.enrolClick}
               payload={{ location: "header" }}
             >
-              {CTA.enrol.label}
+              {dict.cta.enrol}
             </TrackedButtonLink>
           </div>
 
-          <div className="flex items-center gap-1 lg:hidden">
+          <div className="flex items-center gap-1 xl:hidden">
             <Link
               href={ROUTES.search}
-              aria-label="Search vidyantIAS"
+              aria-label={dict.common.search}
               className="flex size-11 items-center justify-center rounded-md text-indigo transition-colors hover:bg-paper"
             >
               <Search aria-hidden className="size-5" />
             </Link>
-            <TrackedAnchor
-              href={`tel:${CONTACT.phoneHref}`}
-              event={ANALYTICS_EVENTS.phoneClick}
-              payload={{ location: "header" }}
-              aria-label={`Call ${CONTACT.phoneDisplay}`}
-              className="flex size-11 items-center justify-center rounded-md text-indigo transition-colors hover:bg-paper"
-            >
-              <Phone aria-hidden className="size-5" />
-            </TrackedAnchor>
             <Button
               variant="ghost"
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-label={menuOpen ? dict.nav.closeMenu : dict.nav.openMenu}
               onClick={() => setMenuOpen((open) => !open)}
               className="size-11 px-0"
             >
@@ -191,10 +195,10 @@ export function Header() {
         <div
           id="mobile-menu"
           style={{ top: drawerTop }}
-          className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-line bg-white sm:top-20 lg:hidden"
+          className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-line bg-white sm:top-20 lg:top-24 xl:hidden"
         >
           <Container className="py-6">
-            <nav aria-label="Mobile">
+            <nav aria-label={dict.nav.mobile}>
               <ul className="divide-y divide-line">
                 {MOBILE_NAV.map((item) => (
                   <li key={item.href}>
@@ -207,12 +211,14 @@ export function Header() {
                         isActive(item.href) ? "text-kesar-600" : "text-indigo",
                       )}
                     >
-                      {item.label}
+                      {dict.nav[item.key]}
                     </Link>
                   </li>
                 ))}
               </ul>
             </nav>
+
+            <LanguageSwitcher className="mt-4 -ml-2.5" onNavigate={closeMenu} />
 
             <div className="mt-7 flex flex-col gap-3">
               <TrackedButtonLink
@@ -224,7 +230,7 @@ export function Header() {
                 event={ANALYTICS_EVENTS.enrolClick}
                 payload={{ location: "mobile-menu" }}
               >
-                {CTA.enrol.label}
+                {dict.cta.enrol}
               </TrackedButtonLink>
               <TrackedButtonLink
                 href={CTA.counselling.href}
@@ -235,7 +241,7 @@ export function Header() {
                 event={ANALYTICS_EVENTS.counsellingClick}
                 payload={{ location: "mobile-menu" }}
               >
-                {CTA.counselling.label}
+                {dict.cta.counselling}
               </TrackedButtonLink>
               <TrackedButtonLink
                 href={CTA.brochure.href}
@@ -246,7 +252,7 @@ export function Header() {
                 event={ANALYTICS_EVENTS.brochureClick}
                 payload={{ location: "mobile-menu" }}
               >
-                {CTA.brochure.label}
+                {dict.cta.brochure}
               </TrackedButtonLink>
               {/* Signed in, the account block below replaces this. */}
               {account ? null : (
@@ -259,7 +265,7 @@ export function Header() {
                   event={ANALYTICS_EVENTS.loginClick}
                   payload={{ location: "mobile-menu" }}
                 >
-                  {CTA.login.label}
+                  {dict.cta.login}
                 </TrackedButtonLink>
               )}
             </div>

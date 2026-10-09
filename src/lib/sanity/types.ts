@@ -60,6 +60,7 @@ export interface CurrentAffairListItem {
   category: string;
   importance: CurrentAffairImportance;
   relatedSubjects: string[];
+  relevance: ("Prelims" | "Mains" | "Essay" | "Interview")[];
   summary: string | null;
 }
 
@@ -81,6 +82,9 @@ export interface FacultyMember {
   /** `paper` of each referenced subject — maps onto the site's faculty filters. */
   papers: (string | null)[];
   experience: string | null;
+  teachingPhilosophy: string | null;
+  /** A teaching-role card, not yet a verified person. */
+  profilePending: boolean;
   achievements: string[];
   order: number;
 }
@@ -88,14 +92,23 @@ export interface FacultyMember {
 export interface CourseContent {
   _id: string;
   title: string;
-  slug: string;
   /** Joins to `courses/{courseId}.sanitySlug` in Firestore. */
-  category: string;
+  slug: string;
   summary: string | null;
   heroImage: SanityImage | null;
   highlights: string[];
+  audience: string[];
+  outcomes: string[];
   curriculum: { title: string; topics: string[] }[];
+  durationNote: string | null;
+  schedule: string | null;
+  tests: string | null;
+  mentorship: string | null;
+  studyMaterial: string[];
+  /** Slugs of the referenced, published faculty profiles. */
+  facultySlugs: string[];
   body: PortableTextBlocks;
+  order: number;
   seo: Seo | null;
 }
 
@@ -118,6 +131,9 @@ export interface FreeResource {
   slug: string;
   category: string;
   description: string | null;
+  resourceType: "pdf" | "guide" | "video" | "article" | "pyq" | "current-affairs";
+  tracks: ("beginner" | "prelims" | "mains" | "optional" | "current-affairs")[];
+  requiresLead: boolean;
   /** Sanity-hosted file, or null when the resource is gated behind a form. */
   fileUrl: string | null;
   pages: number | null;
@@ -128,6 +144,8 @@ export interface Faq {
   question: string;
   answer: PortableTextBlocks;
   category: string;
+  topics: string[];
+  featured: boolean;
   order: number;
 }
 

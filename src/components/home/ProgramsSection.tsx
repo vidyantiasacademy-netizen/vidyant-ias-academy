@@ -2,17 +2,23 @@ import { CourseCard } from "@/components/courses/CourseCard";
 import { Section } from "@/components/layout/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { homepageCourses } from "@/data/courses";
 import { CTA } from "@/lib/constants/site";
+import { firstPerCategory } from "@/lib/courses/catalogue";
+import { COURSE_CATEGORY_LABELS } from "@/lib/courses/labels";
+import type { Course, CourseCategory } from "@/types";
 
-const CTA_LABELS: Record<string, string> = {
-  "foundation-program": "Explore Foundation",
-  "prelims-program": "Explore Prelims",
-  "mains-program": "Explore Mains",
-  "optional-subjects": "Explore Optional",
-};
+/** The four stages the homepage strip shows, in order; the test series lives on /courses. */
+const HOMEPAGE_CATEGORIES: CourseCategory[] = ["foundation", "prelims", "mains", "optional"];
 
-export function ProgramsSection() {
+export function ProgramsSection({ courses }: { courses: Course[] }) {
+  const featured = firstPerCategory(courses)
+    .filter((course) => HOMEPAGE_CATEGORIES.includes(course.category))
+    .sort(
+      (a, b) => HOMEPAGE_CATEGORIES.indexOf(a.category) - HOMEPAGE_CATEGORIES.indexOf(b.category),
+    );
+
+  if (featured.length === 0) return null;
+
   return (
     <Section id="programs" containerSize="wide">
       <SectionHeader
@@ -26,10 +32,14 @@ export function ProgramsSection() {
         }
       />
 
-      <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:mt-14 lg:gap-5">
-        {homepageCourses.map((course) => (
-          <li key={course.id}>
-            <CourseCard course={course} ctaLabel={CTA_LABELS[course.id]} />
+      {/* One row: a snap-scrolling strip on phones and tablets, four columns from lg. */}
+      <ul className="-mx-4 mt-7 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-3 sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:mt-9 lg:grid lg:grid-cols-4 lg:gap-5 lg:overflow-visible lg:px-0 lg:pb-0">
+        {featured.map((course) => (
+          <li key={course.id} className="w-[85%] shrink-0 snap-start sm:w-[46%] lg:w-auto">
+            <CourseCard
+              course={course}
+              ctaLabel={`Explore ${COURSE_CATEGORY_LABELS[course.category]}`}
+            />
           </li>
         ))}
       </ul>

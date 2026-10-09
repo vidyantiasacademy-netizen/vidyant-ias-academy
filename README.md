@@ -164,7 +164,7 @@ Everything below is marked `TODO(institute)` or `TODO(content)` in code:
 | What                                            | Where                                                                                                      |
 | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | Address, phone, WhatsApp, email, social handles | `src/lib/constants/site.ts`                                                                                |
-| Faculty names, credentials, photographs         | `src/data/faculty.ts` (`isPlaceholder: true`)                                                              |
+| Faculty names, credentials, photographs         | Sanity `faculty` documents (sample role cards have "Profile pending verification" on)                      |
 | Photography (mentorship, classroom, library)    | `src/lib/constants/images.ts` + `/public/images`                                                           |
 | Orientation and demo dates                      | `src/data/events.ts` (template in the file header)                                                         |
 | Noticeboard announcements                       | `src/data/announcements.ts` (ships empty; same field names as the Sanity `announcement` document)          |

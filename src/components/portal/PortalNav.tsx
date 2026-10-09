@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-
+import Link from "@/i18n/Link";
+import { usePathnameWithoutLocale } from "@/i18n/usePathnameWithoutLocale";
 import { cn } from "@/lib/utils/cn";
 
 import type { PortalNavItem } from "./PortalShell";
@@ -31,7 +30,7 @@ import type { PortalNavItem } from "./PortalShell";
  * hairline reach the far edge whether the tabs overflow or leave room to spare.
  */
 export function PortalNav({ nav, title }: { nav: PortalNavItem[]; title: string }) {
-  const pathname = usePathname();
+  const pathname = usePathnameWithoutLocale();
 
   return (
     <nav
@@ -40,7 +39,7 @@ export function PortalNav({ nav, title }: { nav: PortalNavItem[]; title: string 
       // band rather than a floating card.
       className="focus-invert -mx-4 overflow-x-auto sm:mx-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
-      <div className="flex w-max min-w-full items-end gap-1 border-b border-white/35 bg-indigo px-2 pt-2 sm:gap-2 sm:rounded-t-lg sm:px-3 sm:pt-3">
+      <div className="flex w-max min-w-full items-end gap-1 border-b border-white/35 bg-indigo-gradient px-2 pt-2 sm:gap-2 sm:rounded-t-lg sm:px-3 sm:pt-3">
         {nav.map((item) => {
           // `/dashboard` must not light up on `/dashboard/services`, so the
           // prefix rule applies to every tab except the exact-match home one.

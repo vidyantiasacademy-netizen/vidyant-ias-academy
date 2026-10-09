@@ -2,10 +2,14 @@ import { Section } from "@/components/layout/Section";
 import { ResourceCard } from "@/components/resources/ResourceCard";
 import { ButtonLink } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { publishedResources } from "@/data/resources";
+import { railItem, railList } from "@/components/ui/rail";
+import { cn } from "@/lib/utils/cn";
 import { ROUTES } from "@/lib/constants/site";
+import type { Resource } from "@/types";
 
-export function ResourcesSection() {
+export function ResourcesSection({ resources }: { resources: Resource[] }) {
+  if (resources.length === 0) return null;
+
   return (
     <Section id="resources" containerSize="wide">
       <SectionHeader
@@ -19,9 +23,9 @@ export function ResourcesSection() {
         }
       />
 
-      <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-5">
-        {publishedResources.map((resource) => (
-          <li key={resource.id}>
+      <ul className={cn(railList[3], "mt-7 lg:mt-9")}>
+        {resources.map((resource) => (
+          <li key={resource.id} className={railItem}>
             <ResourceCard resource={resource} />
           </li>
         ))}

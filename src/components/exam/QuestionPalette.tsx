@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils/cn";
 export type PaletteState = "answered" | "marked" | "seen" | "untouched";
 
 const STATE_STYLES: Record<PaletteState, string> = {
-  answered: "bg-indigo text-white border-indigo",
+  answered: "bg-indigo-gradient text-white border-indigo",
   marked: "bg-indigo-100 text-indigo-900 border-indigo-700 ring-2 ring-indigo-700/30",
   seen: "bg-white text-ink border-line-strong",
   untouched: "bg-paper text-ink-secondary border-paper-200",

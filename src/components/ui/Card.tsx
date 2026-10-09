@@ -13,7 +13,7 @@ interface CardProps extends ComponentProps<"div"> {
 const tones = {
   white: "bg-white border-line",
   paper: "bg-paper border-paper-200",
-  indigo: "bg-indigo-700 border-white/10 text-white focus-invert",
+  indigo: "bg-indigo-gradient border-white/10 text-white focus-invert",
 } as const;
 
 const paddings = {

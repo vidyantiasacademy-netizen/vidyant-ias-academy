@@ -1,10 +1,13 @@
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
-import Link from "next/link";
 
+import Link from "@/i18n/Link";
 import { Container } from "@/components/ui/Container";
+import { KesarWave } from "@/components/ui/KesarLines";
 import { SocialIcon, type SocialIconName } from "@/components/ui/SocialIcon";
 import { Logo } from "@/components/ui/Logo";
 import { TrackedAnchor } from "@/components/ui/TrackedLink";
+import { format, type Dictionary } from "@/i18n/dictionaries";
+import { getDictionary } from "@/i18n/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import {
   BRAND,
@@ -17,9 +20,11 @@ import {
 function FooterColumn({
   title,
   links,
+  nav,
 }: {
   title: string;
-  links: readonly { label: string; href: string }[];
+  links: readonly { key: keyof Dictionary["nav"]; href: string }[];
+  nav: Dictionary["nav"];
 }) {
   return (
     <div>
@@ -33,7 +38,7 @@ function FooterColumn({
               href={link.href}
               className="text-small text-white/70 transition-colors hover:text-kesar"
             >
-              {link.label}
+              {nav[link.key]}
             </Link>
           </li>
         ))}
@@ -42,10 +47,13 @@ function FooterColumn({
   );
 }
 
-export function Footer() {
+export async function Footer() {
+  const dict = await getDictionary();
+
   return (
-    <footer className="bg-indigo text-white focus-invert">
-      <Container size="wide" className="py-14 lg:py-20">
+    <footer className="relative overflow-hidden bg-indigo-gradient text-white focus-invert">
+      <KesarWave />
+      <Container size="wide" className="relative py-14 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
             <Logo tone="light" size="md" asStatic />
@@ -57,7 +65,7 @@ export function Footer() {
                       href={social.href}
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={`${BRAND.name} on ${social.label}`}
+                      aria-label={format(dict.footer.social, { network: social.label })}
                       className="flex size-10 items-center justify-center rounded-md border border-white/15 text-white/80 transition-colors hover:border-kesar hover:text-kesar"
                     >
                       <SocialIcon name={social.icon as SocialIconName} />
@@ -71,7 +79,7 @@ export function Footer() {
                   rel="noreferrer"
                   event={ANALYTICS_EVENTS.whatsappClick}
                   payload={{ location: "footer" }}
-                  aria-label={`Chat with ${BRAND.name} on WhatsApp`}
+                  aria-label={dict.common.whatsappChat}
                   className="flex size-10 items-center justify-center rounded-md border border-white/15 text-white/80 transition-colors hover:border-kesar hover:text-kesar"
                 >
                   <MessageCircle aria-hidden className="size-4.5" />
@@ -80,12 +88,12 @@ export function Footer() {
             </ul>
           </div>
 
-          <FooterColumn title="Explore" links={FOOTER_NAV.explore} />
-          <FooterColumn title="Resources" links={FOOTER_NAV.resources} />
+          <FooterColumn title={dict.footer.explore} links={FOOTER_NAV.explore} nav={dict.nav} />
+          <FooterColumn title={dict.footer.resources} links={FOOTER_NAV.resources} nav={dict.nav} />
 
           <div>
             <h3 className="text-small font-semibold uppercase text-white">
-              Contact
+              {dict.footer.contact}
             </h3>
             <address className="mt-4 space-y-3 text-small not-italic text-white/70">
               <p className="flex gap-2.5">
@@ -114,7 +122,7 @@ export function Footer() {
               </p>
             </address>
             <ul className="mt-6 space-y-2 text-small text-white/60">
-              {CONTACT.openingHours.map((entry) => (
+              {dict.footer.openingHours.map((entry) => (
                 <li key={entry.days}>
                   {entry.days}: {entry.hours}
                 </li>
@@ -125,7 +133,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-small text-white/55">
-            © {BRAND.foundedYear} {BRAND.name}. All rights reserved.
+            © {BRAND.foundedYear} {BRAND.name}. {dict.footer.rights}
           </p>
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {FOOTER_NAV.legal.map((link) => (
@@ -134,7 +142,7 @@ export function Footer() {
                   href={link.href}
                   className="text-small text-white/55 transition-colors hover:text-kesar"
                 >
-                  {link.label}
+                  {dict.nav[link.key]}
                 </Link>
               </li>
             ))}

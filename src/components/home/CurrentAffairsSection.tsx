@@ -5,14 +5,13 @@ import { Section } from "@/components/layout/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import {
-  CURRENT_AFFAIRS_COVERAGE,
-  publishedCurrentAffairs,
-} from "@/data/current-affairs";
+import { CURRENT_AFFAIRS_COVERAGE } from "@/data/current-affairs";
+import { getLocale } from "@/i18n/server";
 import { ROUTES } from "@/lib/constants/site";
+import { getSiteCurrentAffairs } from "@/lib/content/site";
 
-export function CurrentAffairsSection() {
-  const articles = publishedCurrentAffairs.slice(0, 3);
+export async function CurrentAffairsSection() {
+  const articles = await getSiteCurrentAffairs(await getLocale(), 3);
 
   return (
     <Section tone="paper" id="current-affairs" containerSize="wide">
@@ -28,7 +27,7 @@ export function CurrentAffairsSection() {
       />
 
       {articles.length > 0 ? (
-        <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-5">
+        <ul className="mt-7 grid gap-4 md:grid-cols-2 lg:mt-9 lg:grid-cols-3 lg:gap-5">
           {articles.map((item) => (
             <li key={item.id}>
               <CurrentAffairCard item={item} />
@@ -36,7 +35,7 @@ export function CurrentAffairsSection() {
           ))}
         </ul>
       ) : (
-        <div className="mt-12">
+        <div className="mt-8">
           <Card className="flex items-start gap-4 bg-white">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-paper text-kesar-600">
               <Newspaper aria-hidden className="size-5" />

@@ -26,7 +26,7 @@ export function EventsSection() {
       />
 
       {events.length > 0 ? (
-        <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-5">
+        <ul className="mt-7 grid gap-4 md:grid-cols-2 lg:mt-9 lg:grid-cols-3 lg:gap-5">
           {events.map((event) => (
             <li key={event.id}>
               <EventCard event={event} />
@@ -35,7 +35,7 @@ export function EventsSection() {
         </ul>
       ) : (
         <EmptyState
-          className="mt-12"
+          className="mt-8"
           icon={<CalendarDays aria-hidden className="size-5" />}
           title="Nothing is scheduled right now"
           description="The next orientation and webinar dates are being finalised. Register your interest and we will tell you first — the sessions are free and attending commits you to nothing."

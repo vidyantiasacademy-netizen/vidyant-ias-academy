@@ -1,7 +1,6 @@
 import {
   BookOpenCheck,
   CalendarCheck2,
-  ClipboardList,
   FileCheck2,
   MonitorPlay,
   UserRoundCheck,
@@ -122,18 +121,4 @@ export const PROMO_BANNERS: PromoBanner[] = [
     secondary: { label: CTA.brochure.label, href: CTA.brochure.href },
     points: ["Syllabus map", "Booklist", "Weekly template"],
   },
-];
-
-/**
- * Thin notice strip above the banner. Kept to three or four words each: this
- * line is read on a phone, in a hurry, often in sunlight.
- */
-export const HERO_NOTICES: { id: string; icon: LucideIcon; text: string }[] = [
-  {
-    id: "cycle",
-    icon: CalendarCheck2,
-    text: `${EXAM_CYCLE.admissionNote} · ${EXAM_CYCLE.label}`,
-  },
-  { id: "mode", icon: MonitorPlay, text: "Classroom & hybrid batches" },
-  { id: "tests", icon: ClipboardList, text: "Mains answer evaluation" },
 ];

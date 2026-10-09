@@ -90,8 +90,10 @@ export async function sanityFetch<T>(
   try {
     // Both: `revalidate` is the ceiling if no webhook ever fires, `tags` let the
     // Sanity webhook invalidate immediately on publish.
+    // In development nothing can deliver the webhook to localhost, so a cached
+    // result would hide Studio edits for up to `revalidate` seconds.
     return await getSanityClient().fetch<T>(query, params, {
-      next: { revalidate, tags },
+      next: { revalidate: process.env.NODE_ENV === "development" ? 0 : revalidate, tags },
     });
   } catch (error) {
     // A CMS outage degrades a section, it does not take down the page. Callers

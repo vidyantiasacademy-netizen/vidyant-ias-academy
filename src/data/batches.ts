@@ -23,9 +23,9 @@ import type { Batch } from "@/types";
  *   status: "published",
  * }
  */
-export const batches: Batch[] = [];
+const batches: Batch[] = [];
 
-export const publishedBatches = batches.filter((batch) => batch.status === "published");
+const publishedBatches = batches.filter((batch) => batch.status === "published");
 
 /** Batches that have not started yet, soonest first. */
 export function upcomingBatches(now = new Date()) {
@@ -33,12 +33,4 @@ export function upcomingBatches(now = new Date()) {
   return publishedBatches
     .filter((batch) => new Date(batch.startDate) >= today)
     .sort((a, b) => a.startDate.localeCompare(b.startDate));
-}
-
-export function batchesForCourse(courseId: string, now = new Date()) {
-  return upcomingBatches(now).filter((batch) => batch.courseId === courseId);
-}
-
-export function batchBySlug(slug: string) {
-  return batches.find((batch) => batch.slug === slug);
 }

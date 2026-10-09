@@ -2,13 +2,16 @@ import { Section } from "@/components/layout/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { featuredFaqs } from "@/data/faqs";
 import { CTA, ROUTES } from "@/lib/constants/site";
+import type { Faq } from "@/types";
 
-export function HomeFaq() {
+/** `faqs` are the homepage-featured ones, already capped by the caller. */
+export function HomeFaq({ faqs }: { faqs: Faq[] }) {
+  if (faqs.length === 0) return null;
+
   return (
     <Section id="faq">
-      <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-12">
         <div>
           <SectionHeader
             eyebrow="FAQ"
@@ -25,7 +28,7 @@ export function HomeFaq() {
           </div>
         </div>
 
-        <FAQAccordion faqs={featuredFaqs.slice(0, 7)} />
+        <FAQAccordion faqs={faqs} />
       </div>
     </Section>
   );

@@ -1,6 +1,6 @@
 import { ArrowRight, Clock, ListChecks } from "lucide-react";
-import Link from "next/link";
 
+import Link from "@/i18n/Link";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { QUIZ_STAGE_LABELS } from "@/data/quizzes";

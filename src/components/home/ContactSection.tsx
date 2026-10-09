@@ -1,4 +1,5 @@
-import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import type { ReactNode } from "react";
+import { Clock, Mail, MapPin, MessageCircle, Phone, type LucideIcon } from "lucide-react";
 
 import { CallbackForm } from "@/components/forms/CallbackForm";
 import { Section } from "@/components/layout/Section";
@@ -24,85 +25,69 @@ export function ContactSection() {
         }
       />
 
-      <div className="mt-12 grid gap-10 lg:mt-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Card className="sm:col-span-2">
-            <MapPin aria-hidden className="size-5 text-kesar-600" />
-            <h3 className="mt-4 text-h4 font-semibold">Centre address</h3>
-            <address className="mt-3 text-body not-italic text-ink-secondary">
-              {CONTACT.addressLines.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </address>
-            <a
-              href={CONTACT.mapsDirectionsUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-4 inline-block text-small font-semibold text-indigo hover:text-kesar-600"
-            >
-              Get directions
-            </a>
+      <div className="mt-7 grid gap-8 lg:mt-9 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+        <div>
+          <Card padding="none" className="divide-y divide-line">
+            <ContactRow icon={MapPin} label="Centre address">
+              <address className="not-italic text-ink-secondary">
+                {CONTACT.addressLines.join(", ")}
+              </address>
+              <a
+                href={CONTACT.mapsDirectionsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-1 inline-block text-small font-semibold text-indigo hover:text-kesar-600"
+              >
+                Get directions
+              </a>
+            </ContactRow>
+
+            <ContactRow icon={Phone} label="Call us">
+              <TrackedAnchor
+                href={`tel:${CONTACT.phoneHref}`}
+                event={ANALYTICS_EVENTS.phoneClick}
+                payload={{ location: "home-contact" }}
+                className="font-semibold text-indigo hover:text-kesar-600"
+              >
+                {CONTACT.phoneDisplay}
+              </TrackedAnchor>
+            </ContactRow>
+
+            <ContactRow icon={MessageCircle} label="WhatsApp">
+              <TrackedAnchor
+                href={whatsappUrl()}
+                target="_blank"
+                rel="noreferrer"
+                event={ANALYTICS_EVENTS.whatsappClick}
+                payload={{ location: "home-contact" }}
+                className="font-semibold text-indigo hover:text-kesar-600"
+              >
+                Message us
+              </TrackedAnchor>
+            </ContactRow>
+
+            <ContactRow icon={Mail} label="Email">
+              <a
+                href={`mailto:${CONTACT.email}`}
+                className="break-all font-semibold text-indigo hover:text-kesar-600"
+              >
+                {CONTACT.email}
+              </a>
+            </ContactRow>
+
+            <ContactRow icon={Clock} label="Opening hours">
+              <dl className="space-y-0.5">
+                {CONTACT.openingHours.map((entry) => (
+                  <div key={entry.days} className="flex flex-wrap gap-x-2">
+                    <dt className="text-ink-secondary">{entry.days}</dt>
+                    <dd className="font-medium text-indigo">{entry.hours}</dd>
+                  </div>
+                ))}
+              </dl>
+            </ContactRow>
           </Card>
 
-          <Card>
-            <Phone aria-hidden className="size-5 text-kesar-600" />
-            <h3 className="mt-4 text-h4 font-semibold">Call us</h3>
-            <TrackedAnchor
-              href={`tel:${CONTACT.phoneHref}`}
-              event={ANALYTICS_EVENTS.phoneClick}
-              payload={{ location: "home-contact" }}
-              className="mt-3 inline-block text-body font-semibold text-indigo hover:text-kesar-600"
-            >
-              {CONTACT.phoneDisplay}
-            </TrackedAnchor>
-          </Card>
-
-          <Card>
-            <MessageCircle aria-hidden className="size-5 text-kesar-600" />
-            <h3 className="mt-4 text-h4 font-semibold">WhatsApp</h3>
-            <TrackedAnchor
-              href={whatsappUrl()}
-              target="_blank"
-              rel="noreferrer"
-              event={ANALYTICS_EVENTS.whatsappClick}
-              payload={{ location: "home-contact" }}
-              className="mt-3 inline-block text-body font-semibold text-indigo hover:text-kesar-600"
-            >
-              Message us
-            </TrackedAnchor>
-          </Card>
-
-          <Card>
-            <Mail aria-hidden className="size-5 text-kesar-600" />
-            <h3 className="mt-4 text-h4 font-semibold">Email</h3>
-            <a
-              href={`mailto:${CONTACT.email}`}
-              className="mt-3 inline-block break-all text-body font-semibold text-indigo hover:text-kesar-600"
-            >
-              {CONTACT.email}
-            </a>
-          </Card>
-
-          <Card>
-            <Clock aria-hidden className="size-5 text-kesar-600" />
-            <h3 className="mt-4 text-h4 font-semibold">Opening hours</h3>
-            <dl className="mt-3 space-y-2 text-small">
-              {CONTACT.openingHours.map((entry) => (
-                <div key={entry.days}>
-                  <dt className="text-ink-secondary">{entry.days}</dt>
-                  <dd className="font-medium text-indigo">{entry.hours}</dd>
-                </div>
-              ))}
-            </dl>
-          </Card>
-
-          <ButtonLink
-            href={CTA.enquiry.href}
-            variant="link"
-            className="justify-start px-0 sm:col-span-2"
-          >
+          <ButtonLink href={CTA.enquiry.href} variant="link" className="mt-3 justify-start px-0">
             Prefer to write? Send an enquiry instead
           </ButtonLink>
         </div>
@@ -110,5 +95,25 @@ export function ContactSection() {
         <CallbackForm source="home-contact" as="h3" id="callback" className="self-start" />
       </div>
     </Section>
+  );
+}
+
+function ContactRow({
+  icon: Icon,
+  label,
+  children,
+}: {
+  icon: LucideIcon;
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex gap-4 px-5 py-4">
+      <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-kesar-600" />
+      <div className="min-w-0 text-small">
+        <h3 className="font-semibold text-indigo">{label}</h3>
+        <div className="mt-1">{children}</div>
+      </div>
+    </div>
   );
 }

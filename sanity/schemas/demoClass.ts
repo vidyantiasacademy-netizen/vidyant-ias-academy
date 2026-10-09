@@ -1,5 +1,7 @@
 import { defineField, defineType } from "sanity";
 
+import { isUniquePerLanguage, languageField } from "./i18n";
+
 /**
  * Free demo and orientation classes.
  *
@@ -13,6 +15,7 @@ export const demoClass = defineType({
   title: "Demo class",
   type: "document",
   fields: [
+    languageField,
     defineField({
       name: "title",
       type: "string",
@@ -21,7 +24,7 @@ export const demoClass = defineType({
     defineField({
       name: "slug",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: { source: "title", maxLength: 96, isUnique: isUniquePerLanguage },
       validation: (rule) => rule.required(),
     }),
     defineField({ name: "subject", type: "reference", to: [{ type: "subject" }] }),

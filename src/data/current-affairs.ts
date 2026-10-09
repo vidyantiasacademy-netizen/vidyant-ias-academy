@@ -1,17 +1,7 @@
-import type { CurrentAffair } from "@/types";
-
 /**
- * Current affairs analyses. Empty until the daily desk starts publishing —
- * placeholder "news" is never shown, because dated content that is not real
- * misleads aspirants.
- *
- * TODO(content): publish analyses, or connect a CMS to this data layer.
+ * Analyses are Sanity `currentAffair` documents, read through
+ * `src/lib/content/site.ts`. What stays here is page copy.
  */
-export const currentAffairs: CurrentAffair[] = [];
-
-export const publishedCurrentAffairs = currentAffairs.filter(
-  (item) => item.status === "published",
-);
 
 /** What the current affairs desk covers — used for the preview section. */
 export const CURRENT_AFFAIRS_COVERAGE = [
@@ -32,7 +22,3 @@ export const CURRENT_AFFAIRS_COVERAGE = [
     note: "Agreements and groupings with the background a Mains answer needs.",
   },
 ] as const;
-
-export function currentAffairBySlug(slug: string) {
-  return currentAffairs.find((item) => item.slug === slug);
-}

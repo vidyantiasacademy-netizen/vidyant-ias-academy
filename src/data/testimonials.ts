@@ -9,7 +9,7 @@ import type { Testimonial } from "@/types";
  * To publish: add an entry with `isPlaceholder: false`, `status: "published"`.
  * The UI shows an honest empty state while this list has no published entries.
  */
-export const testimonials: Testimonial[] = [];
+const testimonials: Testimonial[] = [];
 
 export const publishedTestimonials = testimonials.filter(
   (item) => item.status === "published" && !item.isPlaceholder,

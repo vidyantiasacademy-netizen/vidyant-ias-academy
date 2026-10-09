@@ -52,7 +52,7 @@ export function PlaceholderVisual({
       aria-label={image.alt}
       className={cn(
         "relative overflow-hidden rounded-xl border",
-        isIndigo ? "border-white/12 bg-indigo-900" : "border-paper-200 bg-paper",
+        isIndigo ? "border-white/12 bg-indigo-gradient-deep" : "border-paper-200 bg-paper",
         className,
       )}
     >

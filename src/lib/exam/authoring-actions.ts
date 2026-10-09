@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
+import { revalidateLocalizedPath } from "@/i18n/revalidate";
 import { action, roleGuard } from "@/lib/auth/guards";
 import { AppError, ERROR_CODES } from "@/lib/errors";
 import { LOCKED_TEST_FIELDS, paperLockReason, publishBlocker } from "@/lib/exam/authoring";
@@ -47,8 +47,8 @@ async function assertEditable(testId: string): Promise<void> {
 }
 
 function revalidatePaper(testId?: string) {
-  revalidatePath("/admin/tests");
-  if (testId) revalidatePath(`/admin/tests/${testId}`, "layout");
+  revalidateLocalizedPath("/admin/tests");
+  if (testId) revalidateLocalizedPath(`/admin/tests/${testId}`, "layout");
 }
 
 // ─── Papers ──────────────────────────────────────────────────────────────────

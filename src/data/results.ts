@@ -8,7 +8,7 @@ import type { Result } from "@/types";
  *
  * To publish: add entries with `verified: true` and `status: "published"`.
  */
-export const results: Result[] = [];
+const results: Result[] = [];
 
 export const publishedResults = results.filter(
   (item) => item.status === "published" && item.verified,
@@ -20,13 +20,3 @@ export const RESULT_STAGES = [
   { id: "interview", label: "Interview Qualified" },
   { id: "final", label: "Final Selections" },
 ] as const;
-
-export function resultsByStage(stage: Result["stage"]) {
-  return publishedResults.filter((item) => item.stage === stage);
-}
-
-export function resultYears() {
-  return Array.from(new Set(publishedResults.map((item) => item.year))).sort(
-    (a, b) => Number(b) - Number(a),
-  );
-}

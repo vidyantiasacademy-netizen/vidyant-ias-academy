@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 
+import Link from "@/i18n/Link";
 import { cn } from "@/lib/utils/cn";
 
 interface Crumb {

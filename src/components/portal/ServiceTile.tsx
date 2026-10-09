@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
+import Link from "@/i18n/Link";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -18,8 +18,8 @@ import { cn } from "@/lib/utils/cn";
 export type ServiceTone = "indigo" | "indigo-dark" | "kesar" | "paper";
 
 const tones: Record<ServiceTone, string> = {
-  indigo: "bg-indigo text-white hover:bg-indigo-700",
-  "indigo-dark": "bg-indigo-900 text-white hover:bg-indigo-700",
+  indigo: "bg-indigo-gradient text-white hover:brightness-125",
+  "indigo-dark": "bg-indigo-gradient-deep text-white hover:brightness-125",
   kesar: "bg-kesar text-indigo-900 hover:bg-kesar-600 hover:text-white",
   paper: "bg-white text-indigo ring-1 ring-line hover:ring-indigo",
 };

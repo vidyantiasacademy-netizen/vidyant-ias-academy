@@ -1,5 +1,5 @@
-import Link from "next/link";
 
+import Link from "@/i18n/Link";
 import { BRAND } from "@/lib/constants/site";
 import { cn } from "@/lib/utils/cn";
 

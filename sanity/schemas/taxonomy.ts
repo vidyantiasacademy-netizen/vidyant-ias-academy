@@ -1,5 +1,7 @@
 import { defineField, defineType } from "sanity";
 
+import { translationsOf } from "./i18n";
+
 /**
  * Shared taxonomies.
  *
@@ -7,6 +9,10 @@ import { defineField, defineType } from "sanity";
  * that renaming "Polity" to "Polity & Governance" updates every blog post and
  * current-affairs article at once, instead of leaving two spellings in the
  * filters forever.
+ *
+ * Translated field by field, not document by document (see `./i18n.ts`): a
+ * Hindi article references the same "Polity" category as the English one, and
+ * the category carries its own Hindi label.
  */
 
 const titleAndSlug = [
@@ -15,6 +21,7 @@ const titleAndSlug = [
     type: "string",
     validation: (rule) => rule.required(),
   }),
+  translationsOf("title", "Title"),
   defineField({
     name: "slug",
     type: "slug",
@@ -89,6 +96,7 @@ export const author = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({ name: "designation", type: "string" }),
+    translationsOf("designation", "Designation"),
     defineField({
       name: "photo",
       type: "image",

@@ -10,11 +10,12 @@ import {
   auditOnCreate,
   auditOnUpdate,
   collection,
+  paginate,
   pickFields,
   requireEntity,
   toEntity,
 } from "@/lib/firebase/firestore";
-import type { Role, Student, StudentDoc, User, UserDoc } from "@/types/db";
+import type { Page, Role, Student, StudentDoc, User, UserDoc } from "@/types/db";
 
 /**
  * Accounts and roles.
@@ -189,6 +190,148 @@ export async function listStaff(): Promise<User[]> {
     .filter((user): user is User => user !== null);
 }
 
+export interface NewUserInput {
+  displayName: string;
+  email: string;
+  /** 10 digits, no country code — already normalised by `phoneField`. */
+  phone: string | null;
+  role: Role;
+  /** Initial password, handed to the person by the super admin. */
+  password: string;
+}
+
+/** Admin SDK error codes for a duplicate or rejected account, mapped to the form field. */
+const CREATE_ERRORS: Record<string, { field: string; message: string }> = {
+  "auth/email-already-exists": { field: "email", message: "An account already uses this email." },
+  "auth/phone-number-already-exists": {
+    field: "phone",
+    message: "An account already uses this mobile number.",
+  },
+  "auth/invalid-password": { field: "password", message: "Use a password of at least 8 characters." },
+  "auth/invalid-email": { field: "email", message: "Enter a valid email address." },
+};
+
+/**
+ * Creates an account on someone's behalf — a student registered at the desk,
+ * or a new member of staff — with the role already set.
+ *
+ * SUPER_ADMIN only. The Auth user, its claim and `users/{uid}` are written
+ * together; if the document writes fail the Auth user is deleted again, so a
+ * half-made account never lingers with a claim and no profile. When the person
+ * first signs in, `ensureUserDocuments` finds the document and keeps the role.
+ */
+export async function createUser(input: NewUserInput): Promise<User> {
+  const actor = await requireRole("SUPER_ADMIN");
+
+  if (!canAssignRole(actor.role, input.role)) {
+    throw new AppError(ERROR_CODES.FORBIDDEN, { message: "You cannot assign that role." });
+  }
+
+  const auth = getAdminAuth();
+
+  let uid: string;
+  try {
+    const record = await auth.createUser({
+      email: input.email,
+      password: input.password,
+      displayName: input.displayName,
+      ...(input.phone ? { phoneNumber: `+91${input.phone}` } : {}),
+    });
+    uid = record.uid;
+  } catch (error) {
+    const code = (error as { code?: string }).code ?? "";
+    const known = CREATE_ERRORS[code];
+    if (!known) throw error;
+
+    throw new AppError(code.endsWith("-exists") ? ERROR_CODES.CONFLICT : ERROR_CODES.VALIDATION_ERROR, {
+      message: known.message,
+      fieldErrors: { [known.field]: [known.message] },
+      cause: error,
+    });
+  }
+
+  try {
+    await auth.setCustomUserClaims(uid, { role: input.role, active: true });
+
+    const doc: UserDoc = {
+      uid,
+      role: input.role,
+      email: input.email,
+      phone: input.phone,
+      displayName: input.displayName,
+      photoPath: null,
+      isActive: true,
+      lastLoginAt: null,
+    };
+
+    const userRef = collection(COLLECTIONS.users).doc(docId.user(uid));
+    await userRef.set({ ...doc, ...auditOnCreate(actor.uid) });
+
+    // A student needs a learner profile before the enrolment desk can find them.
+    if (input.role === "STUDENT") {
+      const student: StudentDoc = {
+        uid,
+        rollNumber: null,
+        fullName: input.displayName,
+        phone: input.phone ?? "",
+        email: input.email,
+        dateOfBirth: null,
+        city: null,
+        state: null,
+        optionalSubject: null,
+        preparationStage: null,
+        attemptsGiven: 0,
+        targetExamYear: null,
+        activeEnrollmentIds: [],
+        mentorUid: null,
+        notes: null,
+      };
+
+      await collection(COLLECTIONS.students)
+        .doc(docId.user(uid))
+        .set({ ...student, ...auditOnCreate(actor.uid) });
+    }
+
+    return requireEntity<User>(await userRef.get(), "user");
+  } catch (error) {
+    await auth.deleteUser(uid).catch(() => undefined);
+    throw error;
+  }
+}
+
+/**
+ * Every account, newest first, optionally narrowed to one role. SUPER_ADMIN
+ * only — it lists students' contact details alongside staff.
+ */
+export async function listAll(
+  { role, cursor }: { role?: Role; cursor?: string | null } = {},
+): Promise<Page<User>> {
+  await requireRole("SUPER_ADMIN");
+
+  const users = collection(COLLECTIONS.users);
+  const filtered = role ? users.where("role", "==", role) : users;
+
+  return paginate<UserDoc>(filtered.orderBy("createdAt", "desc"), { limit: 25, cursor });
+}
+
+/** Uid → display name, for "added by" columns. Missing uids are left out. */
+export async function getDisplayNames(uids: string[]): Promise<Record<string, string>> {
+  await requireRole("ADMIN");
+
+  const unique = [...new Set(uids)];
+  if (unique.length === 0) return {};
+
+  const users = collection(COLLECTIONS.users);
+  const snapshots = await users.firestore.getAll(...unique.map((uid) => users.doc(docId.user(uid))));
+
+  return Object.fromEntries(
+    snapshots
+      .map((snapshot) => toEntity<User>(snapshot))
+      .filter((user): user is User => user !== null)
+      .map((user) => [user.uid, user.displayName]),
+  );
+}
+
 /** The caller's own student profile. The portal's first read on every page. */
 export async function getOwnStudentProfile(): Promise<Student | null> {
   const user = await requireAuth();
@@ -207,5 +350,8 @@ export const userService = {
   setRole,
   setActive,
   listStaff,
+  createUser,
+  listAll,
+  getDisplayNames,
   getOwnStudentProfile,
 };

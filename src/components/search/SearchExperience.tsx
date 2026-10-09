@@ -1,9 +1,9 @@
 "use client";
 
 import { Search } from "lucide-react";
-import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import Link from "@/i18n/Link";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
