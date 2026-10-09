@@ -78,6 +78,8 @@ export const viewport: Viewport = {
   colorScheme: "light",
   width: "device-width",
   initialScale: 1,
+  // Lets the fixed mobile CTA bar pad itself clear of the home indicator.
+  viewportFit: "cover",
 };
 
 /**

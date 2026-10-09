@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import { Section } from "@/components/layout/Section";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import { TrackedButtonLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { nextOrientation } from "@/data/events";
@@ -34,7 +35,7 @@ function dateParts(iso: string) {
 }
 
 /**
- * Lead-generation block for the free orientation: bold type, square tags, a
+ * Lead-generation block for the free orientation: bold type, an eyebrow, a
  * numbered agenda and a ticket card, written for first-time aspirants in their early twenties.
  * When no orientation is scheduled yet, the ticket asks for interest instead of
  * displaying an invented date.
@@ -42,7 +43,6 @@ function dateParts(iso: string) {
 export function OrientationSection() {
   const orientation = nextOrientation();
   const date = orientation ? dateParts(orientation.date) : null;
-  const isFree = !orientation || orientation.fee.toLowerCase() === "free";
 
   const details = [
     {
@@ -64,29 +64,22 @@ export function OrientationSection() {
     <Section tone="indigo" id="orientation" containerSize="wide">
       <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
         <div className="border-t-2 border-white pt-5 lg:col-span-7">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="bg-white px-3 py-1 text-eyebrow font-bold uppercase tracking-wider text-indigo">
-              Free orientation
-            </span>
-            <span className="border border-white/60 px-3 py-1 text-eyebrow font-semibold uppercase tracking-wider text-white">
-              In person · {BRAND.city}
-            </span>
-          </div>
+          <Eyebrow tone="light">Free orientation · In person · {BRAND.city}</Eyebrow>
 
-          <h2 className="mt-6 text-h1 font-bold text-white lg:text-h1-lg">
+          <h2 className="mt-5 text-h2 font-bold text-white lg:text-h2-lg">
             UPSC feels huge.{" "}
-            <span className="mt-2 block text-kesar">
+            <span className="mt-1 block text-kesar">
               Let&rsquo;s make it make sense.
             </span>
           </h2>
 
-          <p className="mt-6 max-w-lg text-body text-white/80 sm:text-body-lg">
+          <p className="mt-5 max-w-[46ch] text-body text-white/80 sm:text-body-lg">
             One free session. No jargon, no sales pitch &ndash; just the whole
             exam, decoded before you spend a rupee or a year on it.
           </p>
 
-          <p className="mt-8 text-eyebrow font-bold uppercase tracking-wider text-white">
-            what you&rsquo;ll walk out knowing <span aria-hidden>&darr;</span>
+          <p className="mt-8 text-eyebrow font-bold uppercase text-white/85">
+            What you&rsquo;ll walk out knowing
           </p>
           <ol className="mt-3 grid sm:grid-cols-2 sm:gap-x-8">
             {TOPICS.map((topic, index) => (
@@ -116,18 +109,9 @@ export function OrientationSection() {
         </div>
 
         <div className="relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none">
-          {isFree && (
-            <span
-              aria-hidden
-              className="ml-auto block w-fit bg-chilli px-3 py-1.5 text-eyebrow font-bold uppercase tracking-wider text-white"
-            >
-              Free
-            </span>
-          )}
-
           <article
             aria-labelledby="orientation-ticket-title"
-            className="overflow-hidden border-t-8 border-kesar bg-white text-ink"
+            className="overflow-hidden border-t-4 border-kesar bg-white text-ink"
           >
             <header className="flex items-center gap-5 p-6 sm:p-7">
               {date ? (
@@ -145,7 +129,7 @@ export function OrientationSection() {
                 </div>
               )}
               <div className="min-w-0">
-                <p className="text-eyebrow font-semibold uppercase tracking-wider text-ink-secondary">
+                <p className="text-eyebrow font-semibold uppercase text-ink-secondary">
                   {date ? date.weekday : "Next session"}
                 </p>
                 <h3
@@ -163,10 +147,7 @@ export function OrientationSection() {
               </div>
             </header>
 
-            <div
-              aria-hidden
-              className="mx-6 border-t-2 border-indigo sm:mx-7"
-            />
+            <div aria-hidden className="mx-6 border-t border-line sm:mx-7" />
 
             <dl className="divide-y divide-line px-6 sm:px-7">
               {details.map(({ icon: Icon, label, value }) => (

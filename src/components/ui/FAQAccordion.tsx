@@ -16,19 +16,19 @@ export function FAQAccordion({ faqs, className }: FAQAccordionProps) {
     <div className={cn("divide-y divide-line border-t-2 border-b border-t-indigo border-b-line", className)}>
       {faqs.map((faq) => (
         <details key={faq.id} className="group py-1">
-          <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-5 text-left [&::-webkit-details-marker]:hidden">
-            <h3 className="text-body font-bold text-indigo sm:text-h4">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-4 text-left transition-colors hover:text-indigo-700 [&::-webkit-details-marker]:hidden">
+            <h3 className="text-body font-bold leading-snug text-indigo sm:text-body-lg">
               {faq.question}
             </h3>
             <span
               aria-hidden
-              className="flex size-10 shrink-0 items-center justify-center border-2 border-indigo text-indigo transition-colors duration-150 group-open:bg-indigo group-open:text-white"
+              className="flex size-9 shrink-0 items-center justify-center border border-line-strong text-indigo transition-colors duration-150 group-open:border-indigo group-open:bg-indigo group-open:text-white"
             >
               <Plus className="size-4 group-open:hidden" />
               <Minus className="hidden size-4 group-open:block" />
             </span>
           </summary>
-          <p className="max-w-3xl pb-6 text-body text-ink-secondary">{faq.answer}</p>
+          <p className="max-w-[65ch] pb-6 pr-12 text-body text-ink-secondary">{faq.answer}</p>
         </details>
       ))}
     </div>

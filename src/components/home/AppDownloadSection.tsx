@@ -142,12 +142,12 @@ export function AppDownloadSection() {
     <Section tone="paper" id="app" containerSize="wide">
       <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12">
         <div className="border-t-2 border-indigo pt-5">
-          <Eyebrow tone="chilli">Plan • Practice • Progress</Eyebrow>
+          <Eyebrow>Plan · Practice · Progress</Eyebrow>
           <h2 className="mt-4 text-h2 font-bold lg:text-h2-lg">
-            A smarter study experience
-            <span className="block text-ink-secondary">— on web and mobile.</span>
+            A smarter study experience,{" "}
+            <span className="text-ink-secondary">on web and mobile.</span>
           </h2>
-          <p className="mt-5 max-w-xl text-body text-ink-secondary sm:text-body-lg">
+          <p className="mt-5 max-w-[52ch] text-body text-ink-secondary sm:text-body-lg">
             Track your progress, follow today&apos;s plan, attend live classes, revise notes and
             practise tests — all in one place. Enrolled students use the student portal on the web
             today; the {BRAND.name} app for Android and iOS is on its way.

@@ -75,7 +75,7 @@ export default async function HomePage() {
         title="Your UPSC preparation deserves a clear direction."
         description="Speak with our academic team to understand the right preparation path for your attempt."
         location="home-final"
-        illustration={<GeoComposition surface="dark" className="mx-auto size-56 sm:size-64 lg:size-80" />}
+        illustration={<GeoComposition surface="dark" className="mx-auto hidden size-64 lg:block xl:size-72" />}
       />
       <script
         type="application/ld+json"

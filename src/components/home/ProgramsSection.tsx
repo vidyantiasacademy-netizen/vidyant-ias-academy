@@ -35,14 +35,14 @@ type HomepageCategory = (typeof HOMEPAGE_CATEGORIES)[number];
 /**
  * Each card opens with the student's own situation as a question, so they
  * recognise themselves before they read a programme name — "that's me" is
- * faster than comparing four syllabi. One primary per stage, as a hard bar
- * across the card's head, makes the four easy to tell apart.
+ * faster than comparing four syllabi. The stage icon and label tell the four
+ * apart; colour is kept for the one "Start here" card.
  */
-const TILE: Record<HomepageCategory, { icon: LucideIcon; hook: string; bar: string }> = {
-  foundation: { icon: Sprout, hook: "New to UPSC?", bar: "bg-kesar" },
-  prelims: { icon: Target, hook: "Prelims up next?", bar: "bg-ink" },
-  mains: { icon: PenLine, hook: "Mains mode on?", bar: "bg-chilli" },
-  optional: { icon: BookOpen, hook: "Got your optional?", bar: "bg-indigo" },
+const TILE: Record<HomepageCategory, { icon: LucideIcon; hook: string }> = {
+  foundation: { icon: Sprout, hook: "New to UPSC?" },
+  prelims: { icon: Target, hook: "Prelims up next?" },
+  mains: { icon: PenLine, hook: "Mains mode on?" },
+  optional: { icon: BookOpen, hook: "Got your optional?" },
 };
 
 /** "6 months" fits a chip; the long fallback note belongs on the course page. */
@@ -82,8 +82,7 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
   return (
     <Section id="programs" containerSize="wide">
       <SectionHeader
-        accent="chilli"
-        eyebrow={`${EXAM_CYCLE.label} · ${EXAM_CYCLE.admissionNote}`}
+        eyebrow={`Programs · ${EXAM_CYCLE.label}`}
         title={
           <>
             Pick{" "}
@@ -101,9 +100,11 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
         }
       />
 
-      <ul className="mt-7 grid gap-5 sm:grid-cols-2 lg:mt-9 lg:grid-cols-4 lg:gap-6">
+      {/* Two across until a card has ~280px of measure, then all four. */}
+      <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:mt-10 lg:gap-6 xl:grid-cols-4">
         {featured.map((course, index) => {
-          const { icon: Icon, hook, bar } = TILE[course.category];
+          const { icon: Icon, hook } = TILE[course.category];
+          const first = index === 0;
           const href = `/courses/${course.slug}`;
 
           return (
@@ -112,23 +113,29 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
               className="reveal relative"
               style={{ animationDelay: `${index * 70}ms` }}
             >
-              <article className="relative flex h-full flex-col border-2 border-indigo bg-white">
-                <span aria-hidden className={cn("absolute inset-x-0 top-0 h-1.5", bar)} />
-                {index === 0 ? (
-                  <span className="pointer-events-none absolute right-0 top-0 z-10 bg-kesar px-2 py-1 text-eyebrow font-bold uppercase text-indigo-900">
+              <article
+                className={cn(
+                  "relative flex h-full flex-col border bg-white transition-colors duration-150 hover:border-indigo",
+                  first ? "border-indigo border-t-4 border-t-kesar" : "border-line-strong",
+                )}
+              >
+                {/* Hangs on the top rule, out of the flow, so the first card's
+                    content lines up with its neighbours. */}
+                {first ? (
+                  <span className="absolute -top-3.5 right-5 bg-kesar px-2 py-0.5 text-eyebrow font-bold whitespace-nowrap uppercase text-indigo-900">
                     Start here
                   </span>
                 ) : null}
 
-                <div className="flex flex-1 flex-col p-5 pt-7 lg:p-6 lg:pt-8">
+                <div className="flex flex-1 flex-col p-5 lg:p-6">
                   <span className="flex items-center gap-2.5 text-indigo">
-                    <Icon aria-hidden className="size-5" />
+                    <Icon aria-hidden className="size-5" strokeWidth={1.75} />
                     <span className="text-eyebrow font-bold uppercase">
                       {COURSE_CATEGORY_LABELS[course.category]}
                     </span>
                   </span>
 
-                  <p className="mt-4 text-small font-bold text-ink-secondary">{hook}</p>
+                  <p className="mt-5 text-small font-semibold text-ink-secondary">{hook}</p>
                   <h3 className="mt-1 text-h4 font-bold leading-tight text-indigo">
                     <TrackedLink
                       href={href}
@@ -146,7 +153,7 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
                   ) : null}
 
                   {course.features.length > 0 ? (
-                    <ul className="mt-4 space-y-1.5">
+                    <ul className="mt-4 space-y-2">
                       {course.features.slice(0, 3).map((feature) => (
                         <li key={feature} className="flex items-start gap-2 text-small text-ink">
                           <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-kesar-600" />
@@ -156,23 +163,27 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
                     </ul>
                   ) : null}
 
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  {/* Metadata: plain secondary lines pinned to the foot of the
+                      body, so the fee rows of neighbouring cards line up. */}
+                  <dl className="mt-auto space-y-1.5 pt-5 text-small text-ink-secondary">
                     {isShortDuration(course.duration) ? (
-                      <span className="inline-flex items-center gap-1 border border-line px-2 py-0.5 text-eyebrow font-bold text-ink-secondary">
-                        <Clock aria-hidden className="size-3.5" />
-                        {course.duration}
-                      </span>
+                      <div className="flex items-start gap-2">
+                        <dt className="sr-only">Duration</dt>
+                        <Clock aria-hidden className="mt-0.5 size-4 shrink-0" />
+                        <dd>{course.duration}</dd>
+                      </div>
                     ) : null}
                     {course.mode.length > 0 ? (
-                      <span className="inline-flex items-center gap-1 border border-line px-2 py-0.5 text-eyebrow font-bold text-ink-secondary">
-                        <Laptop aria-hidden className="size-3.5" />
-                        {course.mode.join(" · ")}
-                      </span>
+                      <div className="flex items-start gap-2">
+                        <dt className="sr-only">Mode</dt>
+                        <Laptop aria-hidden className="mt-0.5 size-4 shrink-0" />
+                        <dd>{course.mode.join(" · ")}</dd>
+                      </div>
                     ) : null}
-                  </div>
+                  </dl>
                 </div>
 
-                <div className="border-t-2 border-indigo p-5 lg:p-6">
+                <div className="border-t border-line p-5 lg:p-6">
                   {course.priceInPaise ? (
                     <p className="text-h3 font-bold tabular-nums text-indigo">
                       {RUPEES.format(course.priceInPaise / 100)}
@@ -181,7 +192,7 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
                       </span>
                     </p>
                   ) : (
-                    <p className="text-body font-bold text-indigo">
+                    <p className="text-body font-bold leading-snug text-indigo">
                       Fee on a free counselling call
                       <span className="block text-small font-medium text-ink-secondary">
                         Instalments available
@@ -193,7 +204,7 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
                     <BuyCourseButton
                       course={course}
                       location="home-programs"
-                      variant={index === 0 ? "kesar" : "primary"}
+                      variant={first ? "kesar" : "primary"}
                       fullWidth
                     >
                       Enrol now
@@ -220,7 +231,7 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
         Not sure which one is you?{" "}
         <Link
           href={CTA.counselling.href}
-          className="font-bold text-chilli-600 underline decoration-2 underline-offset-4 hover:text-indigo"
+          className="font-bold text-indigo underline decoration-kesar decoration-2 underline-offset-4 hover:decoration-indigo"
         >
           Get a free counselling call
         </Link>

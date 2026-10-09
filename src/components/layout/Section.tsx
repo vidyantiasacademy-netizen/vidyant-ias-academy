@@ -19,7 +19,7 @@ const tones = {
 } as const;
 
 const spacings = {
-  default: "py-12 sm:py-14 lg:py-20",
+  default: "py-12 sm:py-16 lg:py-20",
   tight: "py-10 sm:py-12 lg:py-16",
   none: "",
 } as const;
@@ -37,7 +37,7 @@ export function Section({
     <section
       // Sections are anchor targets; keep them clear of the sticky header.
       className={cn(
-        "scroll-mt-16 sm:scroll-mt-18 lg:scroll-mt-20",
+        "scroll-mt-16 lg:scroll-mt-18",
         tones[tone],
         spacings[spacing],
         className,

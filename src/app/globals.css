@@ -169,7 +169,7 @@
   --text-hero: 2.25rem;           /* 36px mobile */
   --text-hero--line-height: 1.02;
   --text-hero--letter-spacing: -0.035em;
-  --text-hero-lg: 4rem;           /* 64px desktop */
+  --text-hero-lg: 3.5rem;         /* 56px desktop — shares its row with the banner */
   --text-hero-lg--line-height: 0.98;
   --text-hero-lg--letter-spacing: -0.045em;
 
@@ -348,9 +348,15 @@
   /* Notification ticker. The track holds the notices twice, so sliding it by
      half its width lands exactly on the second copy and the loop has no seam.
      Duration is set per instance, from how much text there is to read. It
-     never pauses and is exempt from the reduced-motion override below. */
+     pauses while a pointer or keyboard focus is on it, so a link can be read
+     and hit; reduced motion stops it (see the override at the end). */
   .notice-ticker {
     animation: notice-ticker linear infinite;
+  }
+
+  .notice-ticker:hover,
+  .notice-ticker:focus-within {
+    animation-play-state: paused;
   }
 
   @keyframes notice-ticker {
@@ -400,10 +406,14 @@
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  /* The notice ticker is excluded on purpose: it must always keep moving. */
-  *:not(.notice-ticker), *::before, *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+
+  /* A still ticker: the first copy sits flush left and the row scrolls by hand. */
+  .notice-ticker {
+    animation: none !important;
   }
 }

@@ -16,6 +16,11 @@ interface SectionHeaderProps {
   className?: string;
   /** Heading level — keeps the page outline correct. */
   as?: "h2" | "h3";
+  /**
+   * `split` hangs the eyebrow in the left 3 of 12 columns from `lg`; `stack`
+   * keeps it above the heading — for headers inside a narrow column.
+   */
+  layout?: "split" | "stack";
 }
 
 export function SectionHeader({
@@ -28,8 +33,10 @@ export function SectionHeader({
   action,
   className,
   as: Heading = "h2",
+  layout = "split",
 }: SectionHeaderProps) {
   const centered = align === "center";
+  const split = !centered && layout === "split";
 
   // Swiss header: a hard rule across the full measure, then an asymmetric
   // split — the eyebrow hangs in the left 3 of 12 columns, the heading takes
@@ -41,14 +48,17 @@ export function SectionHeader({
         tone === "light" ? "border-white" : "border-indigo",
         centered
           ? "flex flex-col items-center gap-4 text-center"
-          : "grid gap-4 lg:grid-cols-12 lg:gap-x-8",
+          : split
+            ? "grid gap-4 lg:grid-cols-12 lg:gap-x-8"
+            : "flex flex-col gap-4",
         className,
       )}
     >
       {eyebrow ? (
         <Eyebrow
           tone={tone === "light" ? "light" : accent}
-          className={cn(!centered && "lg:col-span-3 lg:pt-2", centered && "justify-center")}
+          // Top-aligned with the heading's cap height, not centred on the block.
+          className={cn(split && "lg:col-span-3 lg:self-start lg:pt-3", centered && "justify-center")}
         >
           {eyebrow}
         </Eyebrow>
@@ -56,7 +66,7 @@ export function SectionHeader({
       <div
         className={cn(
           "flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8",
-          !centered && (eyebrow ? "lg:col-span-9" : "lg:col-span-12"),
+          split && (eyebrow ? "lg:col-span-9" : "lg:col-span-12"),
           centered && "lg:flex-col lg:items-center",
         )}
       >
@@ -72,7 +82,7 @@ export function SectionHeader({
           {description ? (
             <p
               className={cn(
-                "mt-4 max-w-2xl text-body sm:text-body-lg",
+                "mt-4 max-w-[60ch] text-body sm:text-body-lg",
                 centered && "mx-auto",
                 tone === "light" ? "text-white/80" : "text-ink-secondary",
               )}

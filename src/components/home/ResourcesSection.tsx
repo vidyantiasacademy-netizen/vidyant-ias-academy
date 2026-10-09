@@ -21,7 +21,6 @@ export function ResourcesSection({ resources }: { resources: Resource[] }) {
   return (
     <Section id="resources" containerSize="wide">
       <SectionHeader
-        accent="chilli"
         eyebrow={premium.length > 0 ? "Study Material" : "Free Resources"}
         title={
           premium.length > 0

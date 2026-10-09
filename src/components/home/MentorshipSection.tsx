@@ -49,39 +49,43 @@ const FEATURES = [
 export function MentorshipSection() {
   return (
     <Section tone="paper" id="mentorship" containerSize="wide">
-      <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
+      {/* Image in 5 of 12 columns, copy in 7: the promise and its six parts
+          carry the section, the artwork supports it. */}
+      <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-x-8">
         <PlaceholderVisual
           imageKey="mentorshipSession"
           tone="paper"
-          className="mx-auto aspect-4/5 w-full max-w-md lg:max-w-none"
+          className="order-last mx-auto aspect-4/5 w-full max-w-md border border-line lg:order-first lg:col-span-5 lg:max-w-none"
         />
 
-        <div>
-          <div className="border-t-2 border-indigo pt-5">
-            <Eyebrow tone="chilli">Mentorship</Eyebrow>
+        <div className="lg:col-span-7 lg:pl-4 xl:pl-8">
+          <div className="border-t-2 border-indigo pt-5 lg:pt-6">
+            <Eyebrow>Mentorship</Eyebrow>
           </div>
           <h2 className="mt-4 text-h2 font-bold lg:text-h2-lg">
             You shouldn&apos;t have to prepare alone.
           </h2>
-          <p className="mt-5 text-body text-ink-secondary sm:text-body-lg">
+          <p className="mt-5 max-w-[60ch] text-body text-ink-secondary sm:text-body-lg">
             Every serious aspirant needs more than a timetable. Our mentorship approach is designed
             to help students understand what to study, what to prioritise, where they are struggling
             and what to do next.
           </p>
 
-          <ul className="mt-7 grid grid-cols-2 gap-x-4 gap-y-5 sm:gap-x-6">
+          <ul className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2">
             {FEATURES.map(({ icon: Icon, label, note }) => (
-              <li key={label} className="flex gap-3 border-t border-line pt-4">
-                <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-chilli-600" />
+              <li key={label} className="flex gap-4">
+                <span className="flex size-10 shrink-0 items-center justify-center bg-white text-indigo ring-1 ring-line">
+                  <Icon aria-hidden className="size-5" strokeWidth={1.75} />
+                </span>
                 <span>
-                  <span className="block text-body font-semibold text-indigo">{label}</span>
-                  <span className="text-small text-ink-secondary">{note}</span>
+                  <span className="block text-body font-bold leading-snug text-indigo">{label}</span>
+                  <span className="mt-0.5 block text-small text-ink-secondary">{note}</span>
                 </span>
               </li>
             ))}
           </ul>
 
-          <ButtonLink href={`${ROUTES.about}#philosophy`} variant="secondary" className="mt-7">
+          <ButtonLink href={`${ROUTES.about}#philosophy`} variant="secondary" className="mt-9">
             Understand Our Mentorship
           </ButtonLink>
         </div>

@@ -28,7 +28,7 @@ export async function SiteChrome({ children }: { children: ReactNode }) {
         {dict.common.skipToContent}
       </a>
       <Header notice={<NotificationStrip />} />
-      <main id="main" className="flex-1 pb-20 lg:pb-0">
+      <main id="main" className="flex-1 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0">
         {children}
       </main>
       <Footer />

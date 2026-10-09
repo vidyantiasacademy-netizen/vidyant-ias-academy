@@ -22,12 +22,12 @@ const PILLARS = [
 
 export function TrustBar() {
   return (
-    <section aria-label="What vidyantIAS provides" className="border-b-2 border-indigo bg-white">
+    <section aria-label="What vidyantIAS provides" className="border-b border-line bg-paper">
       <Container size="wide">
-        <ul className="grid grid-cols-2 gap-x-6 gap-y-5 py-7 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-8 lg:py-6">
+        <ul className="grid grid-cols-2 gap-x-6 gap-y-4 py-6 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-8">
           {PILLARS.map(({ icon: Icon, label }) => (
-            <li key={label} className="flex items-center gap-2.5 border-l-2 border-indigo pl-3">
-              <Icon aria-hidden className="size-4.5 shrink-0 text-chilli-600" />
+            <li key={label} className="flex items-center gap-2.5">
+              <Icon aria-hidden className="size-5 shrink-0 text-indigo" strokeWidth={1.75} />
               <span className="text-small font-bold text-indigo">{label}</span>
             </li>
           ))}

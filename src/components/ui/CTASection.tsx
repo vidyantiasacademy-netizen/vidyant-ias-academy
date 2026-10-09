@@ -28,7 +28,7 @@ export function CTASection({
   return (
     <section
       className={cn(
-        "relative overflow-hidden bg-indigo py-14 focus-invert sm:py-16 lg:py-24",
+        "relative overflow-hidden bg-indigo py-14 focus-invert sm:py-16 lg:py-20",
         className,
       )}
     >
@@ -37,9 +37,10 @@ export function CTASection({
       {illustration ? null : <GeoCorners corners={["top-right"]} />}
       <Container className={cn("relative", illustration && "grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-12")}>
         <div className="max-w-3xl">
-          <GeoTriad surface="dark" />
-          <h2 className="mt-6 text-h2 font-bold text-white lg:text-h2-lg">{title}</h2>
-          <p className="mt-5 text-body text-white/80 sm:text-body-lg">{description}</p>
+          {/* One Bauhaus element per band: the triad steps aside for an illustration. */}
+          {illustration ? null : <GeoTriad surface="dark" className="mb-6" />}
+          <h2 className="text-h2 font-bold text-white lg:text-h2-lg">{title}</h2>
+          <p className="mt-5 max-w-[52ch] text-body text-white/80 sm:text-body-lg">{description}</p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <TrackedButtonLink
               href={CTA.counselling.href}

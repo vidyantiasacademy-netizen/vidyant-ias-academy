@@ -22,23 +22,13 @@ const NOTICE_TONE: Record<Announcement["tone"], { label: string; tone: "neutral"
 };
 
 /**
- * One primary per board, the same trio the Programs tiles use, so the two
- * sections read as one system: a hard bar across the board's head and the
- * colour of its numbered index. Written out in full for Tailwind.
+ * Boards share one look so the three read as a set; the accent only colours
+ * the numbered index of an empty board's plan. Written out in full for Tailwind.
  */
 const ACCENT = {
-  chilli: {
-    bar: "bg-chilli",
-    number: "text-chilli-600",
-  },
-  indigo: {
-    bar: "bg-indigo",
-    number: "text-indigo",
-  },
-  kesar: {
-    bar: "bg-kesar",
-    number: "text-kesar-700",
-  },
+  chilli: { number: "text-chilli-600" },
+  indigo: { number: "text-indigo" },
+  kesar: { number: "text-kesar-700" },
 } as const;
 type Accent = keyof typeof ACCENT;
 
@@ -64,7 +54,7 @@ function DateTile({ iso }: { iso: string }) {
   return (
     <time
       dateTime={iso}
-      className="flex w-14 shrink-0 flex-col self-start items-center overflow-hidden border-2 border-indigo bg-white text-indigo"
+      className="flex w-14 shrink-0 flex-col self-start items-center overflow-hidden border border-indigo bg-white text-indigo"
     >
       <span className="w-full bg-indigo py-0.5 text-center text-eyebrow font-bold uppercase text-white">
         {month}
@@ -75,9 +65,9 @@ function DateTile({ iso }: { iso: string }) {
 }
 
 /**
- * One of the three boards: a 2px indigo frame with a primary bar across its
- * head, a header that opens on a question, and a full-width, thumb-sized link
- * at the foot. The status tag is locked into the top-right corner.
+ * One of the three boards: a quiet frame, a header that opens on a question
+ * with its status as a small tag, and a full-width, thumb-sized link at the
+ * foot.
  */
 function Board({
   icon,
@@ -86,7 +76,6 @@ function Board({
   description,
   status,
   live = false,
-  accent,
   href,
   linkLabel,
   index,
@@ -101,32 +90,27 @@ function Board({
   status: string;
   /** Marks the tag with a chilli square. Only the announcements board earns it. */
   live?: boolean;
-  accent: Accent;
   href: string;
   linkLabel: string;
   index: 1 | 2 | 3;
   children: ReactNode;
 }) {
-  const { bar } = ACCENT[accent];
-
   return (
     <div className={cn("reveal relative h-full", `reveal-delay-${index}`)}>
-      <span className="pointer-events-none absolute right-0 top-0 z-10 inline-flex items-center gap-1.5 bg-indigo px-2 py-1 text-eyebrow font-bold uppercase text-white">
-        {live ? <span aria-hidden className="size-2 shrink-0 bg-chilli" /> : null}
-        {status}
-      </span>
-
-      <section className="flex h-full flex-col overflow-hidden border-2 border-indigo bg-white">
-        <span aria-hidden className={cn("block h-1.5", bar)} />
-        <header className="border-b-2 border-indigo px-5 pt-6 pb-5 sm:px-6">
-          <div className="flex items-center gap-3">
-            <span className="flex size-11 shrink-0 items-center justify-center border-2 border-indigo text-indigo">
+      <section className="flex h-full flex-col overflow-hidden border border-line-strong bg-white">
+        <header className="border-b border-line px-5 pt-5 pb-5 sm:px-6">
+          <div className="flex items-start gap-3">
+            <span className="flex size-11 shrink-0 items-center justify-center bg-indigo-100 text-indigo">
               {icon}
             </span>
-            <div>
-              <p className="text-small font-bold text-ink-secondary">{hook}</p>
-              <h3 className="text-h3 font-bold leading-tight tracking-tight text-indigo">{title}</h3>
+            <div className="min-w-0 flex-1">
+              <p className="text-small font-semibold text-ink-secondary">{hook}</p>
+              <h3 className="text-h4 font-bold leading-tight text-indigo">{title}</h3>
             </div>
+            <span className="inline-flex shrink-0 items-center gap-1.5 bg-paper px-2 py-1 text-eyebrow font-bold uppercase text-ink-secondary">
+              {live ? <span aria-hidden className="size-2 shrink-0 bg-chilli" /> : null}
+              {status}
+            </span>
           </div>
           <p className="mt-3 text-small text-ink-secondary">{description}</p>
         </header>
@@ -135,12 +119,10 @@ function Board({
 
         <Link
           href={href}
-          className="flex h-14 items-center justify-between gap-3 border-t-2 border-indigo px-5 text-body font-bold text-indigo transition-colors duration-150 hover:bg-indigo hover:text-white sm:px-6"
+          className="group flex h-14 items-center justify-between gap-3 border-t border-line px-5 text-small font-bold text-indigo transition-colors duration-150 hover:bg-indigo hover:text-white sm:px-6"
         >
           {linkLabel}
-          <span className="flex size-9 items-center justify-center border-2 border-current">
-            <ArrowRight aria-hidden className="size-4.5" />
-          </span>
+          <ArrowRight aria-hidden className="size-4.5 transition-transform duration-150 group-hover:translate-x-0.5" />
         </Link>
       </section>
     </div>
@@ -197,16 +179,8 @@ export async function NoticeboardSection() {
   return (
     <Section id="noticeboard" tone="paper" containerSize="wide" className="overflow-hidden">
       <SectionHeader
-        accent="chilli"
         eyebrow="Noticeboard"
-        title={
-          <>
-            What&apos;s new,{" "}
-            <span className="-mx-1 box-decoration-clone bg-kesar-100 px-1">
-              this week.
-            </span>
-          </>
-        }
+        title="What's new, this week."
         description="Schedule changes, faculty articles and free practice — the three things worth checking back for."
       />
 
@@ -215,7 +189,6 @@ export async function NoticeboardSection() {
           <Board
             index={1}
             live
-            accent="chilli"
             icon={<BellRing aria-hidden className="size-5.5" />}
             hook="What changed?"
             title="Announcements"
@@ -235,7 +208,7 @@ export async function NoticeboardSection() {
                         <div className="flex flex-wrap items-center gap-2">
                           <Badge tone={tone.tone}>{tone.label}</Badge>
                           {isFresh(notice.startsAt) ? (
-                            <span className="border border-chilli bg-chilli-100 px-1.5 py-0.5 text-eyebrow font-bold uppercase text-chilli-700">
+                            <span className="bg-chilli-100 px-2 py-1 text-eyebrow font-bold uppercase text-chilli-700">
                               New
                             </span>
                           ) : null}
@@ -244,7 +217,7 @@ export async function NoticeboardSection() {
                           {notice.href ? (
                             <Link
                               href={notice.href}
-                              className="underline decoration-kesar decoration-2 underline-offset-4 transition-colors hover:text-chilli-600 hover:decoration-chilli"
+                              className="underline decoration-line-strong decoration-2 underline-offset-4 transition-colors hover:decoration-indigo"
                             >
                               {notice.title}
                             </Link>
@@ -275,7 +248,6 @@ export async function NoticeboardSection() {
 
           <Board
             index={2}
-            accent="indigo"
             icon={<Newspaper aria-hidden className="size-5.5" />}
             hook="Worth a read"
             title="Articles"
@@ -292,7 +264,7 @@ export async function NoticeboardSection() {
                     <h4 className="mt-2 text-body font-bold leading-snug text-indigo">
                       <Link
                         href={`${ROUTES.blog}/${post.slug}`}
-                        className="underline decoration-kesar decoration-2 underline-offset-4 transition-colors hover:text-chilli-600 hover:decoration-chilli"
+                        className="underline decoration-line-strong decoration-2 underline-offset-4 transition-colors hover:decoration-indigo"
                       >
                         {post.title}
                       </Link>
@@ -319,7 +291,6 @@ export async function NoticeboardSection() {
 
           <Board
             index={3}
-            accent="kesar"
             icon={<ListChecks aria-hidden className="size-5.5" />}
             hook="Quick check?"
             title="Quizzes"
@@ -340,7 +311,7 @@ export async function NoticeboardSection() {
                       {quiz.href ? (
                         <Link
                           href={quiz.href}
-                          className="underline decoration-kesar decoration-2 underline-offset-4 transition-colors hover:text-chilli-600 hover:decoration-chilli"
+                          className="underline decoration-line-strong decoration-2 underline-offset-4 transition-colors hover:decoration-indigo"
                         >
                           {quiz.title}
                         </Link>

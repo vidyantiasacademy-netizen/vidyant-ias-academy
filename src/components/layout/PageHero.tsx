@@ -33,7 +33,7 @@ export function PageHero({
         {breadcrumbs ? <Breadcrumbs items={breadcrumbs} className="mb-5" /> : null}
         <div className="grid gap-6 lg:grid-cols-12 lg:gap-x-8">
           <div className="lg:col-span-8">
-            {eyebrow ? <Eyebrow tone="chilli">{eyebrow}</Eyebrow> : null}
+            {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
             <h1 className="mt-3 max-w-4xl text-h1 font-bold text-indigo lg:text-h1-lg">
               {title}
             </h1>

@@ -38,7 +38,7 @@ function NoticeLine({ notice }: { notice: StripNotice }) {
           href={notice.href}
           event={ANALYTICS_EVENTS.noticeClick}
           payload={{ location: "notification-strip", notice: notice.id }}
-          className="shrink-0 whitespace-nowrap font-bold text-kesar underline decoration-kesar decoration-2 underline-offset-4 transition-colors hover:text-white"
+          className="shrink-0 whitespace-nowrap font-bold text-kesar underline decoration-kesar/60 underline-offset-4 transition-colors hover:text-white hover:decoration-white"
         >
           {notice.linkLabel ?? "Details"}
         </TrackedLink>
@@ -52,13 +52,13 @@ function NoticeLine({ notice }: { notice: StripNotice }) {
  * continuous ticker, end to end, and start again — forever.
  *
  * Shape of the thing:
- *  - it lives inside the sticky header, so it stays pinned with the navigation
- *    on scroll. It cannot be dismissed: the notices are always on show.
+ *  - it sits above the header and scrolls away with the page, so only the
+ *    navigation stays pinned. It cannot be dismissed.
  *  - the ticker is the notice list rendered twice inside one track that slides
  *    by exactly half its width, so the loop has no seam and no gap. The second
  *    copy is `inert` and hidden from assistive tech — it is the same text.
- *  - it never stops: not on hover, not on focus, and not for reduced motion
- *    (`.notice-ticker` is exempt from the site-wide reduced-motion rule).
+ *  - it pauses under the pointer or keyboard focus, so a link can be read and
+ *    hit; with reduced motion it stands still and the row scrolls by hand.
  *
  * `notices` is computed on the server (see `stripNotices`) so the announcement
  * window is evaluated once, against one clock.
@@ -74,8 +74,8 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
     <div role="region" aria-label="Site notices" className="bg-indigo-900 text-white">
       {/* Full-bleed rather than inside a Container: the ticker should run off
           both edges of the screen, not start and stop at the page gutter. */}
-      <div className="flex min-h-10 items-center gap-2 pr-2 pl-4 sm:pr-4 sm:pl-6 lg:pl-8">
-        <div className="flex-1 overflow-hidden">
+      <div className="flex min-h-9 items-center gap-2 pr-2 pl-4 sm:pr-4 sm:pl-6 lg:pl-8">
+        <div className="flex-1 overflow-hidden motion-reduce:overflow-x-auto">
           <div
             className="notice-ticker flex w-max items-center"
             style={{ animationDuration: `${duration}s` }}
@@ -90,7 +90,7 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
                 {notices.map((notice) => (
                   <span
                     key={notice.id}
-                    className="flex items-center gap-2 py-2 pr-10 text-small whitespace-nowrap"
+                    className="flex items-center gap-2 py-1.5 pr-12 text-small whitespace-nowrap text-white/90"
                   >
                     <NoticeLine notice={notice} />
                   </span>

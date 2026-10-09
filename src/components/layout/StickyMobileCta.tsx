@@ -18,7 +18,7 @@ export function StickyMobileCta() {
   if (HIDDEN_ON.includes(pathname)) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-indigo bg-white px-4 py-3 lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line-strong bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] lg:hidden">
       <div className="flex items-center gap-2.5">
         <TrackedButtonLink
           href={CTA.counselling.href}
@@ -37,7 +37,7 @@ export function StickyMobileCta() {
           event={ANALYTICS_EVENTS.whatsappClick}
           payload={{ location: "sticky-mobile" }}
           aria-label={dict.common.whatsappChat}
-          className="flex size-12 shrink-0 items-center justify-center border-2 border-indigo text-indigo transition-colors hover:bg-indigo hover:text-white"
+          className="flex size-12 shrink-0 items-center justify-center border border-line-strong text-indigo transition-colors hover:border-indigo hover:bg-indigo hover:text-white"
         >
           <MessageCircle aria-hidden className="size-5" />
         </TrackedAnchor>
@@ -46,7 +46,7 @@ export function StickyMobileCta() {
           event={ANALYTICS_EVENTS.phoneClick}
           payload={{ location: "sticky-mobile" }}
           aria-label={format(dict.common.call, { phone: CONTACT.phoneDisplay })}
-          className="flex size-12 shrink-0 items-center justify-center border-2 border-indigo text-indigo transition-colors hover:bg-indigo hover:text-white"
+          className="flex size-12 shrink-0 items-center justify-center border border-line-strong text-indigo transition-colors hover:border-indigo hover:bg-indigo hover:text-white"
         >
           <Phone aria-hidden className="size-5" />
         </TrackedAnchor>

@@ -1,108 +1,75 @@
-import { CalendarCheck2, MessageCircle, MonitorPlay, type LucideIcon } from "lucide-react";
+import { ArrowRight, MessageCircle, MonitorPlay } from "lucide-react";
 
-import { TrackedAnchor, TrackedLink } from "@/components/ui/TrackedLink";
-import { ANALYTICS_EVENTS, type AnalyticsEvent } from "@/lib/analytics/events";
-import { CTA, EXAM_CYCLE, whatsappUrl } from "@/lib/constants/site";
-import { cn } from "@/lib/utils/cn";
+import { TrackedAnchor, TrackedButtonLink, TrackedLink } from "@/components/ui/TrackedLink";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { CTA, whatsappUrl } from "@/lib/constants/site";
 
-type HeroAction = {
-  id: string;
-  /** One verb, set large. */
-  verb: string;
-  lines: [string, string];
-  icon: LucideIcon;
-  href: string;
-  event: AnalyticsEvent;
-  external?: boolean;
-  /** The single kesar element of the row — the one that stands for the student. */
-  kesar?: boolean;
-  /** Paper fill instead of white, so the row is not two identical tiles. */
-  paper?: boolean;
-};
+const PAYLOAD = { location: "home-hero" } as const;
 
-const ACTIONS: HeroAction[] = [
-  {
-    id: "demo",
-    verb: "Attend",
-    lines: ["A free demo class", "Judge the teaching"],
-    icon: MonitorPlay,
-    href: CTA.demo.href,
-    event: ANALYTICS_EVENTS.demoClick,
-  },
-  {
-    id: "whatsapp",
-    verb: "Talk",
-    lines: ["To our academic team", "On WhatsApp"],
-    icon: MessageCircle,
-    href: whatsappUrl(),
-    event: ANALYTICS_EVENTS.whatsappClick,
-    external: true,
-    paper: true,
-  },
-  {
-    id: "enrol",
-    verb: "Enrol",
-    lines: [EXAM_CYCLE.label, "Courses & fees"],
-    icon: CalendarCheck2,
-    // Straight to the priced programme cards below, where a course can be
-    // bought — not to a form that asks the visitor to wait for a call.
-    href: "#programs",
-    event: ANALYTICS_EVENTS.enrolClick,
-    kesar: true,
-  },
-];
+const quietLink =
+  "inline-flex min-h-11 items-center gap-2 text-small font-bold text-indigo underline decoration-line-strong decoration-2 underline-offset-4 transition-colors hover:decoration-indigo";
 
-/** Three big action tiles under the banner: one verb, two short lines, one icon. */
+/**
+ * The hero's actions, in three weights so the next step is never in doubt:
+ * one kesar primary (the priced programme cards below, where a course can be
+ * bought), one outlined secondary (a free counselling call — desktop only, as
+ * phones have it in the sticky bottom bar), and two quiet
+ * text links for the visitor who wants to look before they talk.
+ */
 export function HeroActions() {
   return (
-    <ul className="grid gap-4 sm:grid-cols-3 sm:gap-6 xl:gap-8">
-      {ACTIONS.map(({ id, verb, lines, icon: Icon, href, event, external, kesar, paper }) => {
-        const className = cn(
-          "group flex h-full items-start justify-between gap-4 border-2 border-indigo px-5 py-4 transition-colors duration-150 hover:bg-indigo hover:text-white lg:px-6 lg:py-5",
-          kesar ? "bg-kesar text-indigo-900" : paper ? "bg-paper text-indigo" : "bg-white text-indigo",
-        );
-        const body = (
-          <>
-            <span>
-              <span className="block text-h2 font-bold uppercase leading-none tracking-tight lg:text-h2-lg">
-                {verb}
-              </span>
-              <span className="mt-2 block text-small font-bold uppercase leading-snug tracking-wide">
-                {lines[0]}
-                <br />
-                {lines[1]}
-              </span>
-            </span>
-            <Icon
-              aria-hidden
-              className="size-8 shrink-0 lg:size-9"
-              strokeWidth={2.25}
-            />
-          </>
-        );
-        const payload = { location: "home-hero", action: id };
+    <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap [&>a]:whitespace-nowrap">
+        <TrackedButtonLink
+          href="#programs"
+          variant="kesar"
+          size="lg"
+          className="w-full sm:w-auto"
+          event={ANALYTICS_EVENTS.enrolClick}
+          payload={{ ...PAYLOAD, action: "enrol" }}
+        >
+          See courses &amp; fees
+          <ArrowRight aria-hidden className="size-5" />
+        </TrackedButtonLink>
+        <TrackedButtonLink
+          href={CTA.counselling.href}
+          variant="secondary"
+          size="lg"
+          // Below lg the sticky bottom bar already offers counselling.
+          className="hidden lg:inline-flex"
+          event={ANALYTICS_EVENTS.counsellingClick}
+          payload={{ ...PAYLOAD, action: "counselling" }}
+        >
+          {CTA.counselling.label}
+        </TrackedButtonLink>
+      </div>
 
-        return (
-          <li key={id}>
-            {external ? (
-              <TrackedAnchor
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                event={event}
-                payload={payload}
-                className={className}
-              >
-                {body}
-              </TrackedAnchor>
-            ) : (
-              <TrackedLink href={href} event={event} payload={payload} className={className}>
-                {body}
-              </TrackedLink>
-            )}
-          </li>
-        );
-      })}
-    </ul>
+      <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-1">
+        <li>
+          <TrackedLink
+            href={CTA.demo.href}
+            event={ANALYTICS_EVENTS.demoClick}
+            payload={{ ...PAYLOAD, action: "demo" }}
+            className={quietLink}
+          >
+            <MonitorPlay aria-hidden className="size-4.5 shrink-0" />
+            Attend a free demo class
+          </TrackedLink>
+        </li>
+        <li>
+          <TrackedAnchor
+            href={whatsappUrl()}
+            target="_blank"
+            rel="noreferrer"
+            event={ANALYTICS_EVENTS.whatsappClick}
+            payload={{ ...PAYLOAD, action: "whatsapp" }}
+            className={quietLink}
+          >
+            <MessageCircle aria-hidden className="size-4.5 shrink-0" />
+            Ask us on WhatsApp
+          </TrackedAnchor>
+        </li>
+      </ul>
+    </div>
   );
 }
