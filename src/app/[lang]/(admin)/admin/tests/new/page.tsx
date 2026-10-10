@@ -20,7 +20,7 @@ export default async function NewTestPage() {
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">New paper</h1>
+      <h1 className="text-h2 font-bold">New paper</h1>
       <p className="mt-2 text-body text-ink-secondary">
         Set the paper up first. You add its questions on the next screen.
       </p>

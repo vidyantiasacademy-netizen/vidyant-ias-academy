@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { Container } from "@/components/ui/Container";
-import { KesarLines } from "@/components/ui/KesarLines";
+import { GeoCorners, GeoTriad } from "@/components/ui/Geometry";
 import { TrackedButtonLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CTA } from "@/lib/constants/site";
@@ -28,22 +28,19 @@ export function CTASection({
   return (
     <section
       className={cn(
-        "relative overflow-hidden bg-indigo-gradient py-10 focus-invert sm:py-12 lg:py-16",
+        "relative overflow-hidden bg-indigo py-14 focus-invert sm:py-16 lg:py-20",
         className,
       )}
     >
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-[radial-gradient(90%_130%_at_85%_0%,var(--color-indigo-700)_0%,transparent_62%)]"
-      />
       {/* One corner only: the copy runs down the left side. An illustration
-          brings its own line work, so the corner art steps aside for it. */}
-      {illustration ? null : <KesarLines corners={["top-right"]} />}
+          brings its own geometry, so the corner mark steps aside for it. */}
+      {illustration ? null : <GeoCorners corners={["top-right"]} />}
       <Container className={cn("relative", illustration && "grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-12")}>
         <div className="max-w-3xl">
-          <span aria-hidden className="block h-1 w-16 rounded-full bg-kesar" />
-          <h2 className="mt-5 text-h2 font-semibold text-white lg:text-h2-lg">{title}</h2>
-          <p className="mt-5 text-body text-white/75 sm:text-body-lg">{description}</p>
+          {/* One Bauhaus element per band: the triad steps aside for an illustration. */}
+          {illustration ? null : <GeoTriad surface="dark" className="mb-6" />}
+          <h2 className="text-h2 font-bold text-white lg:text-h2-lg">{title}</h2>
+          <p className="mt-5 max-w-[52ch] text-body text-white/80 sm:text-body-lg">{description}</p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <TrackedButtonLink
               href={CTA.counselling.href}

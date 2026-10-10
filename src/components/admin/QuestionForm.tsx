@@ -223,7 +223,7 @@ export function QuestionForm({
               <li key={index} className="flex items-center gap-3">
                 <label
                   className={cn(
-                    "flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-md border text-small font-semibold uppercase transition-colors",
+                    "flex size-10 shrink-0 cursor-pointer items-center justify-center border text-small font-semibold uppercase transition-colors",
                     option.correct
                       ? "border-success bg-success-50 text-success"
                       : "border-line-strong text-ink-secondary hover:border-indigo",
@@ -252,7 +252,7 @@ export function QuestionForm({
                   type="button"
                   onClick={() => setOptions((current) => current.filter((_, i) => i !== index))}
                   disabled={options.length <= MIN_OPTIONS}
-                  className="flex size-10 shrink-0 items-center justify-center rounded-md text-ink-secondary hover:bg-paper hover:text-danger disabled:opacity-40"
+                  className="flex size-10 shrink-0 items-center justify-center text-ink-secondary hover:bg-paper hover:text-danger disabled:opacity-40"
                   aria-label={`Remove option ${LETTERS[index].toUpperCase()}`}
                 >
                   <X aria-hidden className="size-4" />

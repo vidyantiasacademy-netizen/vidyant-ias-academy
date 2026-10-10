@@ -1,7 +1,6 @@
 import type { ComponentProps } from "react";
 
 import { Container } from "@/components/ui/Container";
-import { KesarLines } from "@/components/ui/KesarLines";
 import { cn } from "@/lib/utils/cn";
 
 interface SectionProps extends ComponentProps<"section"> {
@@ -16,12 +15,12 @@ interface SectionProps extends ComponentProps<"section"> {
 const tones = {
   white: "bg-white",
   paper: "bg-paper",
-  indigo: "relative overflow-hidden bg-indigo-gradient text-white focus-invert",
+  indigo: "relative overflow-hidden bg-indigo text-white focus-invert",
 } as const;
 
 const spacings = {
-  default: "py-10 sm:py-12 lg:py-16",
-  tight: "py-8 sm:py-10 lg:py-12",
+  default: "py-12 sm:py-16 lg:py-20",
+  tight: "py-10 sm:py-12 lg:py-16",
   none: "",
 } as const;
 
@@ -36,16 +35,15 @@ export function Section({
 }: SectionProps) {
   return (
     <section
-      // Sections are anchor targets; keep them clear of the sticky header.
+      // Sections are anchor targets; keep them clear of the sticky strip + header.
       className={cn(
-        "scroll-mt-16 sm:scroll-mt-20 lg:scroll-mt-24",
+        "scroll-mt-[calc(4rem+var(--notice-strip-height))] lg:scroll-mt-[calc(4.5rem+var(--notice-strip-height))]",
         tones[tone],
         spacings[spacing],
         className,
       )}
       {...props}
     >
-      {tone === "indigo" ? <KesarLines /> : null}
       {bleed ? (
         children
       ) : (

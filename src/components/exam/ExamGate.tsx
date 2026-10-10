@@ -86,15 +86,15 @@ export function ExamGate({
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-paper p-4 sm:p-6">
-      <div className="w-full max-w-2xl rounded-lg border border-line bg-white p-6 sm:p-9">
+      <div className="w-full max-w-2xl border border-line bg-white p-6 sm:p-9">
         <p className="flex items-center gap-2 text-eyebrow font-semibold uppercase text-ink-secondary">
           <ShieldCheck aria-hidden className="size-4" />
           Invigilated paper
         </p>
 
-        <h1 className="mt-3 text-h2 font-semibold">{test.title}</h1>
+        <h1 className="mt-3 text-h2 font-bold">{test.title}</h1>
 
-        <dl className="mt-6 grid grid-cols-2 gap-4 rounded-md bg-paper p-5 sm:grid-cols-4">
+        <dl className="mt-6 grid grid-cols-2 gap-4 bg-paper p-5 sm:grid-cols-4">
           {[
             ["Questions", String(test.questionCount)],
             ["Marks", String(test.totalMarks)],
@@ -128,7 +128,7 @@ export function ExamGate({
         {error ? (
           <p
             role="alert"
-            className="mt-6 rounded-md bg-danger-50 px-4 py-3 text-small font-semibold text-danger"
+            className="mt-6 bg-danger-50 px-4 py-3 text-small font-semibold text-danger"
           >
             {error}
           </p>

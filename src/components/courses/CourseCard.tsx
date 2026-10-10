@@ -47,7 +47,7 @@ export function CourseCard({
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 46vw, 85vw"
             placeholder={course.image.lqip ? "blur" : "empty"}
             blurDataURL={course.image.lqip}
-            className="object-cover transition-transform duration-500 ease-[var(--ease-brand)] group-hover/card:scale-[1.03]"
+            className="object-cover"
           />
         </div>
       ) : null}
@@ -55,12 +55,12 @@ export function CourseCard({
         <p className="text-eyebrow font-semibold uppercase text-kesar-600">
           {COURSE_CATEGORY_LABELS[course.category]}
         </p>
-        <h3 className="mt-3 text-h3 font-semibold">
+        <h3 className="mt-3 text-h3 font-bold">
           <TrackedLink
             href={href}
             event={ANALYTICS_EVENTS.courseView}
             payload={{ course: course.id, location: "course-card" }}
-            className="transition-colors hover:text-kesar-600"
+            className="transition-colors hover:text-indigo"
           >
             {course.title}
           </TrackedLink>
@@ -99,12 +99,12 @@ export function CourseCard({
           href={href}
           event={ANALYTICS_EVENTS.courseCtaClick}
           payload={{ course: course.id, location: "course-card" }}
-          className="group inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-kesar-600"
+          className="group inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-indigo-900 hover:underline underline-offset-4"
         >
           {ctaLabel}
           <ArrowRight
             aria-hidden
-            className="size-4 transition-transform duration-200 ease-[var(--ease-brand)] group-hover:translate-x-1"
+            className="size-4"
           />
         </TrackedLink>
       </div>

@@ -129,8 +129,8 @@ function ToastCard({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
     <div
       role={isError ? "alert" : "status"}
       className={cn(
-        "toast-enter pointer-events-auto flex items-start gap-3 rounded-md border bg-white p-4 shadow-[var(--shadow-panel)]",
-        isError ? "border-danger/25" : "border-success/25",
+        "toast-enter pointer-events-auto flex items-start gap-3 border-2 border-l-8 bg-white p-4",
+        isError ? "border-danger" : "border-success",
       )}
     >
       {isError ? (
@@ -145,7 +145,7 @@ function ToastCard({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
         type="button"
         onClick={onDismiss}
         aria-label="Dismiss"
-        className="-m-1 shrink-0 rounded-sm p-1 text-ink-secondary transition-colors hover:text-ink"
+        className="-m-2 flex size-10 shrink-0 items-center justify-center text-ink-secondary transition-colors hover:bg-ink hover:text-white"
       >
         <X aria-hidden className="size-4" />
       </button>

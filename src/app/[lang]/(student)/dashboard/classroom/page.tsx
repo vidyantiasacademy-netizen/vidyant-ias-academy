@@ -47,7 +47,7 @@ export default async function ClassroomPage() {
   if (enrolled.length === 0) {
     return (
       <>
-        <h1 className="text-h2 font-semibold">Classroom</h1>
+        <h1 className="text-h2 font-bold">Classroom</h1>
         <div className="mt-8">
           <EmptyState
             icon={<BookOpen aria-hidden className="size-5" />}
@@ -66,7 +66,7 @@ export default async function ClassroomPage() {
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">Classroom</h1>
+      <h1 className="text-h2 font-bold">Classroom</h1>
       <p className="mt-2 text-body text-ink-secondary">
         Live classes, recordings and handouts from your programmes.
       </p>
@@ -78,7 +78,7 @@ export default async function ClassroomPage() {
           return (
             <section key={enrollment.id} aria-labelledby={`course-${course.id}`}>
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 id={`course-${course.id}`} className="text-h3 font-semibold">
+                <h2 id={`course-${course.id}`} className="text-h3 font-bold">
                   {course.title}
                 </h2>
 
@@ -108,7 +108,7 @@ export default async function ClassroomPage() {
                         <Card tone="white" padding="sm">
                           <div className="flex flex-wrap items-start justify-between gap-3">
                             <div className="flex items-start gap-3">
-                              <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-paper text-kesar-600">
+                              <span className="flex size-10 shrink-0 items-center justify-center bg-paper text-kesar-600">
                                 <Icon aria-hidden className="size-5" />
                               </span>
 

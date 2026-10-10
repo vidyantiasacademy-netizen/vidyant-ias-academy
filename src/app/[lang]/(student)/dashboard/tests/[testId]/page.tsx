@@ -57,7 +57,7 @@ export default async function PaperPage({
     <>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-h2 font-semibold">{test.title}</h1>
+          <h1 className="text-h2 font-bold">{test.title}</h1>
           <p className="mt-2 text-body text-ink-secondary">
             {test.questionCount} questions · {test.totalMarks} marks ·{" "}
             {test.durationMinutes} minutes
@@ -116,7 +116,7 @@ export default async function PaperPage({
               <li key={rule} className="flex gap-2">
                 <span
                   aria-hidden
-                  className="mt-2 size-1.5 shrink-0 rounded-full bg-indigo-gradient"
+                  className="mt-2 size-1.5 shrink-0 rounded-full bg-indigo"
                 />
                 <span>{rule}</span>
               </li>

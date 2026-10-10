@@ -30,7 +30,7 @@ export function Breadcrumbs({
                   className={cn(
                     "transition-colors",
                     tone === "light"
-                      ? "text-white/65 hover:text-kesar"
+                      ? "text-white/75 hover:text-kesar"
                       : "text-ink-secondary hover:text-indigo",
                   )}
                 >
@@ -39,7 +39,7 @@ export function Breadcrumbs({
               ) : (
                 <span
                   aria-current={isLast ? "page" : undefined}
-                  className={tone === "light" ? "text-white" : "text-indigo"}
+                  className={cn("font-bold", tone === "light" ? "text-white" : "text-indigo")}
                 >
                   {item.label}
                 </span>

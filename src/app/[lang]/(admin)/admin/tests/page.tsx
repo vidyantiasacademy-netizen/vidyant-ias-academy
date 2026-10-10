@@ -31,7 +31,7 @@ export default async function TestsPage() {
     <>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-h2 font-semibold">Tests</h1>
+          <h1 className="text-h2 font-bold">Tests</h1>
           <p className="mt-2 text-body text-ink-secondary">
             MCQ papers for the online exam runner. A paper is a draft until you publish it.
           </p>
@@ -63,7 +63,7 @@ export default async function TestsPage() {
           <ul className="space-y-3">
             {tests.map((test) => (
               <li key={test.id}>
-                <Link href={`/admin/tests/${test.id}`} className="block rounded-lg">
+                <Link href={`/admin/tests/${test.id}`} className="block">
                   <Card
                     interactive
                     padding="sm"

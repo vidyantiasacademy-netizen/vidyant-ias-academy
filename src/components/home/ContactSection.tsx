@@ -36,7 +36,7 @@ export function ContactSection() {
                 href={CONTACT.mapsDirectionsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-1 inline-block text-small font-semibold text-indigo hover:text-kesar-600"
+                className="mt-1 inline-block text-small font-semibold text-indigo underline-offset-4 hover:underline"
               >
                 Get directions
               </a>
@@ -47,7 +47,7 @@ export function ContactSection() {
                 href={`tel:${CONTACT.phoneHref}`}
                 event={ANALYTICS_EVENTS.phoneClick}
                 payload={{ location: "home-contact" }}
-                className="font-semibold text-indigo hover:text-kesar-600"
+                className="font-semibold text-indigo underline-offset-4 hover:underline"
               >
                 {CONTACT.phoneDisplay}
               </TrackedAnchor>
@@ -60,7 +60,7 @@ export function ContactSection() {
                 rel="noreferrer"
                 event={ANALYTICS_EVENTS.whatsappClick}
                 payload={{ location: "home-contact" }}
-                className="font-semibold text-indigo hover:text-kesar-600"
+                className="font-semibold text-indigo underline-offset-4 hover:underline"
               >
                 Message us
               </TrackedAnchor>
@@ -69,7 +69,7 @@ export function ContactSection() {
             <ContactRow icon={Mail} label="Email">
               <a
                 href={`mailto:${CONTACT.email}`}
-                className="break-all font-semibold text-indigo hover:text-kesar-600"
+                className="break-all font-semibold text-indigo underline-offset-4 hover:underline"
               >
                 {CONTACT.email}
               </a>
@@ -109,9 +109,9 @@ function ContactRow({
 }) {
   return (
     <div className="flex gap-4 px-5 py-4">
-      <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-kesar-600" />
+      <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-indigo" strokeWidth={1.75} />
       <div className="min-w-0 text-small">
-        <h3 className="font-semibold text-indigo">{label}</h3>
+        <h3 className="text-eyebrow font-bold uppercase text-ink-secondary">{label}</h3>
         <div className="mt-1">{children}</div>
       </div>
     </div>

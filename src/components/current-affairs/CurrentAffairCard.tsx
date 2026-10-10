@@ -16,10 +16,10 @@ export function CurrentAffairCard({
   return (
     <Card as="article" interactive className={cn("flex h-full flex-col", className)}>
       <p className="text-eyebrow font-semibold uppercase text-kesar-600">{item.subject}</p>
-      <h3 className="mt-3 text-h4 font-semibold">
+      <h3 className="mt-3 text-h4 font-bold">
         <Link
           href={`/current-affairs/${item.slug}`}
-          className="transition-colors hover:text-kesar-600"
+          className="transition-colors hover:text-indigo"
         >
           {item.title}
         </Link>
@@ -34,12 +34,12 @@ export function CurrentAffairCard({
       </div>
       <Link
         href={`/current-affairs/${item.slug}`}
-        className="group mt-6 inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-kesar-600"
+        className="group mt-6 inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-indigo-900 hover:underline underline-offset-4"
       >
         Read Analysis
         <ArrowRight
           aria-hidden
-          className="size-4 transition-transform duration-200 ease-[var(--ease-brand)] group-hover:translate-x-1"
+          className="size-4"
         />
       </Link>
     </Card>

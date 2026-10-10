@@ -11,7 +11,7 @@ export const BRAND = {
   legalName: "vidyantIAS",
   /**
    * The drawn logotype, split so the two weights of the lockup can be set
-   * separately. The logo deck ("VidyantIAS Logo Concepts", concept 01 — Kalam)
+   * separately. The logo deck ("VidyantIAS Logo Concepts", concept 03 — Sopan)
    * sets the name with a capital V; `name` above is the casing used in running
    * copy. TODO(institute): confirm which casing wins, and align the other.
    */
@@ -85,6 +85,9 @@ export const ROUTES = {
   resources: "/resources",
   currentAffairs: "/current-affairs",
   quizzes: "/quizzes",
+  upscGuide: "/upsc-guide",
+  mockTest: "/mock-test",
+  parents: "/parents",
   blog: "/blog",
   events: "/events",
   demo: "/demo",
@@ -119,6 +122,9 @@ export const MOBILE_NAV = [
   ...PRIMARY_NAV,
   { key: "enrol", label: "Admissions & Batches", href: ROUTES.enrol },
   { key: "quizzes", label: "Quizzes", href: ROUTES.quizzes },
+  { key: "mockTest", label: "Free Mock Test", href: ROUTES.mockTest },
+  { key: "upscGuide", label: "UPSC Exam Guide", href: ROUTES.upscGuide },
+  { key: "parents", label: "For Parents", href: ROUTES.parents },
   { key: "events", label: "Events", href: ROUTES.events },
   { key: "testimonials", label: "Testimonials", href: ROUTES.testimonials },
   { key: "faq", label: "FAQ", href: ROUTES.faq },
@@ -134,6 +140,7 @@ export const CTA = {
   callback: { label: "Request a Callback", href: `${ROUTES.contact}#callback` },
   enquiry: { label: "Send an Enquiry", href: `${ROUTES.contact}#enquiry` },
   orientation: { label: "Join Free UPSC Orientation", href: ROUTES.events },
+  mockTest: { label: "Take the Free Mock Test", href: ROUTES.mockTest },
   courses: { label: "Explore Courses", href: ROUTES.courses },
   resources: { label: "Free Study Material", href: ROUTES.resources },
   login: { label: "Student Login", href: ROUTES.login },
@@ -189,8 +196,11 @@ export const FOOTER_NAV = {
     { key: "faculty", label: "Faculty", href: ROUTES.faculty },
     { key: "results", label: "Results", href: ROUTES.results },
     { key: "testimonials", label: "Testimonials", href: ROUTES.testimonials },
+    { key: "parents", label: "For Parents", href: ROUTES.parents },
   ],
   resources: [
+    { key: "mockTest", label: "Free Mock Test", href: ROUTES.mockTest },
+    { key: "upscGuide", label: "UPSC Exam Guide", href: ROUTES.upscGuide },
     { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
     { key: "practiceQuizzes", label: "Practice Quizzes", href: ROUTES.quizzes },
     { key: "blog", label: "Blog", href: ROUTES.blog },

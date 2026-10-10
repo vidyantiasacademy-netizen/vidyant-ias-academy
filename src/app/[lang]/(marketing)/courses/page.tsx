@@ -1,3 +1,4 @@
+import { CourseComparison } from "@/components/courses/CourseComparison";
 import { CourseFilters } from "@/components/courses/CourseFilters";
 import { PageHero } from "@/components/layout/PageHero";
 import { Section } from "@/components/layout/Section";
@@ -48,7 +49,22 @@ export default async function CoursesPage() {
         <CourseFilters courses={courses} filters={FILTERS} />
       </Section>
 
-      <Section tone="paper" containerSize="default">
+      {/* One programme has nothing to be compared with. */}
+      {courses.length > 1 ? (
+        <Section id="compare" tone="paper" containerSize="wide">
+          <SectionHeader
+            eyebrow="Compare"
+            title="Every program, side by side"
+            description="Duration, mode, testing, mentorship and fee in one view. Scroll sideways on a phone."
+          />
+          <div className="mt-10">
+            <CourseComparison courses={courses} />
+          </div>
+        </Section>
+      ) : null}
+
+      {/* Keeps the white/paper alternation whether or not the table rendered. */}
+      <Section tone={courses.length > 1 ? undefined : "paper"} containerSize="default">
         <SectionHeader
           eyebrow="Before you choose"
           title="Questions worth asking any institute"

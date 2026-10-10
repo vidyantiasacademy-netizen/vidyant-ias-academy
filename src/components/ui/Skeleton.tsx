@@ -5,7 +5,7 @@ export function Skeleton({ className }: { className?: string }) {
   return (
     <div
       aria-hidden
-      className={cn("animate-pulse rounded-md bg-paper-200/80", className)}
+      className={cn("animate-pulse bg-paper-200", className)}
     />
   );
 }
@@ -13,7 +13,7 @@ export function Skeleton({ className }: { className?: string }) {
 /** Card-shaped placeholder used by route-level loading states. */
 export function CardSkeleton() {
   return (
-    <div className="rounded-lg border border-line p-6">
+    <div className="border border-line border-t-2 border-t-paper-200 p-6">
       <Skeleton className="h-4 w-20" />
       <Skeleton className="mt-4 h-6 w-3/4" />
       <Skeleton className="mt-3 h-4 w-full" />

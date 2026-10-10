@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { notFound } from "next/navigation";
 
+import { BuyCourseButton } from "@/components/checkout/BuyCourseButton";
 import { FacultyCard } from "@/components/faculty/FacultyCard";
 import { PageHero } from "@/components/layout/PageHero";
 import { Section } from "@/components/layout/Section";
@@ -99,10 +100,13 @@ export default async function CourseDetailPage({ params }: PageProps<"/[lang]/co
           { label: course.title },
         ]}
       >
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+          <BuyCourseButton course={course} location="course-hero" variant="kesar" size="lg">
+            {course.priceInPaise ? `Enrol now · ${course.fee}` : "Enrol now"}
+          </BuyCourseButton>
           <TrackedButtonLink
             href={CTA.counselling.href}
-            variant="primary"
+            variant="secondary"
             size="lg"
             event={ANALYTICS_EVENTS.courseCtaClick}
             payload={{ course: course.id, location: "course-hero" }}
@@ -131,7 +135,7 @@ export default async function CourseDetailPage({ params }: PageProps<"/[lang]/co
 
             {course.audience.length > 0 ? (
               <>
-                <h3 className="mt-10 text-h4 font-semibold">Who is this for?</h3>
+                <h3 className="mt-10 text-h4 font-bold">Who is this for?</h3>
                 <ul className="mt-4 space-y-3">
                   {course.audience.map((item) => (
                     <li key={item} className="flex gap-3 text-body text-ink">
@@ -145,7 +149,7 @@ export default async function CourseDetailPage({ params }: PageProps<"/[lang]/co
 
             {course.outcomes.length > 0 ? (
               <>
-                <h3 className="mt-10 text-h4 font-semibold">What you&apos;ll learn</h3>
+                <h3 className="mt-10 text-h4 font-bold">What you&apos;ll learn</h3>
                 <ul className="mt-4 space-y-3">
                   {course.outcomes.map((item) => (
                     <li key={item} className="flex gap-3 text-body text-ink">
@@ -160,7 +164,7 @@ export default async function CourseDetailPage({ params }: PageProps<"/[lang]/co
 
           <aside className="flex flex-col gap-4">
             <Card tone="paper">
-              <h2 className="text-h4 font-semibold">Course structure</h2>
+              <h2 className="text-h4 font-bold">Course structure</h2>
               <dl className="mt-5 space-y-4">
                 {structure.map(({ icon: Icon, label, value }) => (
                   <div
@@ -182,7 +186,7 @@ export default async function CourseDetailPage({ params }: PageProps<"/[lang]/co
 
             {course.features.length > 0 ? (
               <Card>
-                <h2 className="text-h4 font-semibold">Included</h2>
+                <h2 className="text-h4 font-bold">Included</h2>
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {course.features.map((feature) => (
                     <li key={feature}>
@@ -207,10 +211,10 @@ export default async function CourseDetailPage({ params }: PageProps<"/[lang]/co
             {course.curriculum.map((module) => (
               <li key={module.title}>
                 <Card className="h-full">
-                  <span className="flex size-10 items-center justify-center rounded-md bg-paper text-kesar-600">
+                  <span className="flex size-10 shrink-0 items-center justify-center border border-line bg-white text-kesar-600">
                     <BookOpen aria-hidden className="size-5" />
                   </span>
-                  <h3 className="mt-5 text-h4 font-semibold">{module.title}</h3>
+                  <h3 className="mt-5 text-h4 font-bold">{module.title}</h3>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     {module.topics.map((topic) => (
                       <li key={topic}>
@@ -231,7 +235,7 @@ export default async function CourseDetailPage({ params }: PageProps<"/[lang]/co
             {support.map(({ icon: Icon, title, text, items }) => (
               <Card key={title}>
                 <Icon aria-hidden className="size-5 text-kesar-600" />
-                <h2 className="mt-5 text-h4 font-semibold">{title}</h2>
+                <h2 className="mt-5 text-h4 font-bold">{title}</h2>
                 {text ? <p className="mt-3 text-small text-ink-secondary">{text}</p> : null}
                 {items.length > 0 ? (
                   <ul className="mt-3 space-y-2 text-small text-ink-secondary">

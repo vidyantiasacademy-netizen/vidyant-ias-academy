@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 
+import Link from "@/i18n/Link";
 import { Card } from "@/components/ui/Card";
+import { formLabel } from "@/lib/enquiries/labels";
 import { isAtLeast } from "@/lib/auth/roles";
 import { requireAuthPage } from "@/lib/auth/server";
 import { enquiryService } from "@/services/enquiries/enquiry.service";
@@ -27,15 +29,23 @@ export default async function AdminOverviewPage() {
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">Overview</h1>
+      <h1 className="text-h2 font-bold">Overview</h1>
       <p className="mt-2 text-body text-ink-secondary">
         Signed in as {session.role.replace("_", " ").toLowerCase()}.
       </p>
 
       <section aria-labelledby="new-enquiries" className="mt-10">
-        <h2 id="new-enquiries" className="text-h3 font-semibold">
-          New enquiries
-        </h2>
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 id="new-enquiries" className="text-h3 font-bold">
+            New enquiries
+          </h2>
+          <Link
+            href="/admin/leads?status=new"
+            className="text-small font-medium text-indigo underline decoration-kesar decoration-2 underline-offset-4"
+          >
+            Open the leads inbox
+          </Link>
+        </div>
 
         <Card tone="white" padding="md" className="mt-5">
           {newEnquiries.items.length === 0 ? (
@@ -47,10 +57,15 @@ export default async function AdminOverviewPage() {
             <ul className="divide-y divide-line">
               {newEnquiries.items.map((enquiry) => (
                 <li key={enquiry.id} className="flex flex-wrap gap-x-4 gap-y-1 py-3">
-                  <span className="font-medium">{enquiry.name}</span>
+                  <Link
+                    href={`/admin/leads/${enquiry.id}`}
+                    className="font-medium text-indigo underline decoration-line underline-offset-4 hover:decoration-indigo"
+                  >
+                    {enquiry.name}
+                  </Link>
                   <span className="text-ink-secondary">{enquiry.phone}</span>
                   <span className="ml-auto text-small text-ink-secondary">
-                    {enquiry.form}
+                    {formLabel(enquiry.form)}
                   </span>
                 </li>
               ))}

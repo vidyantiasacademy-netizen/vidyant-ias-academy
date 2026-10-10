@@ -120,7 +120,7 @@ export function EnrolStudentPanel({ courseId }: { courseId: string }) {
               <ul className="space-y-2">
                 {matches.map((match) => (
                   <li key={match.uid}>
-                    <label className="flex cursor-pointer items-start gap-3 rounded-md border border-line px-4 py-3 has-checked:border-indigo">
+                    <label className="flex cursor-pointer items-start gap-3 border border-line px-4 py-3 has-checked:border-indigo">
                       <input
                         type="radio"
                         name="student"

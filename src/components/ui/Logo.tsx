@@ -3,7 +3,7 @@ import Link from "@/i18n/Link";
 import { BRAND } from "@/lib/constants/site";
 import { cn } from "@/lib/utils/cn";
 
-import { NibMark } from "./NibMark";
+import { SopanMark } from "./SopanMark";
 
 type LogoTone = "dark" | "light";
 
@@ -19,11 +19,11 @@ interface LogoProps {
   priority?: boolean;
 }
 
-/** Nib height per size token. The logotype is sized from the same step. */
+/** Mark height per size token. The logotype is sized from the same step. */
 const MARK: Record<"sm" | "md" | "lg", string> = {
-  sm: "h-8",
-  md: "h-10 lg:h-12",
-  lg: "h-12 lg:h-14",
+  sm: "h-7",
+  md: "h-8 lg:h-10",
+  lg: "h-10 lg:h-12",
 };
 
 const NAME: Record<"sm" | "md" | "lg", string> = {
@@ -46,12 +46,14 @@ export function Logo({
         className,
       )}
     >
-      {/* `w-auto` keeps the 40:64 aspect; the height classes drive the size. */}
-      <NibMark className={cn("w-auto shrink-0", MARK[size])} />
+      {/* `w-auto` keeps the 64:50 aspect; the height classes drive the size. */}
+      <SopanMark className={cn("w-auto shrink-0", MARK[size])} />
 
-      <span className={cn("font-serif leading-none tracking-[-0.01em]", NAME[size])}>
-        <span className="font-semibold">{BRAND.logotype.lead}</span>
-        <span className="font-normal">{BRAND.logotype.trail}</span>
+      {/* Bold "Vidyant", light "IAS", set tight in the sans — the deck's Sopan
+          lockup. No saffron in the name: the top step is the only kesar. */}
+      <span className={cn("inline-flex items-baseline leading-none tracking-[-0.02em]", NAME[size])}>
+        <span className="font-bold">{BRAND.logotype.lead}</span>
+        <span className="font-light">{BRAND.logotype.trail}</span>
       </span>
     </span>
   );

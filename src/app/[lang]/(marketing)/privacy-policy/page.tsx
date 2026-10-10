@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
     <LegalPage
       title="Privacy Policy"
       description={`What ${BRAND.name} collects through this website, why, and what we will never do with it.`}
-      updated="September 2026"
+      updated="October 2026"
       sections={[
         {
           heading: "What we collect",
@@ -59,12 +59,21 @@ export default function PrivacyPolicyPage() {
         {
           heading: "Analytics and cookies",
           body: (
-            <p>
-              We measure how the site is used — pages viewed, forms started and completed — to
-              improve it. This site sets no advertising cookies of its own. If analytics or
-              advertising tools are added later, this page will be updated before they go
-              live.
-            </p>
+            <>
+              <p>
+                We measure how the site is used — pages viewed, buttons clicked, forms
+                completed — to improve it. We use Google Analytics for visit and conversion
+                counts, and Microsoft Clarity for heatmaps and anonymised session recordings
+                that show where a page is confusing. Both set cookies to tell one visit from
+                the next.
+              </p>
+              <p>
+                Clarity masks what you type into forms, so your name, phone number and email
+                are not captured in a recording. Neither tool is used on the student portal
+                or during a test. This site sets no advertising cookies, and you can block
+                analytics cookies in your browser without losing access to anything here.
+              </p>
+            </>
           ),
         },
         {

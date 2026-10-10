@@ -1,16 +1,13 @@
-import { ArrowRight, BellRing, ListChecks, Newspaper } from "lucide-react";
-import type { CSSProperties, ReactNode } from "react";
+import { ArrowRight, BellRing, Clock, ListChecks, Newspaper } from "lucide-react";
+import type { ReactNode } from "react";
 
 import Link from "@/i18n/Link";
 import { Section } from "@/components/layout/Section";
-import { QuizCard } from "@/components/quizzes/QuizCard";
 import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
-import { KesarLines } from "@/components/ui/KesarLines";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { railList } from "@/components/ui/rail";
 import { ANNOUNCEMENT_KINDS } from "@/data/announcements";
-import { QUIZ_PLAN, latestQuizzes } from "@/data/quizzes";
+import { QUIZ_PLAN, QUIZ_STAGE_LABELS, latestQuizzes } from "@/data/quizzes";
 import { getLocale } from "@/i18n/server";
 import { ROUTES } from "@/lib/constants/site";
 import { getSiteAnnouncements, getSitePosts } from "@/lib/content/site";
@@ -23,6 +20,17 @@ const NOTICE_TONE: Record<Announcement["tone"], { label: string; tone: "neutral"
   success: { label: "Good news", tone: "success" },
   warning: { label: "Deadline", tone: "kesar" },
 };
+
+/**
+ * Boards share one look so the three read as a set; the accent only colours
+ * the numbered index of an empty board's plan. Written out in full for Tailwind.
+ */
+const ACCENT = {
+  chilli: { number: "text-chilli-600" },
+  indigo: { number: "text-indigo" },
+  kesar: { number: "text-kesar-700" },
+} as const;
+type Accent = keyof typeof ACCENT;
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat("en-IN", {
@@ -37,12 +45,33 @@ function isFresh(iso: string, now = Date.now()) {
   return age >= 0 && age < 3 * 24 * 60 * 60 * 1000;
 }
 
+/** A flat calendar block: day big, month small. Faster to scan than "9 Oct". */
+function DateTile({ iso }: { iso: string }) {
+  const date = new Date(iso);
+  const day = new Intl.DateTimeFormat("en-IN", { day: "2-digit" }).format(date);
+  const month = new Intl.DateTimeFormat("en-IN", { month: "short" }).format(date);
+
+  return (
+    <time
+      dateTime={iso}
+      className="flex w-14 shrink-0 flex-col self-start items-center overflow-hidden border border-indigo bg-white text-indigo"
+    >
+      <span className="w-full bg-indigo py-0.5 text-center text-eyebrow font-bold uppercase text-white">
+        {month}
+      </span>
+      <span className="py-1 text-h4 font-bold leading-none tabular-nums tracking-tight">{day}</span>
+    </time>
+  );
+}
+
 /**
- * One of the three boards: an indigo header block (title, count, a slow
- * sheen) over a white body, closed by a full-width, thumb-sized link.
+ * One of the three boards: a quiet frame, a header that opens on a question
+ * with its status as a small tag, and a full-width, thumb-sized link at the
+ * foot.
  */
 function Board({
   icon,
+  hook,
   title,
   description,
   status,
@@ -53,11 +82,13 @@ function Board({
   children,
 }: {
   icon: ReactNode;
+  /** The student's own question, read before the board's name. */
+  hook: string;
   title: string;
   description: string;
-  /** Short state shown in the header pill — a count, or what is coming. */
+  /** Short state shown in the corner tag — a count, or what is coming. */
   status: string;
-  /** Pulses the header dot. Only the announcements board earns it. */
+  /** Marks the tag with a chilli square. Only the announcements board earns it. */
   live?: boolean;
   href: string;
   linkLabel: string;
@@ -65,64 +96,65 @@ function Board({
   children: ReactNode;
 }) {
   return (
-    <section
-      className={cn(
-        "reveal group/board flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white shadow-[var(--shadow-card)]",
-        "transition-[box-shadow,transform] duration-300 ease-[var(--ease-brand)] hover:-translate-y-1 hover:shadow-[var(--shadow-panel)]",
-        `reveal-delay-${index}`,
-      )}
-    >
-      <header
-        className="board-sheen grid-lines relative overflow-hidden bg-indigo-gradient px-6 pt-6 pb-7 text-white sm:px-7"
-        style={{ "--sheen-delay": `${(index - 1) * 1.2}s` } as CSSProperties}
-      >
-        <KesarLines corners={["bottom-right"]} size="sm" />
-        <div className="relative flex items-start justify-between gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white ring-1 ring-white/20 transition-transform duration-300 ease-[var(--ease-brand)] group-hover/board:-rotate-6 group-hover/board:scale-110">
-            {icon}
-          </span>
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-eyebrow font-semibold uppercase ring-1 ring-white/20">
-            {live ? (
-              <span aria-hidden className="relative flex size-2.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-kesar opacity-75" />
-                <span className="relative inline-flex size-2.5 rounded-full bg-kesar" />
-              </span>
-            ) : null}
-            {status}
-          </span>
-        </div>
-        <h3 className="relative mt-5 text-h3 font-semibold text-white lg:text-h3-lg">{title}</h3>
-        <p className="relative mt-2 text-body text-white/80">{description}</p>
-      </header>
+    <div className={cn("reveal relative h-full", `reveal-delay-${index}`)}>
+      <section className="flex h-full flex-col overflow-hidden border border-line-strong bg-white">
+        <header className="border-b border-line px-5 pt-5 pb-5 sm:px-6">
+          <div className="flex items-start gap-3">
+            <span className="flex size-11 shrink-0 items-center justify-center bg-indigo-100 text-indigo">
+              {icon}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-small font-semibold text-ink-secondary">{hook}</p>
+              <h3 className="text-h4 font-bold leading-tight text-indigo">{title}</h3>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-1.5 bg-paper px-2 py-1 text-eyebrow font-bold uppercase text-ink-secondary">
+              {live ? <span aria-hidden className="size-2 shrink-0 bg-chilli" /> : null}
+              {status}
+            </span>
+          </div>
+          <p className="mt-3 text-small text-ink-secondary">{description}</p>
+        </header>
 
-      <div className="flex-1 p-5 sm:p-6">{children}</div>
+        <div className="flex-1 px-5 py-2 sm:px-6">{children}</div>
 
-      <Link
-        href={href}
-        className="group/link flex h-14 items-center justify-between gap-3 border-t border-line px-6 text-body font-semibold text-indigo transition-colors duration-200 hover:bg-kesar-100 hover:text-indigo-900 sm:px-7"
-      >
-        {linkLabel}
-        <span className="flex size-9 items-center justify-center rounded-full bg-paper transition-[background-color,transform] duration-200 ease-[var(--ease-brand)] group-hover/link:translate-x-1 group-hover/link:bg-kesar">
-          <ArrowRight aria-hidden className="size-4.5" />
-        </span>
-      </Link>
-    </section>
+        <Link
+          href={href}
+          className="group flex h-14 items-center justify-between gap-3 border-t border-line px-5 text-small font-bold text-indigo transition-colors duration-150 hover:bg-indigo hover:text-white sm:px-6"
+        >
+          {linkLabel}
+          <ArrowRight aria-hidden className="size-4.5 transition-transform duration-150 group-hover:translate-x-0.5" />
+        </Link>
+      </section>
+    </div>
   );
 }
 
+/** Feed rows: hard hairline rules between entries. */
+const FEED = "divide-y divide-line";
+
 /** Numbered row used by the empty-state lists — bigger than a bullet, easier to scan. */
-function PlanItem({ n, title, note }: { n: number; title: string; note?: string }) {
+function PlanItem({
+  n,
+  title,
+  note,
+  accent,
+}: {
+  n: number;
+  title: string;
+  note?: string;
+  accent: Accent;
+}) {
   return (
-    <li className="flex gap-4">
+    <li className="flex gap-4 py-4">
       <span
         aria-hidden
-        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-small font-bold text-indigo"
+        className={cn("w-8 shrink-0 pt-0.5 text-small font-bold tabular-nums", ACCENT[accent].number)}
       >
         {String(n).padStart(2, "0")}
       </span>
-      <div className="pt-1">
-        <p className="text-body font-semibold text-indigo">{title}</p>
-        {note ? <p className="mt-1 text-body text-ink-secondary">{note}</p> : null}
+      <div>
+        <p className="text-body font-bold leading-snug text-indigo">{title}</p>
+        {note ? <p className="mt-1 text-small text-ink-secondary">{note}</p> : null}
       </div>
     </li>
   );
@@ -145,161 +177,169 @@ export async function NoticeboardSection() {
   const quizzes = latestQuizzes(2);
 
   return (
-    <Section id="noticeboard" tone="paper" containerSize="wide">
+    <Section id="noticeboard" tone="paper" containerSize="wide" className="overflow-hidden">
       <SectionHeader
         eyebrow="Noticeboard"
-        title={
-          <>
-            Announcements, articles and quizzes.{" "}
-            <span className="text-indigo-700">Check back often.</span>
-          </>
-        }
-        description="The three things worth checking back for: what changed in the schedule, what our faculty published, and what you can practise this week."
+        title="What's new, this week."
+        description="Schedule changes, faculty articles and free practice — the three things worth checking back for."
       />
 
-      <div className={cn(railList[3], "mt-7 items-start lg:mt-9 lg:items-stretch [&>*]:w-[88%] [&>*]:shrink-0 [&>*]:snap-start sm:[&>*]:w-[60%] lg:[&>*]:w-auto")}>
-        <Board
-          index={1}
-          live
-          icon={<BellRing aria-hidden className="size-6" />}
-          title="Announcements"
-          description="Batch starts, deadlines and schedule changes, dated and short."
-          status={notices.length > 0 ? `${notices.length} active` : "Live board"}
-          href={ROUTES.events}
-          linkLabel="See the full calendar"
-        >
-          {notices.length > 0 ? (
-            <ul className="grid gap-3">
-              {notices.map((notice) => {
-                const tone = NOTICE_TONE[notice.tone];
-                return (
-                  <li key={notice.id}>
-                    <Card
-                      padding="sm"
-                      interactive={Boolean(notice.href)}
-                      className={cn(
-                        "h-full border-l-4",
-                        notice.tone === "warning" ? "border-l-kesar" : "border-l-indigo",
-                      )}
-                    >
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                        <Badge tone={tone.tone}>{tone.label}</Badge>
-                        {isFresh(notice.startsAt) ? <Badge tone="indigo">New</Badge> : null}
-                        <time
-                          dateTime={notice.startsAt}
-                          className="text-small font-medium text-ink-muted"
-                        >
-                          {formatDate(notice.startsAt)}
-                        </time>
+      <div className="relative mt-4 lg:mt-6">
+        <div className={cn(railList[3], "relative items-start lg:items-stretch [&>*]:w-[88%] [&>*]:shrink-0 [&>*]:snap-start sm:[&>*]:w-[60%] lg:[&>*]:w-auto")}>
+          <Board
+            index={1}
+            live
+            icon={<BellRing aria-hidden className="size-5.5" />}
+            hook="What changed?"
+            title="Announcements"
+            description="Batch starts, deadlines and schedule changes — dated and short."
+            status={notices.length > 0 ? `${notices.length} active` : "Live"}
+            href={ROUTES.events}
+            linkLabel="Full calendar"
+          >
+            {notices.length > 0 ? (
+              <ul className={FEED}>
+                {notices.map((notice) => {
+                  const tone = NOTICE_TONE[notice.tone];
+                  return (
+                    <li key={notice.id} className="flex gap-4 py-4">
+                      <DateTile iso={notice.startsAt} />
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge tone={tone.tone}>{tone.label}</Badge>
+                          {isFresh(notice.startsAt) ? (
+                            <span className="bg-chilli-100 px-2 py-1 text-eyebrow font-bold uppercase text-chilli-700">
+                              New
+                            </span>
+                          ) : null}
+                        </div>
+                        <h4 className="mt-2 text-body font-bold leading-snug text-indigo">
+                          {notice.href ? (
+                            <Link
+                              href={notice.href}
+                              className="underline decoration-line-strong decoration-2 underline-offset-4 transition-colors hover:decoration-indigo"
+                            >
+                              {notice.title}
+                            </Link>
+                          ) : (
+                            notice.title
+                          )}
+                        </h4>
+                        <p className="mt-1 line-clamp-2 text-small text-ink-secondary">{notice.body}</p>
                       </div>
-                      <h4 className="mt-3 text-h4 font-semibold text-indigo">
-                        {notice.href ? (
-                          <Link
-                            href={notice.href}
-                            className="transition-colors hover:text-kesar-700"
-                          >
-                            {notice.title}
-                          </Link>
-                        ) : (
-                          notice.title
-                        )}
-                      </h4>
-                      <p className="mt-2 line-clamp-3 text-body text-ink-secondary">{notice.body}</p>
-                    </Card>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <div>
-              <p className="text-h4 font-semibold text-indigo">No notices right now.</p>
-              <p className="mt-2 text-body text-ink-secondary">
-                When there are, they appear here the same day:
-              </p>
-              <ul className="mt-6 grid gap-5">
-                {ANNOUNCEMENT_KINDS.map((kind, i) => (
-                  <PlanItem key={kind} n={i + 1} title={kind} />
-                ))}
+                    </li>
+                  );
+                })}
               </ul>
-            </div>
-          )}
-        </Board>
+            ) : (
+              <div className="pt-4">
+                <p className="text-body font-bold text-indigo">All quiet right now.</p>
+                <p className="mt-1 text-small text-ink-secondary">
+                  When something changes, it lands here the same day:
+                </p>
+                <ul className={cn(FEED, "mt-2")}>
+                  {ANNOUNCEMENT_KINDS.map((kind, i) => (
+                    <PlanItem key={kind} n={i + 1} title={kind} accent="chilli" />
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Board>
 
-        <Board
-          index={2}
-          icon={<Newspaper aria-hidden className="size-6" />}
-          title="Articles"
-          description="Strategy, subject notes and answer-writing pieces from the faculty."
-          status={articles.length > 0 ? `${articles.length} latest` : "Coming soon"}
-          href={ROUTES.blog}
-          linkLabel={articles.length > 0 ? "Read the blog" : "See what we will cover"}
-        >
-          {articles.length > 0 ? (
-            <ul className="grid gap-3">
-              {articles.map((post) => (
-                <li key={post.id}>
-                  <Card padding="sm" interactive className="h-full">
+          <Board
+            index={2}
+            icon={<Newspaper aria-hidden className="size-5.5" />}
+            hook="Worth a read"
+            title="Articles"
+            description="Strategy, subject notes and answer writing, from the faculty."
+            status={articles.length > 0 ? `${articles.length} latest` : "Coming soon"}
+            href={ROUTES.blog}
+            linkLabel={articles.length > 0 ? "Read the blog" : "See what we'll cover"}
+          >
+            {articles.length > 0 ? (
+              <ul className={FEED}>
+                {articles.map((post) => (
+                  <li key={post.id} className="py-4">
                     <Badge tone="neutral">{post.category}</Badge>
-                    <h4 className="mt-3 text-h4 font-semibold text-indigo">
+                    <h4 className="mt-2 text-body font-bold leading-snug text-indigo">
                       <Link
                         href={`${ROUTES.blog}/${post.slug}`}
-                        className="transition-colors hover:text-kesar-700"
+                        className="underline decoration-line-strong decoration-2 underline-offset-4 transition-colors hover:decoration-indigo"
                       >
                         {post.title}
                       </Link>
                     </h4>
-                    <p className="mt-2 line-clamp-2 text-body text-ink-secondary">{post.excerpt}</p>
-                    <p className="mt-3 text-small font-medium text-ink-muted">
+                    <p className="mt-1 line-clamp-2 text-small text-ink-secondary">{post.excerpt}</p>
+                    <p className="mt-2 flex items-center gap-1.5 text-small font-medium text-ink-muted">
+                      <Clock aria-hidden className="size-4" />
                       {formatDate(post.publishedAt)} • {post.readingTimeMinutes} min read
                     </p>
-                  </Card>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div>
-              <p className="text-h4 font-semibold text-indigo">
-                The first articles are being written.
-              </p>
-              <p className="mt-3 text-body text-ink-secondary">
-                We would rather publish nothing than republish someone else&apos;s notes.
-                The blog opens with strategy pieces for Prelims, Mains answer writing and
-                optional-subject selection — written by the faculty who teach them.
-              </p>
-            </div>
-          )}
-        </Board>
-
-        <Board
-          index={3}
-          icon={<ListChecks aria-hidden className="size-6" />}
-          title="Quizzes"
-          description="Short practice sets, free and open to anyone preparing."
-          status={quizzes.length > 0 ? `${quizzes.length} to try` : "Free practice"}
-          href={ROUTES.quizzes}
-          linkLabel={quizzes.length > 0 ? "All quizzes" : "How the quizzes work"}
-        >
-          {quizzes.length > 0 ? (
-            <ul className="grid gap-3">
-              {quizzes.map((quiz) => (
-                <li key={quiz.id}>
-                  <QuizCard quiz={quiz} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div>
-              <p className="text-h4 font-semibold text-indigo">
-                The quiz calendar starts with the first batch.
-              </p>
-              <ul className="mt-6 grid gap-5">
-                {QUIZ_PLAN.map((item, i) => (
-                  <PlanItem key={item.stage} n={i + 1} title={item.title} note={item.note} />
+                  </li>
                 ))}
               </ul>
-            </div>
-          )}
-        </Board>
+            ) : (
+              <div className="py-4">
+                <p className="text-body font-bold text-indigo">The first pieces are being written.</p>
+                <p className="mt-2 text-small text-ink-secondary">
+                  No recycled notes — we&apos;d rather publish nothing. The blog opens with
+                  strategy for Prelims, Mains answer writing and picking an optional, by the
+                  faculty who teach them.
+                </p>
+              </div>
+            )}
+          </Board>
+
+          <Board
+            index={3}
+            icon={<ListChecks aria-hidden className="size-5.5" />}
+            hook="Quick check?"
+            title="Quizzes"
+            description="Short practice sets. Free, and open to anyone preparing."
+            status={quizzes.length > 0 ? `${quizzes.length} to try` : "Free"}
+            href={ROUTES.quizzes}
+            linkLabel={quizzes.length > 0 ? "All quizzes" : "How quizzes work"}
+          >
+            {quizzes.length > 0 ? (
+              <ul className={FEED}>
+                {quizzes.map((quiz) => (
+                  <li key={quiz.id} className="py-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge>{QUIZ_STAGE_LABELS[quiz.stage]}</Badge>
+                      <Badge tone="neutral">{quiz.subject}</Badge>
+                    </div>
+                    <h4 className="mt-2 text-body font-bold leading-snug text-indigo">
+                      {quiz.href ? (
+                        <Link
+                          href={quiz.href}
+                          className="underline decoration-line-strong decoration-2 underline-offset-4 transition-colors hover:decoration-indigo"
+                        >
+                          {quiz.title}
+                        </Link>
+                      ) : (
+                        quiz.title
+                      )}
+                    </h4>
+                    <p className="mt-2 text-small font-medium text-ink-muted">
+                      {quiz.questionCount} questions • {quiz.durationMinutes} min
+                      {quiz.href ? null : (
+                        <span className="font-bold text-kesar-700"> • Opens {formatDate(quiz.publishedAt)}</span>
+                      )}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="pt-4">
+                <p className="text-body font-bold text-indigo">Starts with the first batch.</p>
+                <ul className={cn(FEED, "mt-2")}>
+                  {QUIZ_PLAN.map((item, i) => (
+                    <PlanItem key={item.stage} n={i + 1} title={item.title} note={item.note} accent="kesar" />
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Board>
+        </div>
       </div>
     </Section>
   );

@@ -17,6 +17,8 @@ import {
 } from "@/lib/firebase/firestore";
 import type { Page, Role, Student, StudentDoc, User, UserDoc } from "@/types/db";
 
+import { storageService, type AvatarUpload } from "../storage/storage.service";
+
 /**
  * Accounts and roles.
  *
@@ -198,6 +200,8 @@ export interface NewUserInput {
   role: Role;
   /** Initial password, handed to the person by the super admin. */
   password: string;
+  /** Optional profile photograph, stored before the profile is written. */
+  photo?: AvatarUpload | null;
 }
 
 /** Admin SDK error codes for a duplicate or rejected account, mapped to the form field. */
@@ -250,8 +254,14 @@ export async function createUser(input: NewUserInput): Promise<User> {
     });
   }
 
+  let photoPath: string | null = null;
+
   try {
     await auth.setCustomUserClaims(uid, { role: input.role, active: true });
+
+    // Uploaded inside the rollback block: a rejected photo deletes the Auth user
+    // again, so the form can simply be resubmitted.
+    photoPath = input.photo ? await storageService.uploadAvatarFor(uid, input.photo) : null;
 
     const doc: UserDoc = {
       uid,
@@ -259,7 +269,7 @@ export async function createUser(input: NewUserInput): Promise<User> {
       email: input.email,
       phone: input.phone,
       displayName: input.displayName,
-      photoPath: null,
+      photoPath,
       isActive: true,
       lastLoginAt: null,
     };
@@ -295,6 +305,7 @@ export async function createUser(input: NewUserInput): Promise<User> {
     return requireEntity<User>(await userRef.get(), "user");
   } catch (error) {
     await auth.deleteUser(uid).catch(() => undefined);
+    if (photoPath) await storageService.remove(photoPath).catch(() => undefined);
     throw error;
   }
 }

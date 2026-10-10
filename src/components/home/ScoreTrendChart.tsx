@@ -66,7 +66,6 @@ export function ScoreTrendChart({
               y1={y(t)}
               y2={y(t)}
               className="stroke-line"
-              strokeDasharray={t === domain[0] ? undefined : "2 4"}
             />
           ))}
 
@@ -85,8 +84,7 @@ export function ScoreTrendChart({
             fill="none"
             className="stroke-indigo"
             strokeWidth={2}
-            strokeLinejoin="round"
-            strokeLinecap="round"
+            strokeLinejoin="miter"
           />
           {points.map((p, i) => (
             <circle
@@ -147,7 +145,7 @@ export function ScoreTrendChart({
             <button
               key={p.label}
               type="button"
-              className="flex-1 cursor-pointer rounded-md focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo"
+              className="flex-1 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo"
               aria-label={`${p.label}: ${p.score} out of ${max}`}
               onMouseEnter={() => setActive(i)}
               onFocus={() => setActive(i)}

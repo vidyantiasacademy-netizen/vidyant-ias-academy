@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { UPSC_GUIDES } from "@/data/upsc-guides";
 import { LOCALES, LOCALE_META, localizeHref } from "@/i18n/config";
 import { ROUTES, SITE_URL } from "@/lib/constants/site";
 import { getSiteCurrentAffairs, getSitePosts } from "@/lib/content/site";
@@ -54,6 +55,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: ROUTES.resources, priority: 0.7, changeFrequency: "weekly" },
     { path: ROUTES.currentAffairs, priority: 0.7, changeFrequency: "daily" },
     { path: ROUTES.quizzes, priority: 0.7, changeFrequency: "weekly" },
+    { path: ROUTES.mockTest, priority: 0.9, changeFrequency: "weekly" },
+    { path: ROUTES.upscGuide, priority: 0.8, changeFrequency: "monthly" },
+    ...UPSC_GUIDES.map((guide) => ({
+      path: `${ROUTES.upscGuide}/${guide.slug}`,
+      priority: 0.8,
+      changeFrequency: "monthly" as const,
+    })),
+    { path: ROUTES.parents, priority: 0.7, changeFrequency: "monthly" },
     { path: ROUTES.blog, priority: 0.7, changeFrequency: "weekly" },
     { path: ROUTES.events, priority: 0.7, changeFrequency: "weekly" },
     { path: ROUTES.contact, priority: 0.7, changeFrequency: "monthly" },

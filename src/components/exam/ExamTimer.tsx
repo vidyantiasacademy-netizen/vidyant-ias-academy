@@ -35,7 +35,7 @@ export function ExamTimer({ seconds }: { seconds: number }) {
       // announces the five- and one-minute warnings as discrete messages.
       aria-live="off"
       className={cn(
-        "inline-flex items-baseline gap-2 rounded-md border px-3 py-1.5 tabular-nums",
+        "inline-flex items-baseline gap-2 border px-3 py-1.5 tabular-nums",
         urgent
           ? "border-kesar-600 bg-kesar-100 text-kesar-700"
           : "border-line bg-white text-ink",

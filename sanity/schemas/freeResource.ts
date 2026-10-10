@@ -3,7 +3,8 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { isUniquePerLanguage, languageField } from "./i18n";
 
 /**
- * Free downloads: syllabus PDFs, booklists, PYQ compilations.
+ * Study material: free downloads (syllabus PDFs, booklists, PYQ compilations)
+ * and, when `price` is set, paid material sold on the site.
  *
  * Deliberately on Sanity's CDN rather than Firebase Storage. These files are
  * meant to be shared, and serving them from the CMS keeps them out of the
@@ -13,7 +14,7 @@ import { isUniquePerLanguage, languageField } from "./i18n";
  */
 export const freeResource = defineType({
   name: "freeResource",
-  title: "Free resource",
+  title: "Resource",
   type: "document",
   fields: [
     languageField,
@@ -80,6 +81,14 @@ export const freeResource = defineType({
       description:
         "Leave empty to route the resource through the request form instead of a direct download.",
       options: { accept: "application/pdf" },
+    }),
+    defineField({
+      name: "price",
+      type: "number",
+      title: "Price (₹)",
+      description:
+        "Leave empty for free material. A priced resource is sold, never downloaded: keep its PDF out of the File field above (that URL is public) and fulfil the order after payment.",
+      validation: (rule) => rule.min(0).integer(),
     }),
     defineField({
       name: "pages",

@@ -33,6 +33,14 @@ const nextConfig: NextConfig = {
       // `importQuestionsAction` are a little larger than the file as JSON.
       bodySizeLimit: "4mb",
     },
+    // Keep a visited dynamic page — in practice the portal tabs — in the client
+    // cache for 30s (the default is 0), so flipping back to it skips the server
+    // round trip. Stale data is not a
+    // risk after an edit: every admin form ends in `router.refresh()` or a
+    // `revalidatePath`, and both clear this cache.
+    staleTimes: {
+      dynamic: 30,
+    },
   },
   images: {
     remotePatterns: [

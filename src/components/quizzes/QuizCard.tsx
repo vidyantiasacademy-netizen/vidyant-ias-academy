@@ -32,11 +32,11 @@ export function QuizCard({ quiz, className }: { quiz: Quiz; className?: string }
         <Badge tone="neutral">{quiz.subject}</Badge>
       </div>
 
-      <h3 className="mt-4 text-h4 font-semibold">
+      <h3 className="mt-4 text-h4 font-bold">
         {isOpen ? (
           <Link
             href={quiz.href as string}
-            className="transition-colors hover:text-kesar-600"
+            className="transition-colors hover:text-indigo"
           >
             {quiz.title}
           </Link>
@@ -63,12 +63,12 @@ export function QuizCard({ quiz, className }: { quiz: Quiz; className?: string }
       {isOpen ? (
         <Link
           href={quiz.href as string}
-          className="group mt-4 inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-kesar-600"
+          className="group mt-4 inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-indigo-900 hover:underline underline-offset-4"
         >
           Attempt this quiz
           <ArrowRight
             aria-hidden
-            className="size-4 transition-transform duration-200 ease-[var(--ease-brand)] group-hover:translate-x-1"
+            className="size-4"
           />
         </Link>
       ) : (

@@ -30,7 +30,7 @@ export function SignOutButton() {
           router.refresh();
         }
       }}
-      className="flex items-center gap-2 rounded-md px-3 py-2 text-small font-medium text-ink-secondary hover:bg-paper hover:text-ink disabled:opacity-55"
+      className="flex items-center gap-2 px-3 py-2 text-small font-medium text-ink-secondary hover:bg-paper hover:text-ink disabled:opacity-55"
     >
       <LogOut aria-hidden className="size-4" />
       {isBusy ? "Signing out…" : "Sign out"}

@@ -22,9 +22,11 @@ import { CTA, MOBILE_NAV, PRIMARY_NAV, ROUTES } from "@/lib/constants/site";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * `notice` is the notification strip. It renders inside the sticky header, so
- * it stays pinned with the navigation on scroll. It is passed in rather than
- * imported because it is a server component that reads the notice schedule.
+ * `notice` is the notification strip. It is sticky too, at the very top; the
+ * navigation row pins directly under it (`--notice-strip-height`), and the
+ * contact bar between them scrolls away with the page. The strip is passed in
+ * rather than imported because it is a server component that reads the notice
+ * schedule.
  */
 export function Header({ notice }: { notice?: ReactNode }) {
   const pathname = usePathnameWithoutLocale();
@@ -45,19 +47,23 @@ export function Header({ notice }: { notice?: ReactNode }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // The drawer hangs off the bottom of the header, and the header's height is
-  // not fixed: the notification strip inside it may or may not be showing.
-  // Measure instead of assuming a height, and re-measure on resize —
-  // background scrolling is locked while the drawer is open, so nothing else
-  // can move the header underneath it.
+  // The drawer hangs off the bottom of the header, and where that is depends
+  // on scroll: at the top of the page the notice strip and contact bar sit
+  // above it. Measure instead of assuming a position.
   useEffect(() => {
     if (!menuOpen) return;
     function measure() {
       setDrawerTop(headerRef.current?.getBoundingClientRect().bottom);
     }
     measure();
+    // Scroll too: a smooth scroll already in flight when the drawer opens
+    // still moves the header, even with background scrolling locked.
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    window.addEventListener("scroll", measure, { passive: true });
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure);
+    };
   }, [menuOpen]);
 
   // Lock background scrolling and allow Escape to close while the drawer is open.
@@ -86,194 +92,200 @@ export function Header({ notice }: { notice?: ReactNode }) {
   }
 
   return (
-    <header
-      ref={headerRef}
-      className={cn(
-        "sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-200",
-        scrolled
-          ? "border-b border-line bg-white/85 backdrop-blur-md"
-          : "border-b border-transparent bg-white",
-      )}
-    >
+    <>
       {notice}
       <ContactBar />
-      <Container size="wide">
-        <div className="flex h-16 items-center justify-between gap-4 sm:h-20 lg:h-24 lg:gap-8">
-          <span className="flex items-center">
-            <Logo size="md" priority />
-          </span>
+      <header
+        ref={headerRef}
+        // Swiss bar: solid white, a rule underneath. No blur, no shadow — once the
+        // page scrolls under it the hairline firms to a 2px indigo rule.
+        className={cn(
+          "sticky top-(--notice-strip-height) z-50 border-b-2 bg-white transition-colors duration-150",
+          scrolled ? "border-indigo" : "border-line",
+        )}
+      >
+        <Container size="wide">
+          <div className="flex h-16 items-center justify-between gap-4 lg:h-18 lg:gap-8">
+            <span className="flex items-center">
+              <Logo size="md" priority />
+            </span>
 
-          <nav aria-label={dict.nav.primary} className="hidden xl:block">
-            {/* Seven links plus the actions need ~1070px even icon-only, so
-                the full bar starts at xl; below it the drawer takes over. */}
-            <ul className="flex items-center gap-6 2xl:gap-7">
-              {PRIMARY_NAV.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={isActive(item.href) ? "page" : undefined}
-                    className={cn(
-                      "relative whitespace-nowrap text-small font-medium transition-colors",
-                      isActive(item.href)
-                        ? "text-indigo"
-                        : "text-ink-secondary hover:text-indigo",
-                    )}
-                  >
-                    {dict.nav[item.key]}
-                    {isActive(item.href) ? (
-                      <span
-                        aria-hidden
-                        className="absolute -bottom-1.5 left-0 h-0.5 w-full bg-kesar-600"
-                      />
-                    ) : null}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="hidden shrink-0 items-center gap-4 xl:flex">
-            {/* Icon-only below 2xl: the bar has no room for the label until then. */}
-            <LanguageSwitcher labelClassName="sr-only 2xl:not-sr-only" />
-            <Link
-              href={ROUTES.search}
-              aria-label={dict.common.search}
-              className="flex size-9 items-center justify-center rounded-md text-ink-secondary transition-colors hover:bg-paper hover:text-indigo"
-            >
-              <Search aria-hidden className="size-4.5" />
-            </Link>
-            <AccountMenu account={account} />
-            {/* Counselling is the softer ask, so it yields to Enroll Now until
-                2xl — below that the bar overflows the viewport with both. */}
-            <TrackedButtonLink
-              href={CTA.counselling.href}
-              variant="secondary"
-              className="hidden whitespace-nowrap 2xl:inline-flex"
-              event={ANALYTICS_EVENTS.counsellingClick}
-              payload={{ location: "header" }}
-            >
-              {dict.cta.counsellingShort}
-            </TrackedButtonLink>
-            <TrackedButtonLink
-              href={CTA.enrol.href}
-              variant="primary"
-              className="whitespace-nowrap"
-              event={ANALYTICS_EVENTS.enrolClick}
-              payload={{ location: "header" }}
-            >
-              {dict.cta.enrol}
-            </TrackedButtonLink>
-          </div>
-
-          <div className="flex items-center gap-1 xl:hidden">
-            <Link
-              href={ROUTES.search}
-              aria-label={dict.common.search}
-              className="flex size-11 items-center justify-center rounded-md text-indigo transition-colors hover:bg-paper"
-            >
-              <Search aria-hidden className="size-5" />
-            </Link>
-            <Button
-              variant="ghost"
-              aria-expanded={menuOpen}
-              aria-controls="mobile-menu"
-              aria-label={menuOpen ? dict.nav.closeMenu : dict.nav.openMenu}
-              onClick={() => setMenuOpen((open) => !open)}
-              className="size-11 px-0"
-            >
-              {menuOpen ? (
-                <X aria-hidden className="size-5" />
-              ) : (
-                <Menu aria-hidden className="size-5" />
-              )}
-            </Button>
-          </div>
-        </div>
-      </Container>
-
-      {menuOpen ? (
-        <div
-          id="mobile-menu"
-          style={{ top: drawerTop }}
-          className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-line bg-white sm:top-20 lg:top-24 xl:hidden"
-        >
-          <Container className="py-6">
-            <nav aria-label={dict.nav.mobile}>
-              <ul className="divide-y divide-line">
-                {MOBILE_NAV.map((item) => (
+            <nav aria-label={dict.nav.primary} className="hidden xl:block">
+              {/* Seven links plus the actions need ~1070px even icon-only, so
+                  the full bar starts at xl; below it the drawer takes over. */}
+              <ul className="flex items-center gap-6 2xl:gap-7">
+                {PRIMARY_NAV.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      onClick={closeMenu}
                       aria-current={isActive(item.href) ? "page" : undefined}
                       className={cn(
-                        "flex items-center justify-between py-3.5 text-body font-medium",
-                        isActive(item.href) ? "text-kesar-600" : "text-indigo",
+                        "relative whitespace-nowrap text-small font-bold tracking-[-0.005em] transition-colors",
+                        isActive(item.href)
+                          ? "text-indigo"
+                          : "text-ink hover:text-indigo",
                       )}
                     >
                       {dict.nav[item.key]}
+                      {/* Active: a solid 4px indigo block under the label. */}
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "absolute -bottom-2 left-0 h-1 w-full bg-indigo transition-opacity duration-150",
+                          isActive(item.href) ? "opacity-100" : "opacity-0",
+                        )}
+                      />
                     </Link>
                   </li>
                 ))}
               </ul>
             </nav>
 
-            <LanguageSwitcher className="mt-4 -ml-2.5" onNavigate={closeMenu} />
-
-            <div className="mt-7 flex flex-col gap-3">
-              <TrackedButtonLink
-                href={CTA.enrol.href}
-                variant="primary"
-                size="lg"
-                fullWidth
-                onClick={closeMenu}
-                event={ANALYTICS_EVENTS.enrolClick}
-                payload={{ location: "mobile-menu" }}
+            <div className="hidden shrink-0 items-center gap-4 xl:flex">
+              {/* Icon-only below 2xl: the bar has no room for the label until then. */}
+              <LanguageSwitcher labelClassName="sr-only 2xl:not-sr-only" />
+              <Link
+                href={ROUTES.search}
+                aria-label={dict.common.search}
+                className="flex size-10 items-center justify-center text-ink transition-colors hover:bg-indigo hover:text-white"
               >
-                {dict.cta.enrol}
-              </TrackedButtonLink>
+                <Search aria-hidden className="size-4.5" />
+              </Link>
+              <AccountMenu account={account} />
+              {/* Counselling is the softer ask, so it yields to Enroll Now until
+                  2xl — below that the bar overflows the viewport with both. */}
               <TrackedButtonLink
                 href={CTA.counselling.href}
                 variant="secondary"
-                size="lg"
-                fullWidth
-                onClick={closeMenu}
+                className="hidden whitespace-nowrap 2xl:inline-flex"
                 event={ANALYTICS_EVENTS.counsellingClick}
-                payload={{ location: "mobile-menu" }}
+                payload={{ location: "header" }}
               >
-                {dict.cta.counselling}
+                {dict.cta.counsellingShort}
               </TrackedButtonLink>
               <TrackedButtonLink
-                href={CTA.brochure.href}
-                variant="secondary"
-                size="lg"
-                fullWidth
-                onClick={closeMenu}
-                event={ANALYTICS_EVENTS.brochureClick}
-                payload={{ location: "mobile-menu" }}
+                href={CTA.enrol.href}
+                variant="primary"
+                className="whitespace-nowrap"
+                event={ANALYTICS_EVENTS.enrolClick}
+                payload={{ location: "header" }}
               >
-                {dict.cta.brochure}
+                {dict.cta.enrol}
               </TrackedButtonLink>
-              {/* Signed in, the account block below replaces this. */}
-              {account ? null : (
+            </div>
+
+            <div className="flex items-center gap-1 xl:hidden">
+              <Link
+                href={ROUTES.search}
+                aria-label={dict.common.search}
+                className="flex size-11 items-center justify-center text-indigo transition-colors hover:bg-indigo hover:text-white"
+              >
+                <Search aria-hidden className="size-5" />
+              </Link>
+              <Button
+                variant="ghost"
+                aria-expanded={menuOpen}
+                aria-controls="mobile-menu"
+                aria-label={menuOpen ? dict.nav.closeMenu : dict.nav.openMenu}
+                onClick={() => setMenuOpen((open) => !open)}
+                className="size-11 px-0"
+              >
+                {menuOpen ? (
+                  <X aria-hidden className="size-5" />
+                ) : (
+                  <Menu aria-hidden className="size-5" />
+                )}
+              </Button>
+            </div>
+          </div>
+        </Container>
+
+        {menuOpen ? (
+          <div
+            id="mobile-menu"
+            style={{ top: drawerTop }}
+            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-white lg:top-18 xl:hidden"
+          >
+            <Container className="py-6">
+              <nav aria-label={dict.nav.mobile}>
+                <ul className="divide-y divide-line border-b border-line">
+                  {MOBILE_NAV.map((item) => (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={closeMenu}
+                        aria-current={isActive(item.href) ? "page" : undefined}
+                        className={cn(
+                          "flex items-center justify-between border-l-4 py-3.5 pl-3 text-body font-bold",
+                          isActive(item.href)
+                            ? "border-indigo text-indigo"
+                            : "border-transparent text-ink hover:text-indigo",
+                        )}
+                      >
+                        {dict.nav[item.key]}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
+              <LanguageSwitcher className="mt-4 -ml-2.5" onNavigate={closeMenu} />
+
+              <div className="mt-7 flex flex-col gap-3">
                 <TrackedButtonLink
-                  href={ROUTES.login}
-                  variant="ghost"
+                  href={CTA.enrol.href}
+                  variant="primary"
                   size="lg"
                   fullWidth
                   onClick={closeMenu}
-                  event={ANALYTICS_EVENTS.loginClick}
+                  event={ANALYTICS_EVENTS.enrolClick}
                   payload={{ location: "mobile-menu" }}
                 >
-                  {dict.cta.login}
+                  {dict.cta.enrol}
                 </TrackedButtonLink>
-              )}
-            </div>
+                <TrackedButtonLink
+                  href={CTA.counselling.href}
+                  variant="secondary"
+                  size="lg"
+                  fullWidth
+                  onClick={closeMenu}
+                  event={ANALYTICS_EVENTS.counsellingClick}
+                  payload={{ location: "mobile-menu" }}
+                >
+                  {dict.cta.counselling}
+                </TrackedButtonLink>
+                <TrackedButtonLink
+                  href={CTA.brochure.href}
+                  variant="secondary"
+                  size="lg"
+                  fullWidth
+                  onClick={closeMenu}
+                  event={ANALYTICS_EVENTS.brochureClick}
+                  payload={{ location: "mobile-menu" }}
+                >
+                  {dict.cta.brochure}
+                </TrackedButtonLink>
+                {/* Signed in, the account block below replaces this. */}
+                {account ? null : (
+                  <TrackedButtonLink
+                    href={ROUTES.login}
+                    variant="ghost"
+                    size="lg"
+                    fullWidth
+                    onClick={closeMenu}
+                    event={ANALYTICS_EVENTS.loginClick}
+                    payload={{ location: "mobile-menu" }}
+                  >
+                    {dict.cta.login}
+                  </TrackedButtonLink>
+                )}
+              </div>
 
-            <AccountDrawerLinks account={account} onNavigate={closeMenu} />
-          </Container>
-        </div>
-      ) : null}
-    </header>
+              <AccountDrawerLinks account={account} onNavigate={closeMenu} />
+            </Container>
+          </div>
+        ) : null}
+      </header>
+    </>
   );
 }

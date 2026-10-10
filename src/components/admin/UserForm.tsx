@@ -1,7 +1,8 @@
 "use client";
 
+import { Camera, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition, type SubmitEvent } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition, type SubmitEvent } from "react";
 
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -17,7 +18,14 @@ import { ROLES, type Role } from "@/types/db";
  * Creates an account with its role already set. The super admin chooses the
  * first password and hands it over; the person can change it later through
  * "Forgot password" on the sign-in page.
+ *
+ * The optional photograph travels with the Server Action rather than through a
+ * Route Handler: `bodySizeLimit` is 4 MB and photos are capped at 2 MB. The
+ * checks here are for a quick message; `storageService` enforces them.
  */
+
+const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
+const ACCEPTED_PHOTO = ["image/jpeg", "image/png", "image/webp"];
 
 export function UserForm() {
   const router = useRouter();
@@ -30,6 +38,35 @@ export function UserForm() {
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState<Role>("STUDENT");
   const [password, setPassword] = useState("");
+  const [photo, setPhoto] = useState<File | null>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+
+  const preview = useMemo(() => (photo ? URL.createObjectURL(photo) : null), [photo]);
+  useEffect(() => () => {
+    if (preview) URL.revokeObjectURL(preview);
+  }, [preview]);
+
+  function choosePhoto(file: File | undefined) {
+    if (photoInputRef.current) photoInputRef.current.value = "";
+    if (!file) return;
+
+    if (!ACCEPTED_PHOTO.includes(file.type)) {
+      showToast("error", "Upload a JPEG, PNG or WebP image.");
+      return;
+    }
+
+    if (file.size > MAX_PHOTO_BYTES) {
+      showToast("error", "Photographs must be under 2 MB.");
+      return;
+    }
+
+    setErrors((current) => {
+      const next = { ...current };
+      delete next.photo;
+      return next;
+    });
+    setPhoto(file);
+  }
 
   function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -41,7 +78,14 @@ export function UserForm() {
     }
 
     startTransition(async () => {
-      const result = await createUserAction({ displayName, email, phone, role, password });
+      const result = await createUserAction({
+        displayName,
+        email,
+        phone,
+        role,
+        password,
+        ...(photo ? { photo } : {}),
+      });
 
       if (!result.ok) {
         setErrors(result.fieldErrors ?? {});
@@ -59,6 +103,53 @@ export function UserForm() {
   return (
     <form onSubmit={submit} noValidate className="space-y-6">
       <Card padding="md" className="grid gap-5 sm:grid-cols-2">
+        <Field
+          id="photo"
+          label="Photograph"
+          hint="JPEG, PNG or WebP, under 2 MB. Used on the student's I Card."
+          error={error("photo")}
+          className="sm:col-span-2"
+        >
+          <div className="flex items-center gap-4">
+            <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden border-2 border-line-strong bg-paper">
+              {preview ? (
+                // A local blob URL: next/image has nothing to optimise here.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={preview} alt="Selected photograph" className="size-full object-cover" />
+              ) : (
+                <Camera aria-hidden className="size-6 text-ink-muted" />
+              )}
+            </div>
+
+            <input
+              ref={photoInputRef}
+              id="photo"
+              type="file"
+              accept={ACCEPTED_PHOTO.join(",")}
+              className="sr-only"
+              aria-invalid={Boolean(error("photo"))}
+              onChange={(event) => choosePhoto(event.target.files?.[0])}
+            />
+
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={pending}
+                onClick={() => photoInputRef.current?.click()}
+              >
+                {photo ? "Change photo" : "Choose photo"}
+              </Button>
+              {photo ? (
+                <Button type="button" variant="ghost" disabled={pending} onClick={() => setPhoto(null)}>
+                  <X aria-hidden className="size-4" />
+                  Remove
+                </Button>
+              ) : null}
+            </div>
+          </div>
+        </Field>
+
         <Field id="displayName" label="Full name" required error={error("displayName")}>
           <Input
             id="displayName"

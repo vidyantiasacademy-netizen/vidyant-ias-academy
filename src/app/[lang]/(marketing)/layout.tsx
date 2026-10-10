@@ -1,3 +1,4 @@
+import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import { organizationSchema, websiteSchema } from "@/lib/seo/structured-data";
 
@@ -13,6 +14,7 @@ export default function MarketingLayout({ children }: LayoutProps<"/[lang]">) {
           __html: JSON.stringify([organizationSchema(), websiteSchema()]),
         }}
       />
+      <AnalyticsScripts />
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, LayoutDashboard, LogOut, UserRound } from "lucide-react";
+import { ChevronDown, ChevronUp, LayoutDashboard, LogOut, UserRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import Link from "@/i18n/Link";
@@ -118,7 +118,7 @@ export function AccountMenu({
         event={ANALYTICS_EVENTS.loginClick}
         payload={{ location: "header" }}
         className={cn(
-          "text-small font-medium text-ink-secondary transition-colors hover:text-indigo",
+          "text-small font-bold text-ink transition-colors hover:text-indigo",
           className,
         )}
       >
@@ -136,27 +136,28 @@ export function AccountMenu({
         aria-expanded={open}
         aria-haspopup="menu"
         onClick={() => setOpen((value) => !value)}
-        className="flex items-center gap-2 rounded-md py-1.5 pl-1.5 pr-2 text-small font-medium text-indigo transition-colors hover:bg-paper"
+        className="flex h-10 items-center gap-2 pr-2 text-small font-bold text-indigo transition-colors hover:bg-paper"
       >
-        <span className="flex size-8 items-center justify-center rounded-full bg-indigo-gradient text-small font-semibold text-white">
+        <span className="flex size-10 items-center justify-center bg-indigo text-small font-bold text-white">
           {initial(account.displayName)}
         </span>
         <span className="max-w-28 truncate">{shortName(account.displayName)}</span>
-        <ChevronDown
-          aria-hidden
-          className={cn("size-4 transition-transform", open && "rotate-180")}
-        />
+        {open ? (
+          <ChevronUp aria-hidden className="size-4" />
+        ) : (
+          <ChevronDown aria-hidden className="size-4" />
+        )}
       </button>
 
       {open ? (
         <div
           role="menu"
           aria-label="Account"
-          className="absolute right-0 top-full z-50 mt-2 w-60 rounded-lg border border-line bg-white p-2 shadow-[var(--shadow-card-hover)]"
+          className="absolute right-0 top-full z-50 mt-2 w-60 border-2 border-indigo bg-white"
         >
-          <p className="truncate px-3 py-2 text-small text-ink-secondary">
+          <p className="truncate border-b border-line px-4 py-3 text-small text-ink-secondary">
             Signed in as{" "}
-            <span className="font-semibold text-ink">{account.displayName}</span>
+            <span className="font-bold text-ink">{account.displayName}</span>
           </p>
 
           <Link
@@ -167,7 +168,7 @@ export function AccountMenu({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-small font-semibold text-indigo hover:bg-paper"
+            className="flex min-h-11 items-center gap-2.5 px-4 py-2.5 text-small font-bold text-indigo transition-colors hover:bg-indigo hover:text-white"
           >
             <LayoutDashboard aria-hidden className="size-4" />
             {portalLabel}
@@ -177,7 +178,7 @@ export function AccountMenu({
             role="menuitem"
             href="/signout"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-small font-medium text-ink-secondary hover:bg-paper hover:text-ink"
+            className="flex min-h-11 items-center gap-2.5 border-t border-line px-4 py-2.5 text-small font-bold text-ink-secondary transition-colors hover:bg-paper hover:text-ink"
           >
             <LogOut aria-hidden className="size-4" />
             Sign out
@@ -202,18 +203,18 @@ export function AccountDrawerLinks({
   if (!account) return null;
 
   return (
-    <div className="mt-7 rounded-lg border border-line bg-paper/60 p-4">
+    <div className="mt-7 border-t-2 border-indigo pt-4">
       <p className="flex items-center gap-2 text-small text-ink-secondary">
         <UserRound aria-hidden className="size-4" />
         Signed in as{" "}
-        <span className="font-semibold text-ink">{account.displayName}</span>
+        <span className="font-bold text-ink">{account.displayName}</span>
       </p>
 
       <div className="mt-3 flex flex-col gap-2">
         <Link
           href={account.homeRoute}
           onClick={onNavigate}
-          className="rounded-md bg-indigo-gradient px-4 py-3 text-center text-small font-semibold text-white"
+          className="flex min-h-12 items-center justify-center bg-indigo px-4 py-3 text-center text-small font-bold text-white transition-colors hover:bg-indigo-900"
         >
           {account.isStaff ? "Admin portal" : "Student portal"}
         </Link>
@@ -221,7 +222,7 @@ export function AccountDrawerLinks({
         <Link
           href="/signout"
           onClick={onNavigate}
-          className="rounded-md px-4 py-3 text-center text-small font-medium text-ink-secondary"
+          className="flex min-h-12 items-center justify-center px-4 py-3 text-center text-small font-bold text-ink-secondary transition-colors hover:bg-paper hover:text-ink"
         >
           Sign out
         </Link>

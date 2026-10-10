@@ -117,16 +117,16 @@ export default function AboutPage() {
           description="These are not five services sold separately. They are one loop, and preparation breaks wherever the loop is cut."
         />
 
-        <ol className="mt-12 grid gap-4 lg:mt-14 lg:grid-cols-5 lg:gap-5">
+        <ol className="mt-12 grid gap-8 sm:grid-cols-2 lg:mt-14 lg:grid-cols-5 lg:gap-x-6">
           {PHILOSOPHY.map((item, index) => (
             <li key={item.stage}>
-              <Card className="h-full">
-                <span className="text-small font-semibold text-kesar-600">
+              <div className="h-full border-t-2 border-indigo pt-5">
+                <span className="text-h3 font-bold tabular-nums text-indigo">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-3 text-h4 font-semibold">{item.stage}</h3>
+                <h3 className="mt-3 text-h4 font-bold">{item.stage}</h3>
                 <p className="mt-2.5 text-small text-ink-secondary">{item.detail}</p>
-              </Card>
+              </div>
             </li>
           ))}
         </ol>
@@ -149,7 +149,7 @@ export default function AboutPage() {
             {PROBLEMS.map((problem) => (
               <li key={problem.title}>
                 <Card className="h-full">
-                  <h3 className="text-h4 font-semibold">{problem.title}</h3>
+                  <h3 className="text-h4 font-bold">{problem.title}</h3>
                   <p className="mt-2.5 text-small text-ink-secondary">{problem.detail}</p>
                 </Card>
               </li>
@@ -229,10 +229,10 @@ export default function AboutPage() {
           {INFRASTRUCTURE.map(({ icon: Icon, title, detail }) => (
             <li key={title}>
               <Card tone="paper" className="h-full">
-                <span className="flex size-11 items-center justify-center rounded-md bg-white text-kesar-600 ring-1 ring-line">
+                <span className="flex size-11 shrink-0 items-center justify-center border border-line bg-white text-kesar-600">
                   <Icon aria-hidden className="size-5" />
                 </span>
-                <h3 className="mt-5 text-h4 font-semibold">{title}</h3>
+                <h3 className="mt-5 text-h4 font-bold">{title}</h3>
                 <p className="mt-2.5 text-small text-ink-secondary">{detail}</p>
               </Card>
             </li>

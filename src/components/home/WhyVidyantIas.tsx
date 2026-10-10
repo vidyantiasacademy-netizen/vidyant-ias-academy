@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 
 import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/Card";
 import { PlaceholderVisual } from "@/components/ui/PlaceholderVisual";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
@@ -46,14 +45,15 @@ const REASONS = [
 ];
 
 /**
- * Two columns from lg: the argument and the classroom visual on the left, the
- * six reasons as a compact 2×3 grid on the right — one screen, not three.
+ * Asymmetric 5/7 split from lg: the argument and the classroom visual on the
+ * left, the six reasons as a numbered 2×3 index on the right, each opened by
+ * a hard indigo rule — one screen, not three.
  */
 export function WhyVidyantIas() {
   return (
     <Section tone="paper" id="why-vidyantias">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-12">
-        <div>
+      <div className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-x-12">
+        <div className="lg:col-span-5">
           <SectionHeader
             eyebrow="Why vidyantIAS"
             title="UPSC preparation needs more than classes."
@@ -66,18 +66,17 @@ export function WhyVidyantIas() {
           />
         </div>
 
-        <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4">
-          {REASONS.map(({ icon: Icon, title, description }) => (
-            <li key={title}>
-              <Card padding="sm" className="flex h-full gap-4">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-white text-kesar-600 ring-1 ring-line">
-                  <Icon aria-hidden className="size-5" />
+        <ul className="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:col-span-7 lg:gap-y-10">
+          {REASONS.map(({ icon: Icon, title, description }, index) => (
+            <li key={title} className="border-t-2 border-indigo pt-4">
+              <div className="flex items-center justify-between gap-4">
+                <span aria-hidden className="text-small font-bold tabular-nums text-chilli-600">
+                  {String(index + 1).padStart(2, "0")}
                 </span>
-                <div>
-                  <h3 className="text-h4 font-semibold leading-snug">{title}</h3>
-                  <p className="mt-1 text-body text-ink-secondary">{description}</p>
-                </div>
-              </Card>
+                <Icon aria-hidden className="size-5 text-indigo" />
+              </div>
+              <h3 className="mt-3 text-h4 font-bold leading-snug text-indigo">{title}</h3>
+              <p className="mt-1 text-body text-ink-secondary">{description}</p>
             </li>
           ))}
         </ul>

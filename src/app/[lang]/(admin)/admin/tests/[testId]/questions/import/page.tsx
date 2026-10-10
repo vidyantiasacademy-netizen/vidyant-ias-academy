@@ -32,7 +32,7 @@ export default async function ImportQuestionsPage({
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">Import questions</h1>
+      <h1 className="text-h2 font-bold">Import questions</h1>
       <p className="mt-2 text-body text-ink-secondary">{test.title}</p>
 
       <div className="mt-8 max-w-4xl">

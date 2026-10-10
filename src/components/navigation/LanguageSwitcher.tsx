@@ -41,7 +41,7 @@ export function LanguageSwitcher({
             lang={LOCALE_META[target].htmlLang}
             onClick={onNavigate}
             title={format(dict.language.switchTo, { language: LOCALE_META[target].nativeLabel })}
-            className="inline-flex h-9 items-center gap-1.5 rounded-md px-2.5 text-small font-medium text-ink-secondary transition-colors hover:bg-paper hover:text-indigo"
+            className="inline-flex h-10 items-center gap-1.5 px-2.5 text-small font-bold text-ink transition-colors hover:bg-indigo hover:text-white"
           >
             <Languages aria-hidden className="size-4" />
             <span className={labelClassName}>{LOCALE_META[target].nativeLabel}</span>

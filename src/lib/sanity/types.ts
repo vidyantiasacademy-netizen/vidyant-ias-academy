@@ -137,6 +137,8 @@ export interface FreeResource {
   /** Sanity-hosted file, or null when the resource is gated behind a form. */
   fileUrl: string | null;
   pages: number | null;
+  /** Rupees. Null or 0 means free. */
+  price: number | null;
 }
 
 export interface Faq {

@@ -46,9 +46,14 @@ export function LegalPage({
         </Card>
 
         <div className="mt-10 space-y-10">
-          {sections.map((section) => (
-            <section key={section.heading}>
-              <h2 className="text-h3 font-semibold">{section.heading}</h2>
+          {sections.map((section, index) => (
+            <section key={section.heading} className="border-t-2 border-indigo pt-5">
+              <h2 className="flex items-baseline gap-4 text-h3 font-bold tracking-tight">
+                <span aria-hidden className="text-small font-bold tabular-nums text-indigo">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                {section.heading}
+              </h2>
               <div className="mt-4 space-y-4 text-body text-ink-secondary">
                 {section.body}
               </div>

@@ -43,7 +43,7 @@ export default async function BrochurePage() {
 
           <aside className="flex flex-col gap-4">
             <Card tone="paper">
-              <h2 className="text-h4 font-semibold">What is inside</h2>
+              <h2 className="text-h4 font-bold">What is inside</h2>
               <ul className="mt-5 space-y-3">
                 {CONTENTS.map((item) => (
                   <li key={item} className="flex gap-3 text-body text-ink-secondary">
@@ -55,7 +55,7 @@ export default async function BrochurePage() {
             </Card>
 
             <Card>
-              <h2 className="text-h4 font-semibold">Free either way</h2>
+              <h2 className="text-h4 font-bold">Free either way</h2>
               <p className="mt-3 text-body text-ink-secondary">
                 Our syllabus, booklist and starter kit are available without the brochure —
                 nothing important is kept behind this form.

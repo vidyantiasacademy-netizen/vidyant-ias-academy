@@ -44,7 +44,7 @@ export default async function FeesPage() {
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">Fees</h1>
+      <h1 className="text-h2 font-bold">Fees</h1>
       <p className="mt-2 text-body text-ink-secondary">
         Every payment recorded against your account.
       </p>

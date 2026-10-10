@@ -21,13 +21,20 @@ const newUserSchema = z.object({
   phone: z.literal("").transform(() => null).or(phoneField),
   role: z.enum(ROLES),
   password: passwordField,
+  // Size and type are checked again in `storageService` — this only shapes it.
+  photo: z.instanceof(File).optional(),
 });
 
 export const createUserAction = action(
   roleGuard("SUPER_ADMIN"),
   newUserSchema,
-  async (input) => {
-    const user = await userService.createUser(input);
+  async ({ photo, ...input }) => {
+    const user = await userService.createUser({
+      ...input,
+      photo: photo
+        ? { bytes: await photo.arrayBuffer(), contentType: photo.type, fileName: photo.name }
+        : null,
+    });
 
     revalidateLocalizedPath("/admin/users");
     return { uid: user.uid };

@@ -11,14 +11,15 @@ export function HomeFaq({ faqs }: { faqs: Faq[] }) {
 
   return (
     <Section id="faq">
-      <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-12">
-        <div>
+      <div className="grid gap-8 lg:grid-cols-12 lg:gap-x-8">
+        <div className="lg:col-span-4">
           <SectionHeader
+            layout="stack"
             eyebrow="FAQ"
             title="Questions aspirants ask us"
             description="If your question is not here, ask it directly — nothing important is kept behind a form."
           />
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:flex-col lg:items-start">
             <ButtonLink href={CTA.counselling.href} variant="primary">
               Talk to an Academic Counsellor
             </ButtonLink>
@@ -28,7 +29,7 @@ export function HomeFaq({ faqs }: { faqs: Faq[] }) {
           </div>
         </div>
 
-        <FAQAccordion faqs={faqs} />
+        <FAQAccordion faqs={faqs} className="lg:col-span-8" />
       </div>
     </Section>
   );

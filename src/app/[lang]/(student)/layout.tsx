@@ -27,6 +27,7 @@ const NAV: PortalNavItem[] = [
   { href: "/dashboard/classroom", label: "Classroom", exact: false },
   { href: "/dashboard/prelims", label: "Prelims Test Series", exact: false },
   { href: "/dashboard/mains", label: "Mains Test Series", exact: false },
+  { href: "/dashboard/performance", label: "Performance", exact: false },
   { href: "/dashboard/services", label: "Services", exact: false },
   { href: "/", label: "Website" },
 ];

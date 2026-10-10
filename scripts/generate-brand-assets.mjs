@@ -1,8 +1,8 @@
 /**
- * Regenerates the static brand assets from the single source of nib geometry
- * in `src/lib/brand/nib.ts`:
+ * Regenerates the static brand assets from the single source of Sopan geometry
+ * in `src/lib/brand/sopan.ts`:
  *
- *   src/app/icon.svg               favicon / tab icon — indigo tile, white nib
+ *   src/app/icon.svg               favicon / tab icon — indigo tile, white tick
  *   src/app/apple-icon.png         180px home-screen icon (iOS masks it itself)
  *   public/images/logo-mark.svg    the bare mark, indigo on light
  *   public/images/logo-mark-light.svg   the bare mark, reversed for indigo
@@ -14,28 +14,43 @@ import { dirname } from "node:path";
 
 import sharp from "sharp";
 
-import { BRAND_HEX, NIB_BODY, NIB_HOLE, NIB_SLIT, NIB_VIEWBOX } from "../src/lib/brand/nib.ts";
+import {
+  BRAND_HEX,
+  SOPAN_INTERVIEW,
+  SOPAN_MAINS,
+  SOPAN_PRELIMS,
+  SOPAN_RADIUS,
+  SOPAN_TRANSFORM,
+  SOPAN_VIEWBOX,
+} from "../src/lib/brand/sopan.ts";
 
-const { width: W, height: H } = NIB_VIEWBOX;
+const { width: W, height: H } = SOPAN_VIEWBOX;
 
-/** The bare nib at its own proportions. */
+const rect = ({ x, y, width, height }, fill) =>
+  `<rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${SOPAN_RADIUS}" fill="${fill}"/>`;
+
+/** The three steps, Prelims and Mains in `body`, Interview in kesar. */
+const steps = (body) => `<g transform="${SOPAN_TRANSFORM}">
+    ${[...SOPAN_PRELIMS, SOPAN_MAINS].map((s) => rect(s, body)).join("\n    ")}
+    ${rect(SOPAN_INTERVIEW, BRAND_HEX.kesar)}
+  </g>`;
+
+/** The bare tick at its own proportions. */
 const mark = (body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="VidyantIAS">
-  <path d="${NIB_BODY} ${NIB_SLIT}" fill="${body}" fill-rule="evenodd" clip-rule="evenodd"/>
-  <path d="${NIB_HOLE}" fill="${BRAND_HEX.kesar}"/>
+  ${steps(body)}
 </svg>
 `;
 
-/** The app-icon tile: white nib on an indigo square, per the logo deck. */
+/** The app-icon tile: white tick on an indigo square, per the logo deck. */
 const tile = (radius) => {
   const size = 512;
-  const scale = 5; // 64 × 5 = 320px of nib inside a 512px tile
+  const scale = 5; // 64 × 5 = 320px of tick inside a 512px tile
   const dx = (size - W * scale) / 2;
   const dy = (size - H * scale) / 2;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="VidyantIAS">
   <rect width="${size}" height="${size}" rx="${radius}" fill="${BRAND_HEX.indigo}"/>
   <g transform="translate(${dx} ${dy}) scale(${scale})">
-    <path d="${NIB_BODY} ${NIB_SLIT}" fill="${BRAND_HEX.white}" fill-rule="evenodd" clip-rule="evenodd"/>
-    <path d="${NIB_HOLE}" fill="${BRAND_HEX.kesar}"/>
+  ${steps(BRAND_HEX.white)}
   </g>
 </svg>
 `;

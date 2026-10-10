@@ -24,7 +24,7 @@ export function EventCard({ event, className }: { event: Event; className?: stri
         <Badge tone="kesar">{event.fee}</Badge>
         <Badge tone="neutral">{event.mode}</Badge>
       </div>
-      <h3 className="mt-4 text-h3 font-semibold">{event.title}</h3>
+      <h3 className="mt-4 text-h3 font-bold">{event.title}</h3>
       <p className="mt-3 flex-1 text-body text-ink-secondary">{event.description}</p>
 
       <dl className="mt-6 grid gap-2.5 text-small text-ink-secondary">

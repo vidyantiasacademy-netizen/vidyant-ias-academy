@@ -1,9 +1,8 @@
 import { Bell, BookOpen, ChartLine, Check, House, UserRound } from "lucide-react";
 
-import { HandNote, Sparkle } from "@/components/illustrations/Doodles";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { NibMark } from "@/components/ui/NibMark";
+import { SopanMark } from "@/components/ui/SopanMark";
 import { PhoneMockup } from "@/components/ui/PhoneMockup";
 import { TrackedAnchor } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
@@ -81,7 +80,7 @@ function StoreBadge({ platform }: { platform: "android" | "ios" }) {
   const store = platform === "android" ? "Google Play" : "App Store";
   const lead = href ? (platform === "android" ? "Get it on" : "Download on the") : "Coming soon on";
   const className =
-    "inline-flex h-14 items-center gap-3 rounded-lg border border-white/20 bg-black px-4 text-white";
+    "inline-flex h-14 items-center gap-3 border-2 border-ink bg-ink px-4 text-white";
   const body = (
     <>
       <StoreGlyph platform={platform} />
@@ -99,7 +98,7 @@ function StoreBadge({ platform }: { platform: "android" | "ios" }) {
       rel="noreferrer"
       event={ANALYTICS_EVENTS.appDownloadClick}
       payload={{ platform, location: "home-app" }}
-      className={cn(className, "transition-[filter] hover:brightness-150")}
+      className={cn(className, "transition-colors hover:border-indigo hover:bg-indigo")}
     >
       {body}
     </TrackedAnchor>
@@ -123,7 +122,6 @@ function GoalRing({ percent }: { percent: number }) {
           fill="none"
           stroke="var(--color-kesar)"
           strokeWidth="7"
-          strokeLinecap="round"
           strokeDasharray={`${(c * percent) / 100} ${c}`}
         />
       </svg>
@@ -141,29 +139,18 @@ function GoalRing({ percent }: { percent: number }) {
  */
 export function AppDownloadSection() {
   return (
-    <Section tone="paper" id="app" containerSize="wide" className="relative overflow-hidden">
-      {/* Hand-drawn margin doodles, from lg where there is room for them. */}
-      <svg
-        aria-hidden
-        viewBox="0 0 120 120"
-        className="pointer-events-none absolute top-10 right-10 hidden w-24 text-indigo lg:block"
-      >
-        <Sparkle x={70} y={30} size={10} />
-        <Sparkle x={98} y={56} size={6} />
-        <path d="M30 70q10-14 22-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-
+    <Section tone="paper" id="app" containerSize="wide">
       <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12">
-        <div>
-          <Eyebrow>Plan • Practice • Progress</Eyebrow>
-          <h2 className="mt-4 text-h2 font-semibold lg:text-h2-lg">
-            A smarter study experience
-            <span className="block text-ink-secondary">— on web and mobile.</span>
+        <div className="border-t-2 border-indigo pt-5">
+          <Eyebrow>Plan · Practice · Progress</Eyebrow>
+          <h2 className="mt-4 text-h2 font-bold lg:text-h2-lg">
+            A smarter study experience,{" "}
+            <span className="text-ink-secondary">on web and mobile.</span>
           </h2>
-          <p className="mt-5 max-w-xl text-body text-ink-secondary sm:text-body-lg">
-            Track your progress, follow today&apos;s plan, attend live classes, revise notes
-            and practise tests — all in one place. Enrolled students use the student portal
-            on the web today; the {BRAND.name} app for Android and iOS is on its way.
+          <p className="mt-5 max-w-[52ch] text-body text-ink-secondary sm:text-body-lg">
+            Track your progress, follow today&apos;s plan, attend live classes, revise notes and
+            practise tests — all in one place. Enrolled students use the student portal on the web
+            today; the {BRAND.name} app for Android and iOS is on its way.
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">
@@ -194,34 +181,11 @@ export function AppDownloadSection() {
         <figure className="relative">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:justify-center sm:gap-0">
             <div className="relative w-full max-w-[17.5rem] shrink-0">
-              {/* Paper plane, flown in from the copy. */}
-              <svg
-                aria-hidden
-                viewBox="0 0 80 60"
-                className="pointer-events-none absolute top-1/2 -left-20 hidden w-20 text-indigo lg:block"
-              >
-                <path
-                  d="M4 52q16-4 28-18"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeDasharray="3 5"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M36 30 76 8 56 46 48 34Z M48 34 76 8"
-                  fill="var(--color-white)"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinejoin="round"
-                />
-              </svg>
-
               <PhoneMockup statusBarTone="light">
                 <div className="bg-white px-4 pt-2 pb-3">
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-2 text-small font-semibold text-indigo">
-                      <NibMark className="h-5 w-auto text-indigo" />
+                      <SopanMark className="h-5 w-auto text-indigo" />
                       {BRAND.name}
                     </span>
                     <Bell aria-hidden className="size-4.5 text-ink-muted" />
@@ -234,8 +198,8 @@ export function AppDownloadSection() {
                       <li
                         key={day}
                         className={cn(
-                          "flex flex-col items-center rounded-lg py-1.5 leading-none",
-                          today ? "bg-indigo-gradient text-white" : "bg-paper text-ink-secondary",
+                          "flex flex-col items-center py-1.5 leading-none",
+                          today ? "bg-indigo text-white" : "bg-paper text-ink-secondary",
                         )}
                       >
                         <span className="text-[0.8125rem]">{day}</span>
@@ -247,17 +211,17 @@ export function AppDownloadSection() {
 
                 <div className="flex-1 overflow-hidden px-4 pt-3">
                   <p className="text-small font-semibold text-ink">Today&apos;s plan</p>
-                  <ul className="mt-2 space-y-2">
+                  <ul className="mt-2 border-t border-line">
                     {TODAY_PLAN.map(({ task, time, done }) => (
                       <li
                         key={task}
-                        className="flex items-center gap-2.5 rounded-lg border border-line bg-white px-3 py-2"
+                        className="flex items-center gap-2.5 border-b border-line bg-white px-1 py-2"
                       >
                         <span
                           aria-hidden
                           className={cn(
-                            "flex size-5 shrink-0 items-center justify-center rounded-full border-2",
-                            done ? "border-indigo bg-indigo-gradient text-white" : "border-line-strong",
+                            "flex size-5 shrink-0 items-center justify-center border-2",
+                            done ? "border-indigo bg-indigo text-white" : "border-line-strong",
                           )}
                         >
                           {done ? <Check className="size-3" strokeWidth={3} /> : null}
@@ -280,7 +244,10 @@ export function AppDownloadSection() {
                   </ul>
                 </div>
 
-                <nav aria-hidden className="grid shrink-0 grid-cols-4 border-t border-line bg-white pt-2 pb-1">
+                <nav
+                  aria-hidden
+                  className="grid shrink-0 grid-cols-4 border-t border-line bg-white pt-2 pb-1"
+                >
                   {APP_NAV.map(({ icon: Icon, label, active }) => (
                     <span
                       key={label}
@@ -298,8 +265,8 @@ export function AppDownloadSection() {
             </div>
 
             {/* Progress card, overlapping the phone's edge from sm. */}
-            <div className="relative z-10 hidden w-full max-w-[17.5rem] rounded-xl sm:block border border-line bg-white p-5 shadow-[var(--shadow-panel)] sm:-ml-8 sm:w-64">
-              <p className="text-body font-semibold text-indigo">Your progress</p>
+            <div className="relative z-10 hidden w-full max-w-[17.5rem] border-2 border-indigo bg-white p-5 sm:-ml-8 sm:block sm:w-64">
+              <p className="text-body font-bold text-indigo">Your progress</p>
               <div className="mt-3 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-small text-ink-secondary">Weekly goal</p>
@@ -319,25 +286,19 @@ export function AppDownloadSection() {
                       <span className="text-ink-secondary">{name}</span>
                       <span className="font-semibold text-indigo">{value}%</span>
                     </div>
-                    <div aria-hidden className="mt-1 h-1.5 overflow-hidden rounded-full bg-paper-200">
-                      <span
-                        className="block h-full rounded-full bg-indigo-gradient"
-                        style={{ width: `${value}%` }}
-                      />
+                    <div aria-hidden className="mt-1 h-1.5 overflow-hidden bg-paper-200">
+                      <span className="block h-full bg-indigo" style={{ width: `${value}%` }} />
                     </div>
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-[0.8125rem] text-ink-muted">Sample figures, not student data</p>
+              <p className="mt-4 text-[0.8125rem] text-ink-muted">
+                Sample figures, not student data
+              </p>
             </div>
           </div>
 
           <figcaption className="mt-6 text-center text-small text-ink-muted">
-            <svg aria-hidden viewBox="0 0 150 24" className="mx-auto mb-1 hidden w-36 text-indigo lg:block">
-              <HandNote x="4" y="18" fontSize="16">
-                study on the go!
-              </HandNote>
-            </svg>
             Illustration of the student app interface
           </figcaption>
         </figure>

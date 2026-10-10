@@ -6,24 +6,24 @@ import { cn } from "@/lib/utils/cn";
 
 export const buttonStyles = cva(
   [
-    "inline-flex items-center justify-center gap-2 rounded-md font-semibold",
-    "transition-[transform,background-color,border-color,color,box-shadow,filter] duration-200 ease-[var(--ease-brand)]",
+    "inline-flex items-center justify-center gap-2 font-bold tracking-[-0.005em]",
+    "transition-[background-color,border-color,color] duration-150 ease-[var(--ease-brand)]",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
     "disabled:pointer-events-none disabled:opacity-55",
-    "active:translate-y-px",
   ],
   {
     variants: {
       variant: {
-        primary:
-          "bg-indigo-gradient text-white hover:brightness-125 hover:-translate-y-0.5 shadow-[0_1px_2px_rgb(11_63_49/0.18)]",
+        // Flat blocks, square corners, 2px rules. Hover inverts or steps the
+        // fill — nothing lifts, glows or casts a shadow.
+        primary: "bg-indigo text-white hover:bg-indigo-900",
         secondary:
-          "bg-white text-indigo border border-line-strong hover:border-indigo hover:-translate-y-0.5",
-        kesar: "bg-kesar text-indigo-900 hover:bg-kesar-600 hover:text-white hover:-translate-y-0.5",
+          "bg-white text-indigo border-2 border-indigo hover:bg-indigo hover:text-white",
+        kesar: "bg-kesar text-indigo-900 hover:bg-indigo-900 hover:text-kesar",
         outlineLight:
-          "border border-white/30 text-white hover:bg-white/10 hover:border-white/60",
+          "border-2 border-white text-white hover:bg-white hover:text-indigo",
         ghost: "text-indigo hover:bg-paper",
-        link: "text-indigo underline decoration-kesar decoration-2 underline-offset-4 hover:text-kesar-600",
+        link: "text-indigo underline decoration-kesar decoration-2 underline-offset-4 hover:decoration-indigo",
       },
       size: {
         // Heights are thumb-sized: this site is used one-handed on a

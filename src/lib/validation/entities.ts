@@ -113,6 +113,7 @@ export const testSchema = z.object({
   closesAt: isoDateTime.nullable(),
   resultsVisibleFrom: isoDateTime.nullable(),
   security: examSecuritySchema.nullable(),
+  audience: z.enum(["enrolled", "public"]).optional(),
   status: z.enum(["draft", "published", "archived"]),
 });
 

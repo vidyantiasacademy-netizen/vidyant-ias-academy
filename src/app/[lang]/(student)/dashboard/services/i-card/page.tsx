@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { PhotoUploadButton } from "@/components/portal/PhotoUploadButton";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { NibMark } from "@/components/ui/NibMark";
+import { SopanMark } from "@/components/ui/SopanMark";
 import { getCurrentStudent, getCurrentUserProfile } from "@/lib/auth/server";
 import { BRAND } from "@/lib/constants/site";
 import { courseService } from "@/services/courses/course.service";
@@ -57,7 +57,7 @@ export default async function ICardPage() {
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">I Card</h1>
+      <h1 className="text-h2 font-bold">I Card</h1>
 
       {!student ? (
         <div className="mt-8">
@@ -69,12 +69,12 @@ export default async function ICardPage() {
         </div>
       ) : (
         <div className="mt-8 max-w-lg">
-          <div className="overflow-hidden rounded-lg border border-indigo-900/20 bg-indigo-gradient text-white shadow-[var(--shadow-card-hover)]">
-            {/* Masthead. The nib's breather hole is kesar on its own; the only
+          <div className="overflow-hidden border border-indigo-900/20 bg-indigo text-white">
+            {/* Masthead. The mark's top step is kesar on its own; the only
                 other saffron on the card is the roll number. */}
             <div className="flex items-center justify-between gap-4 px-6 pt-6">
               <span className="flex items-center gap-2.5">
-                <NibMark className="size-5 text-white" />
+                <SopanMark className="h-5 w-auto text-white" />
                 <span className="text-body font-semibold">{BRAND.name}</span>
               </span>
 
@@ -88,7 +88,7 @@ export default async function ICardPage() {
             <div className="flex gap-5 p-6">
               {/* Fixed frame: a portrait and the placeholder occupy the same
                   box, so the card does not reflow when a photo is added. */}
-              <div className="relative size-28 shrink-0 overflow-hidden rounded-md bg-indigo-gradient-deep ring-1 ring-white/25">
+              <div className="relative size-28 shrink-0 overflow-hidden bg-indigo-900 ring-1 ring-white/25">
                 <Image
                   src={photo}
                   alt={hasPhoto ? `Photograph of ${student.fullName}` : ""}
@@ -106,7 +106,7 @@ export default async function ICardPage() {
                 {/* `globals.css` colours every h1–h4 Ink Indigo, which is
                     invisible on this card. Headings on an indigo surface have
                     to set their own colour. */}
-                <h2 className="truncate text-h3 font-semibold text-white">
+                <h2 className="truncate text-h3 font-bold text-white">
                   {student.fullName}
                 </h2>
 
@@ -153,7 +153,7 @@ export default async function ICardPage() {
             <a
               href="/dashboard/services/i-card/download"
               download
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-line-strong bg-white px-5 text-small font-semibold text-indigo transition-colors hover:border-indigo sm:text-body"
+              className="inline-flex h-12 items-center justify-center gap-2 border border-line-strong bg-white px-5 text-small font-semibold text-indigo transition-colors hover:border-indigo sm:text-body"
             >
               <Download aria-hidden className="size-4" />
               Download I Card

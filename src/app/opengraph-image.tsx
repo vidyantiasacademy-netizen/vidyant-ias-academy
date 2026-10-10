@@ -28,7 +28,7 @@ export default async function OpengraphImage() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        background: "linear-gradient(135deg, #1d2470 0%, #0d1138 70%)",
+        background: "#1d2470",
         padding: "72px",
         fontFamily: "sans-serif",
       }}
@@ -92,10 +92,10 @@ export default async function OpengraphImage() {
       >
         {/* satori renders a plain <img>; next/image is not available here */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <img src={mark} alt="" height={56} width={35} />
+          <img src={mark} alt="" height={50} width={64} />
           <div style={{ display: "flex", fontSize: "40px", color: "#ffffff" }}>
             <span style={{ fontWeight: 700 }}>{BRAND.logotype.lead}</span>
-            <span style={{ fontWeight: 400 }}>{BRAND.logotype.trail}</span>
+            <span style={{ fontWeight: 300 }}>{BRAND.logotype.trail}</span>
           </div>
         </div>
         <div

@@ -32,6 +32,14 @@ export interface ExamSecurityPolicy {
   watermark: boolean;
 }
 
+/**
+ * Who may sit a paper. `public` papers are the free mock tests on the website,
+ * sat by visitors who leave a name and a number instead of signing in — see
+ * `mockAttempts`. Absent on papers written before the field existed, which
+ * means `enrolled`.
+ */
+export type TestAudience = "enrolled" | "public";
+
 /** `tests/{testId}` — the paper. Questions live in their own collection. */
 export interface TestDoc {
   courseId: string;
@@ -52,6 +60,8 @@ export interface TestDoc {
   resultsVisibleFrom: IsoDateTime | null;
   /** Exam-integrity settings. `null` falls back to the institute default. */
   security: ExamSecurityPolicy | null;
+  /** Missing means `enrolled`. */
+  audience?: TestAudience;
   status: PublishStatus;
 }
 
@@ -267,3 +277,53 @@ export interface ResultDoc {
 }
 
 export type Result = Entity<ResultDoc>;
+
+export type MockAttemptStatus = "registered" | "in-progress" | "evaluated";
+
+/** The scorecard of a public mock sitting. `score` sits on the attempt itself, for ranking. */
+export type MockResultDoc = Pick<
+  ResultDoc,
+  "totalMarks" | "correctCount" | "wrongCount" | "unattemptedCount" | "negativeMarks" | "subjectBreakdown"
+>;
+
+/**
+ * `mockAttempts/{attemptId}` — one website visitor's sitting of a public mock.
+ *
+ * Visitors have no account, so this is deliberately not `testAttempts`: there
+ * is no uid to hang `answers`, `results` and the invigilation log off, and the
+ * student engine's guarantees (enrolment, one window, proctoring) do not apply
+ * to a free practice paper. Everything lives on this one document instead —
+ * bounded, because a paper's question count is.
+ *
+ * The visitor proves ownership with a random token held in an httpOnly cookie;
+ * only its SHA-256 is stored here. Server-written only, like `testAttempts`.
+ */
+export interface MockAttemptDoc {
+  testId: string;
+  /** The CRM record created at registration — the reason this paper exists. */
+  enquiryId: string;
+  name: string;
+  /** 10 digits, normalised by `phoneField`. One sitting per number per paper. */
+  phone: string;
+  email: string | null;
+  targetAttempt: string | null;
+  accessTokenHash: string;
+  shuffleSeed: string;
+  status: MockAttemptStatus;
+  /** Set by Begin, not by registration — reading the instructions costs no time. */
+  startedAt: IsoDateTime | null;
+  expiresAt: IsoDateTime | null;
+  submittedAt: IsoDateTime | null;
+  /** True when time ran out rather than the visitor pressing Submit. */
+  autoSubmitted: boolean;
+  /** The paper's published question ids, fixed at Begin. Answers are checked against it. */
+  questionIds: string[];
+  /** questionId → selected option ids. */
+  answers: Record<string, string[]>;
+  answeredCount: number;
+  /** Null until scored. Top-level so rank is one count query. */
+  score: number | null;
+  result: MockResultDoc | null;
+}
+
+export type MockAttempt = Entity<MockAttemptDoc>;

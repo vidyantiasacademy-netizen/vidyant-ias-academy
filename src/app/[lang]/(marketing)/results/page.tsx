@@ -57,7 +57,7 @@ export default function ResultsPage() {
         <div className="mt-12 grid gap-4 md:grid-cols-2 lg:gap-5">
           <Card>
             <ShieldCheck aria-hidden className="size-5 text-kesar-600" />
-            <h3 className="mt-5 text-h4 font-semibold">We will publish</h3>
+            <h3 className="mt-5 text-h4 font-bold">We will publish</h3>
             <ul className="mt-4 space-y-2.5 text-body text-ink-secondary">
               <li>Named candidates who have consented, with the stage cleared.</li>
               <li>The year and, where relevant, the optional subject.</li>
@@ -66,7 +66,7 @@ export default function ResultsPage() {
           </Card>
           <Card>
             <ShieldCheck aria-hidden className="size-5 text-danger" />
-            <h3 className="mt-5 text-h4 font-semibold">We will not publish</h3>
+            <h3 className="mt-5 text-h4 font-bold">We will not publish</h3>
             <ul className="mt-4 space-y-2.5 text-body text-ink-secondary">
               <li>Selection counts that mix test-series users with enrolled students.</li>
               <li>Ranks of candidates who only attended a free session.</li>

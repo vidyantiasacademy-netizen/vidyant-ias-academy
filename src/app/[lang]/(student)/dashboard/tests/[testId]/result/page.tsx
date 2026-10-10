@@ -82,7 +82,7 @@ export default async function ResultPage({
 
   return (
     <>
-      <h1 className="text-h2 font-semibold">{test.title}</h1>
+      <h1 className="text-h2 font-bold">{test.title}</h1>
       <p className="mt-2 text-body text-ink-secondary">
         {test.questionCount} questions · {test.totalMarks} marks
         {test.subject ? ` · ${test.subject}` : ""}
@@ -113,14 +113,14 @@ export default async function ResultPage({
 
       {review ? (
         <section className="mt-12">
-          <h2 className="text-h3 font-semibold">Answers and explanations</h2>
+          <h2 className="text-h3 font-bold">Answers and explanations</h2>
           <p className="mt-2 text-body text-ink-secondary">
             In the order you sat them — every student gets a different order.
           </p>
           <ReviewList questions={review} />
         </section>
       ) : reviewMessage ? (
-        <p className="mt-12 rounded-md bg-paper px-4 py-3 text-small text-ink-secondary">
+        <p className="mt-12 bg-paper px-4 py-3 text-small text-ink-secondary">
           {reviewMessage}
         </p>
       ) : null}

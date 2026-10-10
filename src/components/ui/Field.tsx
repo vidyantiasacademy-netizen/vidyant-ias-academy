@@ -24,7 +24,7 @@ export function Field({
 }: FieldProps) {
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      <label htmlFor={id} className="text-small font-medium text-indigo">
+      <label htmlFor={id} className="text-small font-bold text-indigo">
         {label}{" "}
         {required ? (
           <span className="text-kesar-600" aria-hidden>
@@ -42,7 +42,8 @@ export function Field({
       ) : null}
       {children}
       {error ? (
-        <p id={`${id}-error`} role="alert" className="text-small font-medium text-danger">
+        <p id={`${id}-error`} role="alert" className="flex items-start gap-1.5 text-small font-medium text-danger">
+          <span aria-hidden className="mt-[0.45em] size-1.5 shrink-0 bg-danger" />
           {error}
         </p>
       ) : null}
@@ -51,10 +52,10 @@ export function Field({
 }
 
 export const controlStyles = [
-  "w-full rounded-md border bg-white px-3.5 py-2.5 text-body text-ink",
+  "w-full border-2 bg-white px-3.5 py-2.5 text-body text-ink",
   "placeholder:text-ink-muted",
   "border-line-strong transition-colors duration-150",
-  "hover:border-ink-muted focus:border-indigo focus:outline-2 focus:outline-offset-1 focus:outline-[var(--focus-ring)]",
+  "hover:border-ink-muted focus:border-indigo focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring)]",
   "disabled:cursor-not-allowed disabled:bg-paper disabled:text-ink-muted",
-  "aria-invalid:border-danger aria-invalid:outline-danger",
+  "aria-invalid:border-danger aria-invalid:bg-danger-50/40 aria-invalid:outline-danger",
 ].join(" ");

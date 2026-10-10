@@ -79,7 +79,7 @@ export default function QuizzesPage() {
               {QUIZ_PLAN.map((item) => (
                 <li key={item.stage}>
                   <Card className="h-full">
-                    <h2 className="text-h4 font-semibold text-indigo">{item.title}</h2>
+                    <h2 className="text-h4 font-bold text-indigo">{item.title}</h2>
                     <p className="mt-3 text-small text-ink-secondary">{item.note}</p>
                   </Card>
                 </li>
@@ -99,7 +99,7 @@ export default function QuizzesPage() {
           {METHOD.map((item) => (
             <li key={item.title}>
               <Card className="h-full bg-white">
-                <h3 className="text-h4 font-semibold text-indigo">{item.title}</h3>
+                <h3 className="text-h4 font-bold text-indigo">{item.title}</h3>
                 <p className="mt-3 text-small text-ink-secondary">{item.note}</p>
               </Card>
             </li>

@@ -55,7 +55,7 @@ export function SearchExperience({
             <button
               type="button"
               onClick={() => setQuery(suggestion)}
-              className="rounded-full border border-line px-3.5 py-1.5 text-small text-ink-secondary transition-colors hover:border-indigo hover:text-indigo"
+              className="inline-flex h-10 items-center border border-line px-3.5 text-small text-ink-secondary transition-colors hover:border-indigo hover:text-indigo"
             >
               {suggestion}
             </button>
@@ -76,8 +76,8 @@ export function SearchExperience({
               <li key={`${doc.type}-${doc.id}`}>
                 <Card interactive padding="sm">
                   <Badge tone="neutral">{doc.type}</Badge>
-                  <h2 className="mt-3 text-h4 font-semibold">
-                    <Link href={doc.href} className="transition-colors hover:text-kesar-600">
+                  <h2 className="mt-3 text-h4 font-bold">
+                    <Link href={doc.href} className="transition-colors hover:text-indigo">
                       {doc.title}
                     </Link>
                   </h2>
@@ -88,7 +88,7 @@ export function SearchExperience({
           </ul>
         ) : (
           <Card className="mt-5">
-            <h2 className="text-h4 font-semibold">Nothing matched that</h2>
+            <h2 className="text-h4 font-bold">Nothing matched that</h2>
             <p className="mt-3 text-body text-ink-secondary">
               Try a broader word — “Mains”, “test series”, “optional” — or ask the academic
               team directly and we will answer it.

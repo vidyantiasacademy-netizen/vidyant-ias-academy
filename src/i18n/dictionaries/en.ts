@@ -13,6 +13,7 @@ export const en = {
     call: "Call {phone}",
     whatsappChat: "Chat with vidyantIAS on WhatsApp",
     whatsappShort: "WhatsApp us",
+    backToTop: "Back to top",
   },
   nav: {
     primary: "Primary",
@@ -30,6 +31,9 @@ export const en = {
     enrol: "Admissions & Batches",
     quizzes: "Quizzes",
     practiceQuizzes: "Practice Quizzes",
+    mockTest: "Free Mock Test",
+    upscGuide: "UPSC Exam Guide",
+    parents: "For Parents",
     events: "Events",
     testimonials: "Testimonials",
     faq: "FAQ",

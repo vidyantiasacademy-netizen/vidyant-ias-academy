@@ -42,7 +42,7 @@ export function ResultScorecard({
         <p className="text-eyebrow font-semibold uppercase text-white/70">Your score</p>
         <p className="mt-2 text-hero font-semibold tabular-nums">
           {result.score}
-          <span className="text-h3 font-semibold text-white/70"> / {result.totalMarks}</span>
+          <span className="text-h3 font-bold text-white/70"> / {result.totalMarks}</span>
         </p>
 
         <dl className="mt-7 grid grid-cols-2 gap-5 sm:grid-cols-4">
@@ -65,7 +65,7 @@ export function ResultScorecard({
       </Card>
 
       {attempt.autoSubmitted ? (
-        <p className="mt-5 rounded-md bg-kesar-100 px-4 py-3 text-small font-semibold text-kesar-700">
+        <p className="mt-5 bg-kesar-100 px-4 py-3 text-small font-semibold text-kesar-700">
           {attempt.terminationReason === "violations"
             ? "This paper was submitted automatically because the exam rules were broken during the sitting. Speak to the centre if you believe that was an error."
             : "This paper was submitted automatically when the time ran out."}
@@ -74,7 +74,7 @@ export function ResultScorecard({
 
       {result.subjectBreakdown.length > 1 ? (
         <section className="mt-10">
-          <h2 className="text-h3 font-semibold">Where the marks went</h2>
+          <h2 className="text-h3 font-bold">Where the marks went</h2>
 
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-md border-collapse text-body">
@@ -163,7 +163,7 @@ export function ReviewList({ questions }: { questions: ReviewQuestion[] }) {
                     <li
                       key={option.id}
                       className={cn(
-                        "rounded-md border px-4 py-3 text-body",
+                        "border px-4 py-3 text-body",
                         isCorrect
                           ? "border-success bg-success-50"
                           : wasChosen
@@ -192,7 +192,7 @@ export function ReviewList({ questions }: { questions: ReviewQuestion[] }) {
               </ul>
 
               {question.explanation ? (
-                <div className="mt-4 rounded-md bg-paper p-4">
+                <div className="mt-4 bg-paper p-4">
                   <p className="text-eyebrow font-semibold uppercase text-ink-secondary">
                     Explanation
                   </p>

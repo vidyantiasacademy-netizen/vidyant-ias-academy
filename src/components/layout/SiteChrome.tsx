@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { Footer } from "@/components/footer/Footer";
+import { ExitIntentOffer } from "@/components/layout/ExitIntentOffer";
 import { FloatingActions } from "@/components/layout/FloatingActions";
 import { NotificationStrip } from "@/components/layout/NotificationStrip";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
@@ -23,17 +24,18 @@ export async function SiteChrome({ children }: { children: ReactNode }) {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-indigo-gradient focus:px-4 focus:py-2.5 focus:text-small focus:font-semibold focus:text-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-indigo focus:px-4 focus:py-2.5 focus:text-small focus:font-bold focus:text-white"
       >
         {dict.common.skipToContent}
       </a>
       <Header notice={<NotificationStrip />} />
-      <main id="main" className="flex-1 pb-20 lg:pb-0">
+      <main id="main" className="flex-1 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0">
         {children}
       </main>
       <Footer />
       <StickyMobileCta />
       <FloatingActions />
+      <ExitIntentOffer />
     </>
   );
 }

@@ -87,13 +87,13 @@ export function PromoBannerCarousel() {
         }
       }}
     >
-      <div className="overflow-hidden rounded-xl border border-line bg-white shadow-card">
+      <div className="overflow-hidden border-2 border-indigo bg-white">
         {/* Rotation progress — a quiet, non-looping indicator, not decoration. */}
         <div aria-hidden className="h-0.5 bg-paper-200">
           <div
             key={`${index}-${isRotating}`}
             className={cn(
-              "h-full bg-kesar",
+              "h-full bg-chilli",
               isRotating ? "promo-progress" : "w-full opacity-50",
             )}
             style={isRotating ? { animationDuration: `${ROTATION_MS}ms` } : undefined}
@@ -103,7 +103,6 @@ export function PromoBannerCarousel() {
         <div className="grid min-h-[27rem] sm:min-h-[24rem]">
           {banners.map((banner, slide) => {
             const isActive = slide === index;
-            const Icon = banner.icon;
 
             return (
               <article
@@ -120,21 +119,21 @@ export function PromoBannerCarousel() {
               >
                 <p className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   {banner.tag ? (
-                    <span className="inline-flex items-center rounded-full bg-kesar-100 px-3 py-1 text-eyebrow font-semibold uppercase text-kesar-700">
+                    <span className="inline-flex items-center bg-chilli-100 px-3 py-1 text-eyebrow font-bold uppercase text-chilli-700">
                       {banner.tag}
                     </span>
                   ) : null}
-                  <span className="text-eyebrow font-semibold uppercase text-ink-secondary">
+                  <span className="text-eyebrow font-bold uppercase text-ink-secondary">
                     {banner.eyebrow}
                   </span>
                 </p>
 
-                <h2 className="mt-5 text-h2 font-semibold text-indigo lg:text-[2.125rem] xl:text-h2-lg">
+                <h2 className="mt-5 text-h2 font-bold text-indigo lg:text-[2.125rem] xl:text-h2-lg">
                   {banner.title}
                   {banner.titleAccent ? (
                     <>
                       <br />
-                      <span className="text-kesar-600">{banner.titleAccent}</span>
+                      <span className="text-chilli-600">{banner.titleAccent}</span>
                     </>
                   ) : null}
                 </h2>
@@ -157,7 +156,7 @@ export function PromoBannerCarousel() {
                   {banner.secondary ? (
                     <Link
                       href={banner.secondary.href}
-                      className="inline-flex items-center gap-1.5 rounded-md px-1 py-2 text-small font-semibold text-indigo underline decoration-kesar decoration-2 underline-offset-4 transition-colors duration-200 hover:text-kesar-700"
+                      className="inline-flex items-center gap-1.5 px-1 py-2 text-small font-bold text-indigo underline decoration-chilli decoration-2 underline-offset-4 transition-colors duration-200 hover:text-chilli-700"
                     >
                       {banner.secondary.label}
                     </Link>
@@ -176,12 +175,6 @@ export function PromoBannerCarousel() {
                   ))}
                 </ul>
 
-                {/* Watermark icon — identifies the campaign, carries no meaning. */}
-                <Icon
-                  aria-hidden
-                  className="pointer-events-none absolute -bottom-6 right-2 size-40 text-indigo/[0.05]"
-                  strokeWidth={1}
-                />
               </article>
             );
           })}
@@ -195,7 +188,7 @@ export function PromoBannerCarousel() {
               type="button"
               onClick={() => goTo(index - 1)}
               aria-label="Previous announcement"
-              className="inline-flex size-11 cursor-pointer items-center justify-center rounded-md border border-line-strong text-indigo transition-colors duration-200 hover:border-indigo hover:bg-paper"
+              className="inline-flex size-11 cursor-pointer items-center justify-center border-2 border-indigo text-indigo transition-colors duration-150 hover:bg-indigo hover:text-white"
             >
               <ChevronLeft aria-hidden className="size-5" />
             </button>
@@ -203,7 +196,7 @@ export function PromoBannerCarousel() {
               type="button"
               onClick={() => goTo(index + 1)}
               aria-label="Next announcement"
-              className="inline-flex size-11 cursor-pointer items-center justify-center rounded-md border border-line-strong text-indigo transition-colors duration-200 hover:border-indigo hover:bg-paper"
+              className="inline-flex size-11 cursor-pointer items-center justify-center border-2 border-indigo text-indigo transition-colors duration-150 hover:bg-indigo hover:text-white"
             >
               <ChevronRight aria-hidden className="size-5" />
             </button>
@@ -228,9 +221,9 @@ export function PromoBannerCarousel() {
                   <span
                     aria-hidden
                     className={cn(
-                      "h-1 w-full rounded-full transition-colors duration-200",
+                      "h-1 w-full transition-colors duration-150",
                       slide === index
-                        ? "bg-indigo-gradient"
+                        ? "bg-indigo"
                         : "bg-line-strong group-hover:bg-ink-secondary",
                     )}
                   />
@@ -251,7 +244,7 @@ export function PromoBannerCarousel() {
                     ? "Resume announcement rotation"
                     : "Pause announcement rotation"
                 }
-                className="inline-flex size-11 cursor-pointer items-center justify-center rounded-md border border-line-strong text-indigo transition-colors duration-200 hover:border-indigo hover:bg-paper"
+                className="inline-flex size-11 cursor-pointer items-center justify-center border-2 border-indigo text-indigo transition-colors duration-150 hover:bg-indigo hover:text-white"
               >
                 {isPaused ? (
                   <Play aria-hidden className="size-4" />

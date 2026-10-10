@@ -1,6 +1,6 @@
 # Firestore schema
 
-Eighteen flat, top-level collections. Types in `src/types/db/`, names in
+Nineteen flat, top-level collections. Types in `src/types/db/`, names in
 `src/lib/firebase/collections.ts`.
 
 ## Why flat
@@ -166,6 +166,17 @@ recorded can see which were not.
 ### `results/{attemptId}`
 The scorecard: score, counts, negative marks, `rank`, `percentile`, and
 `subjectBreakdown[]`. Nobody writes this from a client, ever.
+
+### `mockAttempts/{attemptId}`
+One website visitor's sitting of a free public mock test (a `tests` paper with
+`audience: "public"`). Visitors have no account, so this is not `testAttempts`:
+answers (`questionId → optionIds`), score and scorecard all live on this one
+document — bounded by the paper's question count. `score` is top-level so a
+rank is a single count query. `enquiryId` links the sitting to the lead its
+registration created, and the result is written back onto that enquiry.
+Ownership is a random token in an httpOnly cookie; only its SHA-256
+(`accessTokenHash`) is stored. Closed to every client read and write — the
+server reads it with the Admin SDK in `src/services/mock-tests`.
 
 ### `doubts/{doubtId}`
 A student question routed to faculty or a mentor. Editable by the student while

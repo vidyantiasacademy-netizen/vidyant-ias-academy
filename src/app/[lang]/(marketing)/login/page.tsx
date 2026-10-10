@@ -55,10 +55,10 @@ export default async function LoginPage({ searchParams }: PageProps<"/[lang]/log
           <SignInForm nextPath={nextPath} />
         ) : (
           <Card tone="paper" padding="lg">
-            <span className="flex size-11 items-center justify-center rounded-md bg-white text-kesar-600 ring-1 ring-line">
+            <span className="flex size-11 shrink-0 items-center justify-center border border-line bg-white text-kesar-600">
               <LockKeyhole aria-hidden className="size-5" />
             </span>
-            <h2 className="mt-5 text-h3 font-semibold">Sign-in is not available yet.</h2>
+            <h2 className="mt-5 text-h3 font-bold">Sign-in is not available yet.</h2>
             <p className="mt-3 text-body text-ink-secondary">
               The student platform is being set up. Your batch coordinator shares class
               schedules, test papers and evaluated answers directly in the meantime.
@@ -67,7 +67,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/[lang]/log
         )}
 
         <Card tone="paper" padding="lg" className="mt-8">
-          <h2 className="text-h3 font-semibold">Don&apos;t have an account yet?</h2>
+          <h2 className="text-h3 font-bold">Don&apos;t have an account yet?</h2>
           <p className="mt-3 text-body text-ink-secondary">
             Classes, tests and study material open up once your admission is confirmed and
             the centre activates your enrolment. If you have enrolled and not received your

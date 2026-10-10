@@ -8,12 +8,16 @@ interface ContainerProps extends ComponentProps<"div"> {
   size?: "default" | "narrow" | "wide";
 }
 
-/* Default and wide step up on large screens so a 1920px or 2K display
-   isn't mostly margin. Narrow is a reading measure and stays put. */
+/* One page measure, shared by the header, every section and the footer, so
+   their left edges line up down the whole page. It steps up on large screens
+   so a 1920px or 2K display isn't mostly margin. `wide` is kept as an alias for
+   existing callers; narrow is a reading measure and stays put. */
+const PAGE = "max-w-[1280px] 2xl:max-w-[1440px] 3xl:max-w-[1760px] 4xl:max-w-[2160px]";
+
 const sizes = {
-  default: "max-w-[1200px] 2xl:max-w-[1360px] 3xl:max-w-[1600px] 4xl:max-w-[1920px]",
+  default: PAGE,
   narrow: "max-w-[820px]",
-  wide: "max-w-[1280px] 2xl:max-w-[1440px] 3xl:max-w-[1760px] 4xl:max-w-[2160px]",
+  wide: PAGE,
 } as const;
 
 export function Container({

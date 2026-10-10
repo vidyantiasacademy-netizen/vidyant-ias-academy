@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils/cn";
 interface CardProps extends ComponentProps<"div"> {
   as?: ElementType;
   tone?: "white" | "paper" | "indigo";
-  /** Adds a subtle lift on hover — use for linked cards only. */
+  /** Hover hardens the rule to indigo — use for linked cards only. */
   interactive?: boolean;
   padding?: "none" | "sm" | "md" | "lg";
 }
@@ -13,7 +13,7 @@ interface CardProps extends ComponentProps<"div"> {
 const tones = {
   white: "bg-white border-line",
   paper: "bg-paper border-paper-200",
-  indigo: "bg-indigo-gradient border-white/10 text-white focus-invert",
+  indigo: "bg-indigo border-indigo text-white focus-invert",
 } as const;
 
 const paddings = {
@@ -34,11 +34,11 @@ export function Card({
   return (
     <Tag
       className={cn(
-        "rounded-lg border",
+        "border",
         tones[tone],
         paddings[padding],
         interactive &&
-          "transition-[box-shadow,border-color,transform] duration-200 ease-[var(--ease-brand)] hover:-translate-y-0.5 hover:border-line-strong hover:shadow-[var(--shadow-card-hover)]",
+          "transition-colors duration-150 ease-[var(--ease-brand)] hover:border-indigo",
         className,
       )}
       {...props}

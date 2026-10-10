@@ -19,7 +19,7 @@ import { pageMetadata, SEO_KEYWORDS } from "@/lib/seo/metadata";
 export const generateMetadata = () => pageMetadata({
   title: `Admissions & Batches — ${EXAM_CYCLE.label}`,
   description:
-    "Enrol at vidyantIAS Pune for UPSC CSE 2026. Batch start dates, modes of attendance, the admission steps and a transparent fee conversation — no payment is taken online.",
+    "Enrol at vidyantIAS Pune for UPSC CSE 2026. Batch start dates, modes of attendance, the admission steps and transparent fees — pay online for listed programmes or confirm on a call.",
   path: ROUTES.enrol,
   keywords: [...SEO_KEYWORDS.primary, "UPSC admission Pune", "UPSC batch Pune"],
 });
@@ -45,8 +45,11 @@ const STEPS = [
   },
 ];
 
-export default async function EnrolPage() {
+export default async function EnrolPage({ searchParams }: PageProps<"/[lang]/enrol">) {
+  const { course: requestedSlug } = await searchParams;
   const courses = await getCourseCatalogue(await getLocale());
+  // Arriving from a course card's "Enrol now": pre-select that programme.
+  const defaultCourse = courses.find((course) => course.slug === requestedSlug)?.title;
   const batches = upcomingBatches();
 
   return (
@@ -54,7 +57,7 @@ export default async function EnrolPage() {
       <PageHero
         eyebrow="Admissions"
         title={`Enrol for ${EXAM_CYCLE.label}.`}
-        description="Three steps, no online payment and no pressure. Admission is confirmed on a call with our academic team so you know exactly what you are joining."
+        description="Three steps and no pressure. Send your details and our academic team confirms your batch and fee on a call, so you know exactly what you are joining."
         breadcrumbs={[{ label: "Home", href: ROUTES.home }, { label: "Admissions" }]}
       />
 
@@ -68,14 +71,14 @@ export default async function EnrolPage() {
             <li key={title}>
               <Card className="h-full">
                 <div className="flex items-center gap-3">
-                  <span className="flex size-10 items-center justify-center rounded-md bg-paper text-kesar-600">
+                  <span className="flex size-10 shrink-0 items-center justify-center border border-line bg-white text-kesar-600">
                     <Icon aria-hidden className="size-5" />
                   </span>
                   <span className="text-eyebrow font-semibold uppercase text-ink-muted">
                     Step {index + 1}
                   </span>
                 </div>
-                <h3 className="mt-4 text-h4 font-semibold">{title}</h3>
+                <h3 className="mt-4 text-h4 font-bold">{title}</h3>
                 <p className="mt-3 text-body text-ink-secondary">{description}</p>
               </Card>
             </li>
@@ -116,12 +119,12 @@ export default async function EnrolPage() {
       <Section containerSize="wide">
         <div className="grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:gap-14">
           <div id="enrolment-form" className="scroll-mt-28">
-            <EnrolmentForm courses={courses} batches={batches} />
+            <EnrolmentForm courses={courses} batches={batches} defaultCourse={defaultCourse} />
           </div>
 
           <aside className="flex flex-col gap-4">
             <Card tone="paper">
-              <h2 className="text-h4 font-semibold">About fees</h2>
+              <h2 className="text-h4 font-bold">About fees</h2>
               <p className="mt-3 text-body text-ink-secondary">
                 Fees differ by programme and batch, so we share the full structure — including
                 instalments and what is covered — during the admission call rather than
@@ -134,7 +137,7 @@ export default async function EnrolPage() {
             </Card>
 
             <Card>
-              <h2 className="text-h4 font-semibold">Not ready to enrol?</h2>
+              <h2 className="text-h4 font-bold">Not ready to enrol?</h2>
               <p className="mt-3 text-body text-ink-secondary">
                 Attend a free demo class or book a counselling session first. Neither commits
                 you to anything.

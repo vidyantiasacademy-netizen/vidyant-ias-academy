@@ -62,9 +62,9 @@ export function EnrolmentForm({ courses, batches, defaultCourse }: EnrolmentForm
       onSubmit={handleSubmit(async (values) => {
         await lead.submit(values, { source: "enrol-page", course: values.course });
       })}
-      className="rounded-lg border border-line bg-white p-6 sm:p-8"
+      className="border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8"
     >
-      <h2 className="text-h3 font-semibold">Start your enrolment</h2>
+      <h2 className="text-h3 font-bold tracking-tight">Start your enrolment</h2>
       <p className="mt-3 text-body text-ink-secondary">
         Tell us where you are in your preparation. We confirm the batch, the fee structure
         and the instalment options on a call — there is no payment on this page.

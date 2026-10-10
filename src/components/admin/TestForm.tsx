@@ -12,7 +12,7 @@ import { useToast } from "@/components/ui/Toast";
 import { createTestAction, updateTestAction } from "@/lib/exam/authoring-actions";
 import { isoToIstInput, istInputToIso } from "@/lib/exam/ist";
 import { DEFAULT_EXAM_SECURITY, VIOLATION_WEIGHTS } from "@/lib/exam/policy";
-import type { ExamSecurityPolicy, Test } from "@/types/db";
+import type { ExamSecurityPolicy, Test, TestAudience } from "@/types/db";
 
 /**
  * Creates or edits a paper's settings — not its questions, which are added one
@@ -72,6 +72,7 @@ export function TestForm({
     test && test.kind !== "mains-descriptive" ? test.kind : "prelims-mcq",
   );
   const [subject, setSubject] = useState(test?.subject ?? "");
+  const [audience, setAudience] = useState<TestAudience>(test?.audience ?? "enrolled");
   const [questionCount, setQuestionCount] = useState(String(test?.questionCount ?? 100));
   const [totalMarks, setTotalMarks] = useState(String(test?.totalMarks ?? 200));
   const [durationMinutes, setDurationMinutes] = useState(String(test?.durationMinutes ?? 120));
@@ -107,6 +108,7 @@ export function TestForm({
       closesAt: istInputToIso(closesAt),
       resultsVisibleFrom: istInputToIso(resultsFrom),
       security: customSecurity ? security : null,
+      audience,
     };
 
     startTransition(async () => {
@@ -130,7 +132,7 @@ export function TestForm({
   return (
     <form onSubmit={submit} noValidate className="space-y-6">
       {lockReason ? (
-        <p className="rounded-md border border-line-strong bg-paper px-4 py-3 text-small text-ink">
+        <p className="border border-line-strong bg-paper px-4 py-3 text-small text-ink">
           {lockReason}
         </p>
       ) : null}
@@ -151,7 +153,11 @@ export function TestForm({
           id="courseId"
           label="Course"
           required
-          hint="Only students enrolled in this course can sit the paper."
+          hint={
+            audience === "public"
+              ? "The paper is filed under this course. Website visitors sit it without enrolling."
+              : "Only students enrolled in this course can sit the paper."
+          }
           error={errorFor(errors, "courseId")}
         >
           <Select
@@ -182,6 +188,28 @@ export function TestForm({
                 {label}
               </option>
             ))}
+          </Select>
+        </Field>
+
+        <Field
+          id="audience"
+          label="Who can sit it"
+          required
+          hint={
+            audience === "public"
+              ? "Listed at /mock-test. Visitors leave a name and number — each becomes a lead with their score — and sit it without fullscreen or invigilation."
+              : undefined
+          }
+          className="sm:col-span-2"
+        >
+          <Select
+            id="audience"
+            value={audience}
+            onChange={(event) => setAudience(event.target.value as TestAudience)}
+            disabled={locked}
+          >
+            <option value="enrolled">Enrolled students only</option>
+            <option value="public">Anyone on the website — free mock test</option>
           </Select>
         </Field>
 

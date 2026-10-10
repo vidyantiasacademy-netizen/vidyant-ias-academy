@@ -362,7 +362,8 @@ const freeResourcesQuery = defineQuery(`
     "tracks": coalesce(tracks, []),
     "requiresLead": coalesce(requiresLead, false),
     "fileUrl": file.asset->url,
-    pages
+    pages,
+    price
   }
 `);
 

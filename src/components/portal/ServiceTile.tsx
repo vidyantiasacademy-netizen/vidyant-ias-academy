@@ -18,10 +18,10 @@ import { cn } from "@/lib/utils/cn";
 export type ServiceTone = "indigo" | "indigo-dark" | "kesar" | "paper";
 
 const tones: Record<ServiceTone, string> = {
-  indigo: "bg-indigo-gradient text-white hover:brightness-125",
-  "indigo-dark": "bg-indigo-gradient-deep text-white hover:brightness-125",
+  indigo: "bg-indigo text-white hover:bg-indigo-900",
+  "indigo-dark": "bg-indigo-900 text-white hover:bg-indigo",
   kesar: "bg-kesar text-indigo-900 hover:bg-kesar-600 hover:text-white",
-  paper: "bg-white text-indigo ring-1 ring-line hover:ring-indigo",
+  paper: "bg-white text-indigo border-2 border-line hover:border-indigo",
 };
 
 const iconTones: Record<ServiceTone, string> = {
@@ -51,14 +51,14 @@ export function ServiceTile({
     <>
       <span
         className={cn(
-          "flex size-11 items-center justify-center rounded-md",
+          "flex size-11 items-center justify-center",
           href ? iconTones[tone] : "bg-paper-200 text-ink-secondary",
         )}
       >
         {icon}
       </span>
 
-      <span className="mt-5 block text-body-lg font-semibold">{label}</span>
+      <span className="mt-5 block text-body-lg font-bold">{label}</span>
 
       <span
         className={cn(
@@ -71,9 +71,9 @@ export function ServiceTile({
       </span>
 
       {!href ? (
-        // `mt-auto` pins the chip to the bottom of the tile, so tiles with a
+        // `mt-auto` pins the tag to the bottom of the tile, so tiles with a
         // one-line and a two-line description still line up.
-        <span className="mt-auto self-start rounded-full bg-paper-200 px-3 py-1 text-eyebrow font-semibold uppercase text-ink-secondary">
+        <span className="mt-auto self-start bg-paper-200 px-3 py-1 text-eyebrow font-semibold uppercase text-ink-secondary">
           Not live yet
         </span>
       ) : null}
@@ -83,7 +83,7 @@ export function ServiceTile({
   // `h-full` is what makes every tile in a row the same height: the grid item
   // already stretches, the tile has to take the height it is given.
   const shape =
-    "flex h-full min-h-44 flex-col rounded-lg p-6 transition-[background-color,box-shadow,transform] duration-200 ease-[var(--ease-brand)]";
+    "flex h-full min-h-44 flex-col p-6 transition-colors duration-200 ease-[var(--ease-brand)]";
 
   if (!href) {
     return (
@@ -99,7 +99,7 @@ export function ServiceTile({
       className={cn(
         shape,
         tones[tone],
-        "hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
       )}
     >
       {body}

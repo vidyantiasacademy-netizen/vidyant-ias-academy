@@ -38,6 +38,10 @@ export interface Course {
   schedule: string;
   /** Kept as a string so "Shared on counselling call" is a valid, honest value. */
   fee: string;
+  /** Exact price in paise, or null when the fee is quoted on a counselling call. */
+  priceInPaise: number | null;
+  /** True when the programme can be bought on the site right now (priced and Razorpay configured). */
+  buyOnline: boolean;
   /** Who teaches it. `subject` is enough for a card; the course page resolves full profiles by slug. */
   faculty: { slug: string; subject: string }[];
   faqIds: string[];
@@ -118,6 +122,10 @@ export interface Resource {
   /** Download/read target. Empty string means "gated behind lead capture". */
   href: string;
   requiresLead: boolean;
+  /** Price in rupees for paid study material; null means the resource is free. */
+  price: number | null;
+  /** Page count, shown so a buyer knows what they are getting. */
+  pages: number | null;
   status: ContentStatus;
 }
 

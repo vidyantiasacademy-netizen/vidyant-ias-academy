@@ -64,9 +64,9 @@ export function BrochureForm({ courses }: { courses: Course[] }) {
       onSubmit={handleSubmit(async (values) => {
         await lead.submit(values, { source: "brochure-page", course: values.course });
       })}
-      className="rounded-lg border border-line bg-white p-6 sm:p-8"
+      className="border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8"
     >
-      <h2 className="text-h3 font-semibold">Get the brochure</h2>
+      <h2 className="text-h3 font-bold tracking-tight">Get the brochure</h2>
       <p className="mt-3 text-body text-ink-secondary">{BROCHURE.note}</p>
 
       <Honeypot registration={register("honeypot")} />

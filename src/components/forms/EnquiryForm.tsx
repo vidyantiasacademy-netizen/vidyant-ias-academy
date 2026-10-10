@@ -43,9 +43,9 @@ export function EnquiryForm({ id }: { id?: string } = {}) {
       onSubmit={handleSubmit(async (values) => {
         await lead.submit(values, { source: "contact-page" });
       })}
-      className="scroll-mt-28 rounded-lg border border-line bg-white p-6 sm:p-8"
+      className="scroll-mt-28 border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8"
     >
-      <h2 className="text-h3 font-semibold">Send an enquiry</h2>
+      <h2 className="text-h3 font-bold tracking-tight">Send an enquiry</h2>
       <p className="mt-3 text-body text-ink-secondary">
         Ask anything — fees, batches, schedules, optional subjects. We answer questions
         without requiring a call first.

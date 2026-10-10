@@ -100,6 +100,27 @@ export async function getSignedUrl(
 ): Promise<string> {
   await assertCanRead(ref);
 
+  return sign(ref, ttlMinutes);
+}
+
+/**
+ * A question image for a website visitor sitting a public mock test.
+ *
+ * Visitors have no session for `assertCanRead` to check, so this signs only
+ * question images and nothing else. The caller — `mockTestService` — must
+ * already have verified the visitor's attempt token and that the question is
+ * on their paper.
+ */
+export async function getQuestionImageUrlForVisitor(
+  ref: string,
+  ttlMinutes = DEFAULT_TTL_MINUTES,
+): Promise<string> {
+  if (!ref.startsWith("questions/")) throw new AppError(ERROR_CODES.FORBIDDEN);
+
+  return sign(ref, ttlMinutes);
+}
+
+function sign(ref: string, ttlMinutes: number): string {
   const { publicId, format } = fromMediaRef(ref);
 
   if (!format) {
@@ -184,6 +205,25 @@ export interface AvatarUpload {
  */
 export async function uploadOwnAvatar(input: AvatarUpload): Promise<string> {
   const user = await requireAuth();
+  return storeAvatar(user.uid, input);
+}
+
+/**
+ * Stores a profile photograph for someone else — the super admin attaching a
+ * photo while creating an account. Admin-only: `uploadOwnAvatar` is the only
+ * path by which anyone else writes into a `users/{uid}/avatar/` folder.
+ */
+export async function uploadAvatarFor(uid: string, input: AvatarUpload): Promise<string> {
+  const user = await requireAuth();
+
+  if (!isAtLeast(user.role, "ADMIN")) {
+    throw new AppError(ERROR_CODES.FORBIDDEN);
+  }
+
+  return storeAvatar(uid, input);
+}
+
+async function storeAvatar(uid: string, input: AvatarUpload): Promise<string> {
   const { maxBytes, mimeTypes } = UPLOAD_LIMITS.image;
 
   if (!(mimeTypes as readonly string[]).includes(input.contentType)) {
@@ -206,7 +246,7 @@ export async function uploadOwnAvatar(input: AvatarUpload): Promise<string> {
     });
   }
 
-  const publicId = MEDIA_PATHS.userAvatar(user.uid, uniqueAssetName(input.fileName));
+  const publicId = MEDIA_PATHS.userAvatar(uid, uniqueAssetName(input.fileName));
 
   try {
     const result = await uploadBuffer(bytes, {
@@ -352,9 +392,11 @@ function toUploadError(error: unknown): AppError {
 
 export const storageService = {
   getSignedUrl,
+  getQuestionImageUrlForVisitor,
   getLessonDocumentUrl,
   remove,
   uploadOwnAvatar,
+  uploadAvatarFor,
   removeOwnAvatar,
   signUpload,
 };

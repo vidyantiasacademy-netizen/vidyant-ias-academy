@@ -21,10 +21,10 @@ export default function GlobalRouteError({
 
   return (
     <Container className="flex flex-col items-start py-20 sm:py-28">
-      <span className="flex size-12 items-center justify-center rounded-full bg-paper text-kesar-600">
+      <span className="flex size-12 items-center justify-center border-2 border-indigo bg-white text-indigo">
         <TriangleAlert aria-hidden className="size-6" />
       </span>
-      <h1 className="mt-7 text-h1 font-semibold">Something went wrong.</h1>
+      <h1 className="mt-7 text-h1 font-bold">Something went wrong.</h1>
       <p className="mt-4 max-w-xl text-body text-ink-secondary sm:text-body-lg">
         The page could not be loaded. Please try again — if it keeps happening, call the
         centre and we will help you directly.

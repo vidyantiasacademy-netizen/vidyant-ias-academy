@@ -90,7 +90,7 @@ export default async function CurrentAffairPage({
                     href={source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-small font-medium text-indigo underline underline-offset-2 hover:text-kesar-600"
+                    className="inline-flex items-center gap-1.5 text-small font-medium text-indigo underline underline-offset-2 hover:text-indigo-900"
                   >
                     {source.label}
                     <ExternalLink aria-hidden className="size-3.5" />
