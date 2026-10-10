@@ -1,5 +1,6 @@
-import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { CallbackForm } from "@/components/forms/CallbackForm";
 import { EnquiryForm } from "@/components/forms/EnquiryForm";
 import { PageHero } from "@/components/layout/PageHero";
@@ -74,7 +75,7 @@ export default function ContactPage() {
             </Card>
 
             <Card>
-              <MessageCircle aria-hidden className="size-5 text-kesar-600" />
+              <SocialIcon name="whatsapp" className="size-6" />
               <h2 className="mt-4 text-h4 font-bold">WhatsApp</h2>
               <TrackedAnchor
                 href={whatsappUrl()}

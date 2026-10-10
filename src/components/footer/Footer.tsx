@@ -1,4 +1,4 @@
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 import Link from "@/i18n/Link";
 import { Container } from "@/components/ui/Container";
@@ -68,9 +68,9 @@ export async function Footer() {
                       target="_blank"
                       rel="noreferrer"
                       aria-label={format(dict.footer.social, { network: social.label })}
-                      className="flex size-10 items-center justify-center border-2 border-white/25 text-white transition-colors hover:border-kesar hover:bg-kesar hover:text-indigo-900"
+                      className="flex size-10 items-center justify-center border-2 border-white/25 bg-white transition-colors hover:border-kesar"
                     >
-                      <SocialIcon name={social.icon as SocialIconName} />
+                      <SocialIcon name={social.icon as SocialIconName} className="size-6" />
                     </a>
                   </li>
               ))}
@@ -82,9 +82,9 @@ export async function Footer() {
                   event={ANALYTICS_EVENTS.whatsappClick}
                   payload={{ location: "footer" }}
                   aria-label={dict.common.whatsappChat}
-                  className="flex size-10 items-center justify-center border-2 border-white/25 text-white transition-colors hover:border-kesar hover:bg-kesar hover:text-indigo-900"
+                  className="flex size-10 items-center justify-center border-2 border-white/25 bg-white transition-colors hover:border-kesar"
                 >
-                  <MessageCircle aria-hidden className="size-4.5" />
+                  <SocialIcon name="whatsapp" className="size-6" />
                 </TrackedAnchor>
               </li>
             </ul>

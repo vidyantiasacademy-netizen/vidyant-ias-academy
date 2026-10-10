@@ -105,10 +105,10 @@ export function SocialSection() {
                     network: social.label.toLowerCase(),
                     location: "home-social",
                   }}
-                  className="flex items-center justify-between gap-2 border border-line bg-white px-4 py-3 text-small font-medium text-indigo transition-colors hover:border-indigo hover:bg-indigo hover:text-white"
+                  className="flex items-center justify-between gap-2 border border-line bg-white px-4 py-3 text-small font-medium text-indigo transition-colors hover:border-indigo"
                 >
                   <span className="flex items-center gap-2.5">
-                    <SocialIcon name={social.icon as SocialIconName} />
+                    <SocialIcon name={social.icon as SocialIconName} className="size-6" />
                     {social.label}
                   </span>
                   <ArrowUpRight aria-hidden className="size-4 shrink-0" />

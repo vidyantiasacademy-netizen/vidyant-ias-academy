@@ -1,5 +1,6 @@
 import { CalendarClock, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { CounsellingForm } from "@/components/forms/CounsellingForm";
 import { PageHero } from "@/components/layout/PageHero";
 import { Section } from "@/components/layout/Section";
@@ -91,7 +92,7 @@ export default function CounsellingPage() {
                   payload={{ location: "counselling-page" }}
                   className="inline-flex items-center gap-2.5 text-body font-semibold text-indigo hover:text-indigo-900 hover:underline underline-offset-4"
                 >
-                  <MessageCircle aria-hidden className="size-4.5 text-kesar-600" />
+                  <SocialIcon name="whatsapp" className="size-5" />
                   WhatsApp us
                 </TrackedAnchor>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Mail, MessageCircle, Phone } from "lucide-react";
+import { Clock, Mail, Phone } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
 import { SocialIcon, type SocialIconName } from "@/components/ui/SocialIcon";
@@ -52,7 +52,7 @@ export function ContactBar() {
                 aria-label={dict.common.whatsappChat}
                 className={linkClass}
               >
-                <MessageCircle aria-hidden className="size-4 shrink-0 text-indigo/70" />
+                <SocialIcon name="whatsapp" className="size-4.5 shrink-0" />
                 {dict.common.whatsappShort}
               </TrackedAnchor>
             </li>
@@ -83,9 +83,9 @@ export function ContactBar() {
                       location: "contact-bar",
                     }}
                     aria-label={format(dict.footer.social, { network: social.label })}
-                    className="flex size-10 items-center justify-center text-indigo/70 transition-colors hover:text-indigo"
+                    className="flex size-10 items-center justify-center transition-transform hover:scale-110"
                   >
-                    <SocialIcon name={social.icon as SocialIconName} className="size-4" />
+                    <SocialIcon name={social.icon as SocialIconName} />
                   </TrackedAnchor>
                 </li>
               ))}

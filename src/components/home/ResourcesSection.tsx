@@ -19,7 +19,7 @@ export function ResourcesSection({ resources }: { resources: Resource[] }) {
   const shown = premium.length > 0 ? [...premium, ...free].slice(0, 6) : resources;
 
   return (
-    <Section id="resources" containerSize="wide">
+    <Section tone="paper" id="resources" containerSize="wide">
       <SectionHeader
         eyebrow={premium.length > 0 ? "Study Material" : "Free Resources"}
         title={

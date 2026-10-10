@@ -104,25 +104,34 @@ export const ROUTES = {
 } as const;
 
 /**
- * Desktop primary navigation. `label` is the English text; `key` indexes
- * `dict.nav` in `src/i18n/dictionaries`, which is what the header renders.
+ * Primary navigation: the homepage's own sections. On the homepage a click
+ * scrolls to the section; anywhere else `/#id` lands on home at that section.
+ * `id` is the section's element id; `key` indexes `dict.nav` in
+ * `src/i18n/dictionaries`, which is what the header renders. Keep the list in
+ * page order — the active-section marker depends on it. Separate pages
+ * are reached from the homepage cards (`ExploreCards`), the footer and the
+ * mobile drawer.
  */
 export const PRIMARY_NAV = [
-  { key: "home", label: "Home", href: ROUTES.home },
-  { key: "about", label: "About", href: ROUTES.about },
-  { key: "courses", label: "Courses", href: ROUTES.courses },
-  { key: "faculty", label: "Faculty", href: ROUTES.faculty },
-  { key: "results", label: "Results", href: ROUTES.results },
-  { key: "resources", label: "Resources", href: ROUTES.resources },
-  { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
+  { key: "programs", label: "Programs", id: "programs", href: "/#programs" },
+  { key: "resources", label: "Resources", id: "resources", href: "/#resources" },
+  { key: "whatsNew", label: "What's New", id: "noticeboard", href: "/#noticeboard" },
+  { key: "ourSystem", label: "Our System", id: "learning-system", href: "/#learning-system" },
+  { key: "faq", label: "FAQ", id: "faq", href: "/#faq" },
+  { key: "contact", label: "Contact", id: "contact", href: "/#contact" },
 ] as const;
 
-/** Mobile drawer navigation — a superset of the desktop links. */
+/** Mobile drawer: page links, listed under the homepage sections. */
 export const MOBILE_NAV = [
-  ...PRIMARY_NAV,
+  { key: "about", label: "About", href: ROUTES.about },
+  { key: "courses", label: "Courses", href: ROUTES.courses },
   { key: "enrol", label: "Admissions & Batches", href: ROUTES.enrol },
-  { key: "quizzes", label: "Quizzes", href: ROUTES.quizzes },
+  { key: "faculty", label: "Faculty", href: ROUTES.faculty },
+  { key: "results", label: "Results", href: ROUTES.results },
   { key: "mockTest", label: "Free Mock Test", href: ROUTES.mockTest },
+  { key: "quizzes", label: "Quizzes", href: ROUTES.quizzes },
+  { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
+  { key: "resources", label: "Resources", href: ROUTES.resources },
   { key: "upscGuide", label: "UPSC Exam Guide", href: ROUTES.upscGuide },
   { key: "parents", label: "For Parents", href: ROUTES.parents },
   { key: "events", label: "Events", href: ROUTES.events },

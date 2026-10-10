@@ -2,12 +2,13 @@ import { HomeHero } from "@/components/hero/HomeHero";
 import { AppDownloadSection } from "@/components/home/AppDownloadSection";
 // import { BatchesSection } from "@/components/home/BatchesSection";
 import { ContactSection } from "@/components/home/ContactSection";
+import { ExploreCards } from "@/components/home/ExploreCards";
 // import { CurrentAffairsSection } from "@/components/home/CurrentAffairsSection";
 // import { EventsSection } from "@/components/home/EventsSection";
 // import { FacultySection } from "@/components/home/FacultySection";
 import { HomeFaq } from "@/components/home/HomeFaq";
 import { LearningSystem } from "@/components/home/LearningSystem";
-import { MentorshipSection } from "@/components/home/MentorshipSection";
+// import { MentorshipSection } from "@/components/home/MentorshipSection";
 import { NoticeboardSection } from "@/components/home/NoticeboardSection";
 import { OrientationSection } from "@/components/home/OrientationSection";
 // import { PerformanceTracking } from "@/components/home/PerformanceTracking";
@@ -52,22 +53,27 @@ export default async function HomePage() {
       */}
       <HomeHero />
       <TrustBar />
+      {/* The way off the homepage: one card per page. The header nav only
+          scrolls between the sections below. */}
+      <ExploreCards />
       {/* What we sell sits directly under the hero, priced and buyable. */}
       <ProgramsSection courses={courses} />
+      {/* Free material right after the paid programs: the low-commitment way in. */}
+      <ResourcesSection resources={resources} />
       <NoticeboardSection />
       {/* <BatchesSection /> */}
       {/* <WhyVidyantIas /> */}
       <LearningSystem />
-      <ResourcesSection resources={resources} />
-      <MentorshipSection />
+      {/* <MentorshipSection /> */}
       {/* <PerformanceTracking /> */}
       {/* <FacultySection /> */}
       {/* <ResultsSection /> */}
       {/* <TestimonialsSection /> */}
       {/* <CurrentAffairsSection /> */}
+      {/* App sits between the two indigo bands (system, orientation) so they never touch. */}
+      <AppDownloadSection />
       <OrientationSection />
       {/* <EventsSection /> */}
-      <AppDownloadSection />
       {/* <SocialSection /> */}
       <HomeFaq faqs={featuredFaqs} />
       <ContactSection />
