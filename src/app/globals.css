@@ -248,6 +248,15 @@
     /* Focus ring colour. Indigo reads at 13.7:1 on white; dark
        surfaces flip it to white with the `focus-invert` utility. */
     --focus-ring: var(--color-indigo);
+
+    /* Height of the sticky notification strip, so the sticky header can sit
+       right under it. Zero on days with no live notices, when the strip
+       renders nothing. */
+    --notice-strip-height: 0px;
+  }
+
+  :root:has([data-notice-strip]) {
+    --notice-strip-height: 2.25rem;
   }
 
   html {
@@ -349,9 +358,10 @@
      half its width lands exactly on the second copy and the loop has no seam.
      Duration is set per instance, from how much text there is to read. It
      pauses while a pointer or keyboard focus is on it, so a link can be read
-     and hit; reduced motion stops it (see the override at the end). */
+     and hit. It keeps running under reduced motion too (see the override at
+     the end) — the pause on hover/focus is the way to stop it. */
   .notice-ticker {
-    animation: notice-ticker linear infinite;
+    animation: notice-ticker var(--ticker-duration, 14s) linear infinite;
   }
 
   .notice-ticker:hover,
@@ -412,8 +422,10 @@
     transition-duration: 0.001ms !important;
   }
 
-  /* A still ticker: the first copy sits flush left and the row scrolls by hand. */
+  /* The ticker is exempt from the blanket flattening above: it only ever
+     reads as a ticker, and it still pauses under the pointer or focus. */
   .notice-ticker {
-    animation: none !important;
+    animation-duration: var(--ticker-duration, 14s) !important;
+    animation-iteration-count: infinite !important;
   }
 }

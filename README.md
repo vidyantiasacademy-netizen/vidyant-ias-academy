@@ -36,6 +36,8 @@ disables its feature instead of breaking the build.
 | `NEXT_PUBLIC_SANITY_*`, `SANITY_*`                       | CMS content and the publish webhook ([setup](./docs/sanity.md)) |
 | `RAZORPAY_*`                                             | Online fee payment — **secret**                                 |
 | `MUX_*`                                                  | Signed lecture playback — **secret**                            |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID`                          | Google Analytics 4 on the public site (`G-XXXXXXXXXX`)          |
+| `NEXT_PUBLIC_CLARITY_PROJECT_ID`                         | Microsoft Clarity heatmaps and recordings on the public site    |
 
 ## Pages
 

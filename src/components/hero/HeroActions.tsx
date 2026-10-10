@@ -1,4 +1,4 @@
-import { ArrowRight, MessageCircle, MonitorPlay } from "lucide-react";
+import { ArrowRight, ListChecks, MessageCircle, MonitorPlay } from "lucide-react";
 
 import { TrackedAnchor, TrackedButtonLink, TrackedLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
@@ -13,8 +13,8 @@ const quietLink =
  * The hero's actions, in three weights so the next step is never in doubt:
  * one kesar primary (the priced programme cards below, where a course can be
  * bought), one outlined secondary (a free counselling call — desktop only, as
- * phones have it in the sticky bottom bar), and two quiet
- * text links for the visitor who wants to look before they talk.
+ * phones have it in the sticky bottom bar), and quiet text links for the
+ * visitor who wants to try before they talk.
  */
 export function HeroActions() {
   return (
@@ -45,6 +45,17 @@ export function HeroActions() {
       </div>
 
       <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-1">
+        <li>
+          <TrackedLink
+            href={CTA.mockTest.href}
+            event={ANALYTICS_EVENTS.mockTestClick}
+            payload={{ ...PAYLOAD, action: "mock-test" }}
+            className={quietLink}
+          >
+            <ListChecks aria-hidden className="size-4.5 shrink-0" />
+            Take a free mock test
+          </TrackedLink>
+        </li>
         <li>
           <TrackedLink
             href={CTA.demo.href}

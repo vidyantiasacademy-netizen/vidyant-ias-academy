@@ -337,6 +337,16 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // ----------------------------------------------------------- mockAttempts
+
+    // Website visitors' free mock sittings. Visitors have no Firebase account,
+    // so nothing client-side could authorise them anyway: the server reads and
+    // writes this with the Admin SDK, checking the visitor's cookie token.
+    // Staff see the sittings through the admin screens, not the client SDK.
+    match /mockAttempts/{attemptId} {
+      allow read, write: if false;
+    }
+
     // --------------------------------------------------------------- payments
 
     // Entirely server-written, from the Razorpay webhook. Nothing — no role,

@@ -280,6 +280,44 @@
       ]
     },
     {
+      "//": "The CRM inbox's \"Mine\" view with a status tab selected.",
+      "collectionGroup": "enquiries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "assignedTo", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "//": "mockTestService rank — scored sittings of one paper above a score.",
+      "collectionGroup": "mockAttempts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "testId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "score", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "//": "mockTestService.sweepExpired — abandoned sittings past their deadline.",
+      "collectionGroup": "mockAttempts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "expiresAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "//": "mockTestService.listForStaff — a paper's visitor sittings, newest first.",
+      "collectionGroup": "mockAttempts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "testId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
       "//": "paymentService.listForStudent — fee history.",
       "collectionGroup": "payments",
       "queryScope": "COLLECTION",

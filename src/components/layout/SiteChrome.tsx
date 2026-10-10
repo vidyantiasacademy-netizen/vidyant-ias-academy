@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { Footer } from "@/components/footer/Footer";
+import { ExitIntentOffer } from "@/components/layout/ExitIntentOffer";
 import { FloatingActions } from "@/components/layout/FloatingActions";
 import { NotificationStrip } from "@/components/layout/NotificationStrip";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
@@ -34,6 +35,7 @@ export async function SiteChrome({ children }: { children: ReactNode }) {
       <Footer />
       <StickyMobileCta />
       <FloatingActions />
+      <ExitIntentOffer />
     </>
   );
 }

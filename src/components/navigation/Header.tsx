@@ -22,11 +22,11 @@ import { CTA, MOBILE_NAV, PRIMARY_NAV, ROUTES } from "@/lib/constants/site";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * `notice` is the notification strip. It and the contact bar sit above the
- * header and scroll away with the page — only the navigation row is sticky, so
- * the pinned bar never eats more than 64–72px of a phone screen. The strip is
- * passed in rather than imported because it is a server component that reads
- * the notice schedule.
+ * `notice` is the notification strip. It is sticky too, at the very top; the
+ * navigation row pins directly under it (`--notice-strip-height`), and the
+ * contact bar between them scrolls away with the page. The strip is passed in
+ * rather than imported because it is a server component that reads the notice
+ * schedule.
  */
 export function Header({ notice }: { notice?: ReactNode }) {
   const pathname = usePathnameWithoutLocale();
@@ -100,7 +100,7 @@ export function Header({ notice }: { notice?: ReactNode }) {
         // Swiss bar: solid white, a rule underneath. No blur, no shadow — once the
         // page scrolls under it the hairline firms to a 2px indigo rule.
         className={cn(
-          "sticky top-0 z-50 border-b-2 bg-white transition-colors duration-150",
+          "sticky top-(--notice-strip-height) z-50 border-b-2 bg-white transition-colors duration-150",
           scrolled ? "border-indigo" : "border-line",
         )}
       >

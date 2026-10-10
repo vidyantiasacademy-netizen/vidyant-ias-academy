@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { track, type AnalyticsEvent } from "@/lib/analytics";
 import { LeadSubmissionError, postLead, type LeadContext } from "@/lib/leads/client";
+import { LEAD_SUBMITTED_KEY, writeFlag } from "@/lib/leads/visitor-flags";
 import type { LeadFormType } from "@/lib/validation/schemas";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -22,6 +23,8 @@ export function useLeadForm(form: LeadFormType, successEvent: AnalyticsEvent) {
     try {
       await postLead(form, values, context);
       track(successEvent, { form, ...context });
+      // Stops conversion prompts asking someone who has already enquired.
+      writeFlag(LEAD_SUBMITTED_KEY, "1");
       setStatus("success");
       return true;
     } catch (error) {

@@ -12,6 +12,7 @@ import {
   VIOLATION_WEIGHTS,
   resolveExamSecurity,
 } from "@/lib/exam/policy";
+import { scoreMcqPaper } from "@/lib/exam/scoring";
 import { optionSeed, seededShuffle } from "@/lib/exam/shuffle";
 import type { ScoredPaper } from "@/lib/exam/analytics";
 import type { ExamPayload, ExamQuestion } from "@/lib/exam/types";
@@ -302,12 +303,15 @@ export async function listForStaff(limit = 200): Promise<Test[]> {
 export async function hasAttempts(testId: string): Promise<boolean> {
   await requireRole("FACULTY");
 
-  const snapshot = await collection(COLLECTIONS.testAttempts)
-    .where("testId", "==", testId)
-    .limit(1)
-    .get();
+  // A public mock is sat by website visitors too, in their own collection, and
+  // their scorecards depend on the paper just as much as a student's.
+  const [students, visitors] = await Promise.all(
+    [COLLECTIONS.testAttempts, COLLECTIONS.mockAttempts].map((name) =>
+      collection(name).where("testId", "==", testId).limit(1).get(),
+    ),
+  );
 
-  return !snapshot.empty;
+  return !students.empty || !visitors.empty;
 }
 
 /** 32 hex characters. Matches `sessionToken` in `lib/validation/entities.ts`. */
@@ -957,7 +961,6 @@ async function finalise(
 
   const answers = toEntities<AnswerDoc>(answerSnapshot.docs) as Answer[];
   const questions = toEntities<QuestionDoc>(questionSnapshot.docs) as Question[];
-  const questionById = new Map(questions.map((question) => [question.id, question]));
 
   const batch = collection(COLLECTIONS.answers).firestore.batch();
   const nowIso = new Date().toISOString();
@@ -981,60 +984,15 @@ async function finalise(
     return null;
   }
 
-  const bySubject = new Map<
-    string,
-    { score: number; totalMarks: number; correctCount: number; wrongCount: number }
-  >();
-
-  let score = 0;
-  let correctCount = 0;
-  let wrongCount = 0;
-  let negativeMarks = 0;
-
-  for (const question of questions) {
-    const bucket =
-      bySubject.get(question.subject) ??
-      { score: 0, totalMarks: 0, correctCount: 0, wrongCount: 0 };
-    bucket.totalMarks += question.marks;
-    bySubject.set(question.subject, bucket);
-  }
+  const scored = scoreMcqPaper(questions, answers, test.negativeMarksPerQuestion);
 
   for (const answer of answers) {
-    const question = questionById.get(answer.questionId);
-    if (!question) continue;
-
-    const selected = [...answer.selectedOptionIds].sort();
-    const correct = [...question.correctOptionIds].sort();
-
-    const attempted = selected.length > 0;
-    const isCorrect =
-      attempted &&
-      selected.length === correct.length &&
-      selected.every((id, index) => id === correct[index]);
-
-    let marksAwarded = 0;
-
-    if (isCorrect) {
-      marksAwarded = question.marks;
-      correctCount += 1;
-    } else if (attempted) {
-      marksAwarded = -test.negativeMarksPerQuestion;
-      negativeMarks += test.negativeMarksPerQuestion;
-      wrongCount += 1;
-    }
-
-    score += marksAwarded;
-
-    const bucket = bySubject.get(question.subject);
-    if (bucket) {
-      bucket.score += marksAwarded;
-      if (isCorrect) bucket.correctCount += 1;
-      else if (attempted) bucket.wrongCount += 1;
-    }
+    const mark = scored.marks.get(answer.questionId);
+    if (!mark) continue;
 
     batch.update(collection(COLLECTIONS.answers).doc(answer.id), {
-      isCorrect: attempted ? isCorrect : null,
-      marksAwarded,
+      isCorrect: mark.attempted ? mark.isCorrect : null,
+      marksAwarded: mark.marksAwarded,
       evaluatedBy: "system",
       ...auditOnUpdate("system"),
     });
@@ -1044,21 +1002,15 @@ async function finalise(
     attemptId: attempt.id,
     testId: attempt.testId,
     studentUid: attempt.studentUid,
-    score: Number(score.toFixed(2)),
+    score: scored.score,
     totalMarks: test.totalMarks,
-    correctCount,
-    wrongCount,
-    unattemptedCount: Math.max(questions.length - correctCount - wrongCount, 0),
-    negativeMarks: Number(negativeMarks.toFixed(2)),
+    correctCount: scored.correctCount,
+    wrongCount: scored.wrongCount,
+    unattemptedCount: scored.unattemptedCount,
+    negativeMarks: scored.negativeMarks,
     rank: null,
     percentile: null,
-    subjectBreakdown: [...bySubject.entries()].map(([subject, bucket]) => ({
-      subject,
-      score: Number(bucket.score.toFixed(2)),
-      totalMarks: bucket.totalMarks,
-      correctCount: bucket.correctCount,
-      wrongCount: bucket.wrongCount,
-    })),
+    subjectBreakdown: scored.subjectBreakdown,
     publishedAt: test.resultsVisibleFrom ?? nowIso,
   };
 

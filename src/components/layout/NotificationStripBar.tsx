@@ -52,13 +52,13 @@ function NoticeLine({ notice }: { notice: StripNotice }) {
  * continuous ticker, end to end, and start again — forever.
  *
  * Shape of the thing:
- *  - it sits above the header and scrolls away with the page, so only the
- *    navigation stays pinned. It cannot be dismissed.
+ *  - it is pinned to the top of the viewport, with the sticky navigation
+ *    pinned directly beneath it. It cannot be dismissed.
  *  - the ticker is the notice list rendered twice inside one track that slides
  *    by exactly half its width, so the loop has no seam and no gap. The second
  *    copy is `inert` and hidden from assistive tech — it is the same text.
  *  - it pauses under the pointer or keyboard focus, so a link can be read and
- *    hit; with reduced motion it stands still and the row scrolls by hand.
+ *    hit. It runs under reduced motion too, and never shows a scroll bar.
  *
  * `notices` is computed on the server (see `stripNotices`) so the announcement
  * window is evaluated once, against one clock.
@@ -71,14 +71,21 @@ export function NotificationStripBar({ notices }: { notices: StripNotice[] }) {
   const duration = Math.max(MIN_DURATION_SECONDS, characters * SECONDS_PER_CHARACTER);
 
   return (
-    <div role="region" aria-label="Site notices" className="bg-indigo-900 text-white">
+    <div
+      role="region"
+      aria-label="Site notices"
+      data-notice-strip
+      // Fixed height: the header pins itself right under this, at
+      // `--notice-strip-height` (globals.css). Change both together.
+      className="sticky top-0 z-50 h-(--notice-strip-height) bg-indigo-900 text-white"
+    >
       {/* Full-bleed rather than inside a Container: the ticker should run off
           both edges of the screen, not start and stop at the page gutter. */}
-      <div className="flex min-h-9 items-center gap-2 pr-2 pl-4 sm:pr-4 sm:pl-6 lg:pl-8">
-        <div className="flex-1 overflow-hidden motion-reduce:overflow-x-auto">
+      <div className="flex h-full items-center gap-2 pr-2 pl-4 sm:pr-4 sm:pl-6 lg:pl-8">
+        <div className="flex-1 overflow-hidden">
           <div
             className="notice-ticker flex w-max items-center"
-            style={{ animationDuration: `${duration}s` }}
+            style={{ "--ticker-duration": `${duration}s` } as React.CSSProperties}
           >
             {[0, 1].map((copy) => (
               <div

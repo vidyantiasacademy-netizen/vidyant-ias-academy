@@ -100,6 +100,27 @@ export async function getSignedUrl(
 ): Promise<string> {
   await assertCanRead(ref);
 
+  return sign(ref, ttlMinutes);
+}
+
+/**
+ * A question image for a website visitor sitting a public mock test.
+ *
+ * Visitors have no session for `assertCanRead` to check, so this signs only
+ * question images and nothing else. The caller — `mockTestService` — must
+ * already have verified the visitor's attempt token and that the question is
+ * on their paper.
+ */
+export async function getQuestionImageUrlForVisitor(
+  ref: string,
+  ttlMinutes = DEFAULT_TTL_MINUTES,
+): Promise<string> {
+  if (!ref.startsWith("questions/")) throw new AppError(ERROR_CODES.FORBIDDEN);
+
+  return sign(ref, ttlMinutes);
+}
+
+function sign(ref: string, ttlMinutes: number): string {
   const { publicId, format } = fromMediaRef(ref);
 
   if (!format) {
@@ -371,6 +392,7 @@ function toUploadError(error: unknown): AppError {
 
 export const storageService = {
   getSignedUrl,
+  getQuestionImageUrlForVisitor,
   getLessonDocumentUrl,
   remove,
   uploadOwnAvatar,

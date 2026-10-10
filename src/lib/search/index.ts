@@ -1,4 +1,5 @@
 import { QUIZ_STAGE_LABELS, latestQuizzes } from "@/data/quizzes";
+import { UPSC_GUIDES } from "@/data/upsc-guides";
 import { ROUTES } from "@/lib/constants/site";
 import { COURSE_CATEGORY_LABELS } from "@/lib/courses/labels";
 import type { BlogPost, Course, CurrentAffair, Faculty, Faq, Resource } from "@/types";
@@ -12,7 +13,8 @@ export interface SearchDoc {
     | "FAQ"
     | "Article"
     | "Current Affairs"
-    | "Quiz";
+    | "Quiz"
+    | "Guide";
   title: string;
   description: string;
   href: string;
@@ -89,6 +91,17 @@ export function buildSearchIndex({ courses, faculty, resources, faqs, posts, aff
         description: quiz.description,
         href: quiz.href ?? ROUTES.quizzes,
         extra: [QUIZ_STAGE_LABELS[quiz.stage], quiz.subject],
+      }),
+    ),
+    // Static, so read here rather than passed in like the CMS sources.
+    ...UPSC_GUIDES.map((guide) =>
+      toDoc({
+        id: `guide-${guide.slug}`,
+        type: "Guide",
+        title: guide.title,
+        description: guide.description,
+        href: `${ROUTES.upscGuide}/${guide.slug}`,
+        extra: [...guide.keywords, ...guide.sections.map((section) => section.heading)],
       }),
     ),
     ...faqs.map((faq) =>

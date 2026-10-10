@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 
 import { NextResponse } from "next/server";
 
+import { mockTestService } from "@/services/mock-tests/mock-test.service";
 import { testService } from "@/services/tests/test.service";
 
 /**
@@ -54,7 +55,19 @@ export async function POST(request: Request) {
 
   try {
     const { finalised } = await testService.sweepExpiredAttempts();
-    return NextResponse.json({ ok: true, finalised });
+
+    // Website visitors' free mock sittings, swept on the same clock. Isolated:
+    // a failure here must not be what stops enrolled students' papers being
+    // finalised, so it is logged and reported rather than thrown.
+    const mockFinalised = await mockTestService
+      .sweepExpired()
+      .then((result) => result.finalised)
+      .catch((error: unknown) => {
+        console.error("[mock-sweep] failed", error);
+        return null;
+      });
+
+    return NextResponse.json({ ok: true, finalised, mockFinalised });
   } catch (error) {
     console.error("[exam-sweep] failed", error);
     return NextResponse.json({ ok: false }, { status: 500 });

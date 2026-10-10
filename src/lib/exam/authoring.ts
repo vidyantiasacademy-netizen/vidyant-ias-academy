@@ -20,6 +20,8 @@ export const LOCKED_TEST_FIELDS = [
   "negativeMarksPerQuestion",
   "opensAt",
   "security",
+  // Visitors' scorecards and the leads behind them hang off a public paper.
+  "audience",
 ] as const satisfies readonly (keyof TestDoc)[];
 
 /**

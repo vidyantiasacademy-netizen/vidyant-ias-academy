@@ -35,9 +35,9 @@ export function Section({
 }: SectionProps) {
   return (
     <section
-      // Sections are anchor targets; keep them clear of the sticky header.
+      // Sections are anchor targets; keep them clear of the sticky strip + header.
       className={cn(
-        "scroll-mt-16 lg:scroll-mt-18",
+        "scroll-mt-[calc(4rem+var(--notice-strip-height))] lg:scroll-mt-[calc(4.5rem+var(--notice-strip-height))]",
         tones[tone],
         spacings[spacing],
         className,

@@ -73,8 +73,13 @@ export const updateTestAction = action(
     const reason = await lockReason(current);
 
     if (reason) {
+      // A paper written before `audience` existed has no field, which means
+      // "enrolled" — not a change when the form sends that value back.
+      const before = { ...current, audience: current.audience ?? "enrolled" };
+      const after = { ...fields, audience: fields.audience ?? "enrolled" };
+
       const changed = LOCKED_TEST_FIELDS.some(
-        (field) => JSON.stringify(current[field] ?? null) !== JSON.stringify(fields[field]),
+        (field) => JSON.stringify(before[field] ?? null) !== JSON.stringify(after[field] ?? null),
       );
 
       if (changed) {

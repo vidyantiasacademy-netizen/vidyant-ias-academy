@@ -26,6 +26,11 @@ export const ANALYTICS_EVENTS = {
   checkoutStart: "checkout_start",
   checkoutSuccess: "checkout_success",
   resourceBuyClick: "resource_buy_click",
+  exitOfferShown: "exit_offer_shown",
+  mockTestClick: "mock_test_click",
+  mockTestRegister: "mock_test_register",
+  mockTestStart: "mock_test_start",
+  mockTestSubmit: "mock_test_submit",
 } as const;
 
 export type AnalyticsEvent =

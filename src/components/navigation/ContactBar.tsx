@@ -3,19 +3,20 @@
 import { Clock, Mail, MessageCircle, Phone } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
+import { SocialIcon, type SocialIconName } from "@/components/ui/SocialIcon";
 import { TrackedAnchor } from "@/components/ui/TrackedLink";
 import { format } from "@/i18n/dictionaries";
 import { useI18n } from "@/i18n/I18nProvider";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
-import { CONTACT, whatsappUrl } from "@/lib/constants/site";
+import { CONTACT, SOCIAL_LINKS, whatsappUrl } from "@/lib/constants/site";
 
 const linkClass =
   "flex min-h-10 items-center gap-2 whitespace-nowrap font-semibold text-indigo underline-offset-4 transition-colors hover:underline hover:decoration-kesar hover:decoration-2";
 
 /**
  * Contact strip at the top of the header. Phone and WhatsApp show at every
- * width — the audience calls before it fills a form — email joins from `sm`
- * and opening hours from `lg`, as the row gains room.
+ * width — the audience calls before it fills a form — email and the social
+ * links join from `sm` and opening hours from `lg`, as the row gains room.
  */
 export function ContactBar() {
   const { dict } = useI18n();
@@ -63,10 +64,33 @@ export function ContactBar() {
             </li>
           </ul>
 
-          <p className="hidden items-center gap-2 whitespace-nowrap text-ink-secondary lg:flex">
-            <Clock aria-hidden className="size-4 shrink-0 text-indigo/70" />
-            {hours.days}, {hours.hours}
-          </p>
+          <div className="hidden shrink-0 items-center gap-4 sm:flex lg:gap-6">
+            <p className="hidden items-center gap-2 whitespace-nowrap text-ink-secondary lg:flex">
+              <Clock aria-hidden className="size-4 shrink-0 text-indigo/70" />
+              {hours.days}, {hours.hours}
+            </p>
+
+            <ul className="flex items-center lg:border-l lg:border-line lg:pl-4">
+              {SOCIAL_LINKS.map((social) => (
+                <li key={social.label}>
+                  <TrackedAnchor
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    event={ANALYTICS_EVENTS.socialClick}
+                    payload={{
+                      network: social.label.toLowerCase(),
+                      location: "contact-bar",
+                    }}
+                    aria-label={format(dict.footer.social, { network: social.label })}
+                    className="flex size-10 items-center justify-center text-indigo/70 transition-colors hover:text-indigo"
+                  >
+                    <SocialIcon name={social.icon as SocialIconName} className="size-4" />
+                  </TrackedAnchor>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </Container>
     </div>

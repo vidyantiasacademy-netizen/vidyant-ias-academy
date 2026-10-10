@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 const OVERVIEW: PortalNavItem = { href: "/admin", label: "Overview" };
+const LEADS: PortalNavItem = { href: "/admin/leads", label: "Leads", exact: false };
 const COURSES: PortalNavItem = { href: "/admin/courses", label: "Courses", exact: false };
 const TESTS: PortalNavItem = { href: "/admin/tests", label: "Tests", exact: false };
 const USERS: PortalNavItem = { href: "/admin/users", label: "Users", exact: false };
@@ -38,10 +39,10 @@ export default async function AdminLayout({ children }: LayoutProps<"/[lang]">) 
 
   // Tabs a role cannot use are left out rather than shown and refused.
   const nav = isSuperAdmin(session.role)
-    ? [OVERVIEW, COURSES, TESTS, USERS, WEBSITE]
+    ? [OVERVIEW, LEADS, COURSES, TESTS, USERS, WEBSITE]
     : isAtLeast(session.role, "FACULTY")
-      ? [OVERVIEW, COURSES, TESTS, WEBSITE]
-      : [OVERVIEW, COURSES, WEBSITE];
+      ? [OVERVIEW, LEADS, COURSES, TESTS, WEBSITE]
+      : [OVERVIEW, LEADS, COURSES, WEBSITE];
 
   return (
     <AuthProvider>

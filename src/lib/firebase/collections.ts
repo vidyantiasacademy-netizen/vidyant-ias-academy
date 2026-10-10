@@ -21,6 +21,7 @@ export const COLLECTIONS = {
   answers: "answers",
   results: "results",
   proctorEvents: "proctorEvents",
+  mockAttempts: "mockAttempts",
   doubts: "doubts",
   mentorship: "mentorship",
   notifications: "notifications",

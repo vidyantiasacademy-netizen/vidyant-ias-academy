@@ -79,6 +79,7 @@ export const CALLBACK_TOPICS = [
   "Fees and instalments",
   "Batch dates and timings",
   "Optional subject guidance",
+  "A parent's questions",
   "Something else",
 ] as const;
 
@@ -175,6 +176,15 @@ export const enrolmentSchema = z.object({
   honeypot: honeypotField,
 });
 
+/** Free mock test registration — the details a counsellor calls back on. */
+export const mockTestRegistrationSchema = z.object({
+  name: nameField,
+  phone: phoneField,
+  email: emailField.optional().or(z.literal("")),
+  targetAttempt: optionalText(20),
+  honeypot: honeypotField,
+});
+
 export const eventRegistrationSchema = z.object({
   name: nameField,
   phone: phoneField,
@@ -197,6 +207,7 @@ export type BrochureInput = z.input<typeof brochureSchema>;
 export type BrochureValues = z.output<typeof brochureSchema>;
 export type EnrolmentInput = z.input<typeof enrolmentSchema>;
 export type EnrolmentValues = z.output<typeof enrolmentSchema>;
+export type MockTestRegistrationInput = z.input<typeof mockTestRegistrationSchema>;
 
 export const LEAD_FORMS = {
   demo: "demo",
@@ -207,6 +218,8 @@ export const LEAD_FORMS = {
   callback: "callback",
   brochure: "brochure",
   enrolment: "enrolment",
+  /** Registration for the free public mock test. Created by its Server Action, never by `/api/leads`. */
+  mockTest: "mock-test",
 } as const;
 
 export type LeadFormType = (typeof LEAD_FORMS)[keyof typeof LEAD_FORMS];
@@ -252,6 +265,8 @@ export function schemaForForm(form: LeadFormType) {
       return brochureSchema;
     case LEAD_FORMS.enrolment:
       return enrolmentSchema;
+    case LEAD_FORMS.mockTest:
+      return mockTestRegistrationSchema;
     case LEAD_FORMS.resource:
       return z.object({
         name: nameField,
