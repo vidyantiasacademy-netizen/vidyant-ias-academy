@@ -1,5 +1,6 @@
-import { ArrowRight, ListChecks, MessageCircle, MonitorPlay } from "lucide-react";
+import { ArrowRight, ListChecks, MonitorPlay } from "lucide-react";
 
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { TrackedAnchor, TrackedButtonLink, TrackedLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CTA, whatsappUrl } from "@/lib/constants/site";
@@ -77,7 +78,7 @@ export function HeroActions() {
             payload={{ ...PAYLOAD, action: "whatsapp" }}
             className={quietLink}
           >
-            <MessageCircle aria-hidden className="size-4.5 shrink-0" />
+            <SocialIcon name="whatsapp" className="size-5 shrink-0" />
             Ask us on WhatsApp
           </TrackedAnchor>
         </li>

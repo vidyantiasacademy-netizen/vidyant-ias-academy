@@ -220,6 +220,8 @@ export const LEAD_FORMS = {
   enrolment: "enrolment",
   /** Registration for the free public mock test. Created by its Server Action, never by `/api/leads`. */
   mockTest: "mock-test",
+  /** A chat with the WhatsApp bot. Created by its webhook, never by `/api/leads`. */
+  whatsapp: "whatsapp",
 } as const;
 
 export type LeadFormType = (typeof LEAD_FORMS)[keyof typeof LEAD_FORMS];

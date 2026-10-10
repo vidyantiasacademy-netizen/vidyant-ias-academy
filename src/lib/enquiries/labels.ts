@@ -38,6 +38,7 @@ export const ENQUIRY_FORM_LABELS: Record<string, string> = {
   brochure: "Brochure",
   enrolment: "Enrolment",
   "mock-test": "Free mock test",
+  whatsapp: "WhatsApp chat",
 };
 
 export function formLabel(form: string): string {
@@ -59,6 +60,7 @@ const OPENERS: Record<string, string> = {
   brochure: "here is the brochure you requested",
   enrolment: "thank you for your interest in enrolling",
   "mock-test": "thank you for taking our free UPSC mock test",
+  whatsapp: "thank you for messaging us on WhatsApp",
 };
 
 export function whatsappOpener(name: string, form: string, counsellor?: string): string {

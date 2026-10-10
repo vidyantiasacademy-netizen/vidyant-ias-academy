@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Mail, MessageCircle, Phone } from "lucide-react";
 
 import { LeadWorkbench } from "@/components/admin/LeadWorkbench";
+import { WhatsAppBotCard } from "@/components/admin/WhatsAppBotCard";
 import { Badge } from "@/components/ui/Badge";
 import { buttonStyles } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -17,6 +18,7 @@ import {
 import { formatIst } from "@/lib/exam/ist";
 import { enquiryService } from "@/services/enquiries/enquiry.service";
 import { userService } from "@/services/users/user.service";
+import { whatsappSessionService } from "@/services/whatsapp/session.service";
 
 import { orNotFound, requireRolePage } from "../../page-guards";
 
@@ -45,17 +47,21 @@ export default async function LeadPage({ params }: PageProps<"/[lang]/admin/lead
 
   const enquiry = await orNotFound(enquiryService.getById(leadId));
   const canAssign = isAtLeast(session.role, "ADMIN");
+  // Set by the WhatsApp bot on the enquiries it creates.
+  const waId = typeof enquiry.answers.whatsappId === "string" ? enquiry.answers.whatsappId : null;
 
-  const [names, profile, staff] = await Promise.all([
+  const [names, profile, staff, bot] = await Promise.all([
     enquiryService.getStaffNames([
       ...enquiry.activity.map((entry) => entry.by),
       ...(enquiry.assignedTo ? [enquiry.assignedTo] : []),
     ]),
     getCurrentUserProfile(),
     canAssign ? userService.listStaff() : Promise.resolve(null),
+    waId ? whatsappSessionService.getStatus(waId) : Promise.resolve(null),
   ]);
 
   const answers = Object.entries(enquiry.answers)
+    .filter(([key]) => key !== "whatsappId")
     .map(([key, value]) => [humanise(key), answerText(value)] as const)
     .filter((entry): entry is readonly [string, string] => entry[1] !== null);
 
@@ -66,6 +72,9 @@ export default async function LeadPage({ params }: PageProps<"/[lang]/admin/lead
   );
 
   const history = [...enquiry.activity].sort((a, b) => b.at.localeCompare(a.at));
+
+  // Read once per request, like the leads list.
+  const now = new Date().toISOString();
 
   return (
     <>
@@ -160,20 +169,30 @@ export default async function LeadPage({ params }: PageProps<"/[lang]/admin/lead
           </Card>
         </div>
 
-        <LeadWorkbench
-          // Remount after every save, so the inputs show what the server now holds.
-          key={enquiry.updatedAt}
-          enquiryId={enquiry.id}
-          status={enquiry.status}
-          followUpAt={enquiry.followUpAt}
-          assignedTo={enquiry.assignedTo}
-          currentUid={session.uid}
-          staff={
-            staff
-              ?.filter((person) => person.isActive && isAtLeast(person.role, "COUNSELLOR"))
-              .map((person) => ({ uid: person.uid, name: person.displayName })) ?? null
-          }
-        />
+        <div className="space-y-5">
+          {waId && bot ? (
+            <WhatsAppBotCard
+              enquiryId={enquiry.id}
+              waId={waId}
+              pausedUntil={bot.pausedUntil && bot.pausedUntil > now ? bot.pausedUntil : null}
+              lastInboundAt={bot.lastInboundAt}
+            />
+          ) : null}
+          <LeadWorkbench
+            // Remount after every save, so the inputs show what the server now holds.
+            key={enquiry.updatedAt}
+            enquiryId={enquiry.id}
+            status={enquiry.status}
+            followUpAt={enquiry.followUpAt}
+            assignedTo={enquiry.assignedTo}
+            currentUid={session.uid}
+            staff={
+              staff
+                ?.filter((person) => person.isActive && isAtLeast(person.role, "COUNSELLOR"))
+                .map((person) => ({ uid: person.uid, name: person.displayName })) ?? null
+            }
+          />
+        </div>
       </div>
     </>
   );

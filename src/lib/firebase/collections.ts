@@ -28,6 +28,8 @@ export const COLLECTIONS = {
   enquiries: "enquiries",
   payments: "payments",
   activity: "activity",
+  /** WhatsApp lead bot conversations, keyed by WhatsApp number. Server-only. */
+  whatsappSessions: "whatsappSessions",
 } as const;
 
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];

@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, Search, X } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 
 import Link from "@/i18n/Link";
 import { usePathnameWithoutLocale } from "@/i18n/usePathnameWithoutLocale";
@@ -83,12 +83,31 @@ export function Header({ notice }: { notice?: ReactNode }) {
     };
   }, [menuOpen]);
 
+  const isHome = pathname === ROUTES.home;
+  const activeSection = useActiveSection(isHome);
+
   function closeMenu() {
     setMenuOpen(false);
   }
 
   function isActive(href: string) {
     return pathname === href || pathname.startsWith(`${href}/`);
+  }
+
+  // Already on the homepage: scroll to the section ourselves instead of a
+  // client navigation, and keep the hash in the address bar so it can be
+  // shared. `scrollIntoView` follows the CSS `scroll-behavior` (smooth, or
+  // instant under reduced motion) and each section's `scroll-margin-top`.
+  // Elsewhere the link navigates to `/#id` and the router scrolls on arrival.
+  function onSectionClick(event: MouseEvent<HTMLAnchorElement>, id: string) {
+    closeMenu();
+    if (!isHome) return;
+    const target = document.getElementById(id);
+    if (!target) return;
+    event.preventDefault();
+    window.history.replaceState(null, "", `#${id}`);
+    // Wait a frame so a closing drawer has released the body scroll lock.
+    requestAnimationFrame(() => target.scrollIntoView());
   }
 
   return (
@@ -114,30 +133,32 @@ export function Header({ notice }: { notice?: ReactNode }) {
               {/* Seven links plus the actions need ~1070px even icon-only, so
                   the full bar starts at xl; below it the drawer takes over. */}
               <ul className="flex items-center gap-6 2xl:gap-7">
-                {PRIMARY_NAV.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      aria-current={isActive(item.href) ? "page" : undefined}
-                      className={cn(
-                        "relative whitespace-nowrap text-small font-bold tracking-[-0.005em] transition-colors",
-                        isActive(item.href)
-                          ? "text-indigo"
-                          : "text-ink hover:text-indigo",
-                      )}
-                    >
-                      {dict.nav[item.key]}
-                      {/* Active: a solid 4px indigo block under the label. */}
-                      <span
-                        aria-hidden
+                {PRIMARY_NAV.map((item) => {
+                  const active = activeSection === item.id;
+                  return (
+                    <li key={item.id}>
+                      <Link
+                        href={item.href}
+                        onClick={(event) => onSectionClick(event, item.id)}
+                        aria-current={active ? "location" : undefined}
                         className={cn(
-                          "absolute -bottom-2 left-0 h-1 w-full bg-indigo transition-opacity duration-150",
-                          isActive(item.href) ? "opacity-100" : "opacity-0",
+                          "relative whitespace-nowrap text-small font-bold tracking-[-0.005em] transition-colors",
+                          active ? "text-indigo" : "text-ink hover:text-indigo",
                         )}
-                      />
-                    </Link>
-                  </li>
-                ))}
+                      >
+                        {dict.nav[item.key]}
+                        {/* Active: a solid 4px indigo block under the label. */}
+                        <span
+                          aria-hidden
+                          className={cn(
+                            "absolute -bottom-2 left-0 h-1 w-full bg-indigo transition-opacity duration-150",
+                            active ? "opacity-100" : "opacity-0",
+                          )}
+                        />
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
 
@@ -208,7 +229,36 @@ export function Header({ notice }: { notice?: ReactNode }) {
           >
             <Container className="py-6">
               <nav aria-label={dict.nav.mobile}>
-                <ul className="divide-y divide-line border-b border-line">
+                <h2 className="text-eyebrow font-bold uppercase tracking-[0.12em] text-ink-secondary">
+                  {dict.nav.onThisPage}
+                </h2>
+                <ul className="mt-2 divide-y divide-line border-b border-line">
+                  {PRIMARY_NAV.map((item) => {
+                    const active = activeSection === item.id;
+                    return (
+                      <li key={item.id}>
+                        <Link
+                          href={item.href}
+                          onClick={(event) => onSectionClick(event, item.id)}
+                          aria-current={active ? "location" : undefined}
+                          className={cn(
+                            "flex items-center justify-between border-l-4 py-3.5 pl-3 text-body font-bold",
+                            active
+                              ? "border-indigo text-indigo"
+                              : "border-transparent text-ink hover:text-indigo",
+                          )}
+                        >
+                          {dict.nav[item.key]}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <h2 className="mt-7 text-eyebrow font-bold uppercase tracking-[0.12em] text-ink-secondary">
+                  {dict.nav.explorePages}
+                </h2>
+                <ul className="mt-2 divide-y divide-line border-b border-line">
                   {MOBILE_NAV.map((item) => (
                     <li key={item.href}>
                       <Link
@@ -288,4 +338,43 @@ export function Header({ notice }: { notice?: ReactNode }) {
       </header>
     </>
   );
+}
+
+/**
+ * Which homepage section is being read, for the nav's active marker: the last
+ * nav section whose top has passed a line a third of the way down the
+ * viewport. Above the first one (the hero) nothing is active; sections not in
+ * the nav (orientation, app) keep the one before them lit.
+ */
+function useActiveSection(enabled: boolean) {
+  const [active, setActive] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let frame = 0;
+    function update() {
+      frame = 0;
+      const line = window.innerHeight / 3;
+      let current: string | null = null;
+      for (const item of PRIMARY_NAV) {
+        const section = document.getElementById(item.id);
+        if (section && section.getBoundingClientRect().top <= line) current = item.id;
+      }
+      setActive(current);
+    }
+    function onScroll() {
+      if (!frame) frame = requestAnimationFrame(update);
+    }
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [enabled]);
+
+  // Off the homepage a stale id from the last visit must not light a link.
+  return enabled ? active : null;
 }

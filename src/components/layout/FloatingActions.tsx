@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowUp, MessageCircle, Phone } from "lucide-react";
+import { ArrowUp, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { usePathnameWithoutLocale } from "@/i18n/usePathnameWithoutLocale";
 import { TrackedAnchor } from "@/components/ui/TrackedLink";
 import { format } from "@/i18n/dictionaries";
@@ -100,9 +101,9 @@ function ContactActions() {
         payload={{ location: "floating" }}
         aria-label={dict.common.whatsappChat}
         title={dict.common.whatsappChat}
-        className={cn(cell, "bg-indigo text-white hover:bg-indigo-900")}
+        className={cn(cell, "border-b border-indigo hover:bg-paper")}
       >
-        <MessageCircle aria-hidden className="size-5" />
+        <SocialIcon name="whatsapp" className="size-6" />
       </TrackedAnchor>
 
       <TrackedAnchor

@@ -32,6 +32,8 @@ function resolveSinks(): LeadSink[] {
 }
 
 interface CreateLeadInput {
+  /** Supplied when the caller must know the id up front (the WhatsApp bot). */
+  id?: string;
   form: LeadFormType;
   data: Record<string, unknown>;
   context: {
@@ -44,7 +46,7 @@ interface CreateLeadInput {
   };
 }
 
-export function buildLead({ form, data, context }: CreateLeadInput): Lead {
+export function buildLead({ id, form, data, context }: CreateLeadInput): Lead {
   const { name, phone, email, ...rest } = data as {
     name: string;
     phone: string;
@@ -57,7 +59,7 @@ export function buildLead({ form, data, context }: CreateLeadInput): Lead {
   delete answers.honeypot;
 
   return {
-    id: randomUUID(),
+    id: id ?? randomUUID(),
     form,
     name,
     phone,

@@ -337,6 +337,15 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // ------------------------------------------------------- whatsappSessions
+
+    // The WhatsApp bot's conversation state. Written by the webhook with the
+    // Admin SDK; counsellors pause and resume the bot through the admin
+    // screens. Nothing client-side needs it.
+    match /whatsappSessions/{waId} {
+      allow read, write: if false;
+    }
+
     // ----------------------------------------------------------- mockAttempts
 
     // Website visitors' free mock sittings. Visitors have no Firebase account,

@@ -227,6 +227,38 @@ export async function recordMockResult(
 }
 
 /**
+ * Brings a WhatsApp bot enquiry up to date with the chat: the answers so far,
+ * the name once the person confirms it, and a history line per menu choice.
+ *
+ * System write, no session: the WhatsApp webhook has verified Meta's
+ * signature before this runs. Answers are written as a full snapshot each
+ * time, so a late or repeated call converges on the chat's latest state.
+ */
+export async function syncFromWhatsApp(
+  enquiryId: string,
+  update: { name?: string; answers: Record<string, string>; note?: string },
+): Promise<void> {
+  await collection(COLLECTIONS.enquiries)
+    .doc(enquiryId)
+    .update({
+      ...(update.name ? { name: update.name } : {}),
+      ...Object.fromEntries(
+        Object.entries(update.answers).map(([key, value]) => [`answers.${key}`, value]),
+      ),
+      ...(update.note
+        ? {
+            activity: FieldValue.arrayUnion({
+              at: new Date().toISOString(),
+              by: "system",
+              note: update.note,
+            }),
+          }
+        : {}),
+      ...auditOnUpdate("system"),
+    });
+}
+
+/**
  * Uid → display name for the people who own or wrote on an enquiry.
  *
  * Only staff names come back: a counsellor has no business resolving an
@@ -259,5 +291,6 @@ export const enquiryService = {
   assign,
   addNote,
   recordMockResult,
+  syncFromWhatsApp,
   getStaffNames,
 };

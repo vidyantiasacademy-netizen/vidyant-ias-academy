@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer/Footer";
 import { ExitIntentOffer } from "@/components/layout/ExitIntentOffer";
 import { FloatingActions } from "@/components/layout/FloatingActions";
 import { NotificationStrip } from "@/components/layout/NotificationStrip";
+import { SocialRail } from "@/components/layout/SocialRail";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
 import { Header } from "@/components/navigation/Header";
 import { getDictionary } from "@/i18n/server";
@@ -34,6 +35,7 @@ export async function SiteChrome({ children }: { children: ReactNode }) {
       </main>
       <Footer />
       <StickyMobileCta />
+      <SocialRail />
       <FloatingActions />
       <ExitIntentOffer />
     </>

@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
-import { Clock, Mail, MapPin, MessageCircle, Phone, type LucideIcon } from "lucide-react";
+import type { ComponentType, ReactNode } from "react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { CallbackForm } from "@/components/forms/CallbackForm";
 import { Section } from "@/components/layout/Section";
 import { ButtonLink } from "@/components/ui/Button";
@@ -53,7 +54,7 @@ export function ContactSection() {
               </TrackedAnchor>
             </ContactRow>
 
-            <ContactRow icon={MessageCircle} label="WhatsApp">
+            <ContactRow icon={WhatsAppGlyph} label="WhatsApp">
               <TrackedAnchor
                 href={whatsappUrl()}
                 target="_blank"
@@ -98,12 +99,17 @@ export function ContactSection() {
   );
 }
 
+/** WhatsApp's brand mark, shaped like a lucide icon so `ContactRow` can take it. */
+function WhatsAppGlyph({ className }: { className?: string }) {
+  return <SocialIcon name="whatsapp" className={className} />;
+}
+
 function ContactRow({
   icon: Icon,
   label,
   children,
 }: {
-  icon: LucideIcon;
+  icon: ComponentType<{ className?: string; strokeWidth?: number; "aria-hidden"?: boolean }>;
   label: string;
   children: ReactNode;
 }) {

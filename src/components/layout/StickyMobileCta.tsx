@@ -1,7 +1,8 @@
 "use client";
 
-import { MessageCircle, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { usePathnameWithoutLocale } from "@/i18n/usePathnameWithoutLocale";
 import { TrackedAnchor, TrackedButtonLink } from "@/components/ui/TrackedLink";
 import { format } from "@/i18n/dictionaries";
@@ -37,9 +38,9 @@ export function StickyMobileCta() {
           event={ANALYTICS_EVENTS.whatsappClick}
           payload={{ location: "sticky-mobile" }}
           aria-label={dict.common.whatsappChat}
-          className="flex size-12 shrink-0 items-center justify-center border border-line-strong text-indigo transition-colors hover:border-indigo hover:bg-indigo hover:text-white"
+          className="flex size-12 shrink-0 items-center justify-center border border-line-strong transition-colors hover:border-indigo"
         >
-          <MessageCircle aria-hidden className="size-5" />
+          <SocialIcon name="whatsapp" className="size-6" />
         </TrackedAnchor>
         <TrackedAnchor
           href={`tel:${CONTACT.phoneHref}`}
