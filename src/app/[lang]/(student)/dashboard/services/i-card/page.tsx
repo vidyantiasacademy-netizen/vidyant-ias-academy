@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { PhotoUploadButton } from "@/components/portal/PhotoUploadButton";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { NibMark } from "@/components/ui/NibMark";
+import { SopanMark } from "@/components/ui/SopanMark";
 import { getCurrentStudent, getCurrentUserProfile } from "@/lib/auth/server";
 import { BRAND } from "@/lib/constants/site";
 import { courseService } from "@/services/courses/course.service";
@@ -70,11 +70,11 @@ export default async function ICardPage() {
       ) : (
         <div className="mt-8 max-w-lg">
           <div className="overflow-hidden border border-indigo-900/20 bg-indigo text-white">
-            {/* Masthead. The nib's breather hole is kesar on its own; the only
+            {/* Masthead. The mark's top step is kesar on its own; the only
                 other saffron on the card is the roll number. */}
             <div className="flex items-center justify-between gap-4 px-6 pt-6">
               <span className="flex items-center gap-2.5">
-                <NibMark className="size-5 text-white" />
+                <SopanMark className="h-5 w-auto text-white" />
                 <span className="text-body font-semibold">{BRAND.name}</span>
               </span>
 

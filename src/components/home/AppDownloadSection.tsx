@@ -2,7 +2,7 @@ import { Bell, BookOpen, ChartLine, Check, House, UserRound } from "lucide-react
 
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { NibMark } from "@/components/ui/NibMark";
+import { SopanMark } from "@/components/ui/SopanMark";
 import { PhoneMockup } from "@/components/ui/PhoneMockup";
 import { TrackedAnchor } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
@@ -185,7 +185,7 @@ export function AppDownloadSection() {
                 <div className="bg-white px-4 pt-2 pb-3">
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-2 text-small font-semibold text-indigo">
-                      <NibMark className="h-5 w-auto text-indigo" />
+                      <SopanMark className="h-5 w-auto text-indigo" />
                       {BRAND.name}
                     </span>
                     <Bell aria-hidden className="size-4.5 text-ink-muted" />

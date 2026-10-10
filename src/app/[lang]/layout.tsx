@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Devanagari, Source_Serif_4 } from "next/font/google";
+import { Inter, Noto_Sans_Devanagari } from "next/font/google";
 
 import { LOCALE_META, LOCALES } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/server";
@@ -27,14 +27,6 @@ const devanagari = Noto_Sans_Devanagari({
   display: "swap",
   preload: false,
   variable: "--font-devanagari",
-});
-
-/** Logotype only — the drawn name in the Kalam lockup, nothing else. */
-const sourceSerif = Source_Serif_4({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  display: "swap",
-  variable: "--font-source-serif",
 });
 
 /**
@@ -97,7 +89,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   return (
     <html
       lang={LOCALE_META[locale].htmlLang}
-      className={`${inter.variable} ${devanagari.variable} ${sourceSerif.variable} h-full`}
+      className={`${inter.variable} ${devanagari.variable} h-full`}
     >
       <body className="flex min-h-full flex-col bg-white antialiased">
         <I18nProvider locale={locale} dict={dict}>

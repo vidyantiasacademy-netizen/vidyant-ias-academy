@@ -290,13 +290,13 @@
       ]
     },
     {
-      "//": "mockTestService rank — scored sittings of one paper above a score.",
+      "//": "mockTestService.getResult — rank and percentile: scored sittings of one paper above / below a score. Range filters with no orderBy read the index ascending.",
       "collectionGroup": "mockAttempts",
       "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "testId", "order": "ASCENDING" },
         { "fieldPath": "status", "order": "ASCENDING" },
-        { "fieldPath": "score", "order": "DESCENDING" }
+        { "fieldPath": "score", "order": "ASCENDING" }
       ]
     },
     {

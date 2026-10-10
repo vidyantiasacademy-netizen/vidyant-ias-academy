@@ -11,7 +11,7 @@ export const BRAND = {
   legalName: "vidyantIAS",
   /**
    * The drawn logotype, split so the two weights of the lockup can be set
-   * separately. The logo deck ("VidyantIAS Logo Concepts", concept 01 — Kalam)
+   * separately. The logo deck ("VidyantIAS Logo Concepts", concept 03 — Sopan)
    * sets the name with a capital V; `name` above is the casing used in running
    * copy. TODO(institute): confirm which casing wins, and align the other.
    */

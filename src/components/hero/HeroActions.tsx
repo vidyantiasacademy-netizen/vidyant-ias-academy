@@ -7,14 +7,15 @@ import { CTA, whatsappUrl } from "@/lib/constants/site";
 const PAYLOAD = { location: "home-hero" } as const;
 
 const quietLink =
-  "inline-flex min-h-11 items-center gap-2 text-small font-bold text-indigo underline decoration-line-strong decoration-2 underline-offset-4 transition-colors hover:decoration-indigo";
+  "inline-flex min-h-11 items-center gap-2 text-small font-bold text-white underline decoration-white/40 decoration-2 underline-offset-4 transition-colors hover:decoration-kesar";
 
 /**
  * The hero's actions, in three weights so the next step is never in doubt:
  * one kesar primary (the priced programme cards below, where a course can be
- * bought), one outlined secondary (a free counselling call — desktop only, as
+ * bought), one white-outlined secondary (a free counselling call — desktop only, as
  * phones have it in the sticky bottom bar), and quiet text links for the
- * visitor who wants to try before they talk.
+ * visitor who wants to try before they talk. Styled for the hero's dark
+ * photograph — white type throughout.
  */
 export function HeroActions() {
   return (
@@ -33,7 +34,7 @@ export function HeroActions() {
         </TrackedButtonLink>
         <TrackedButtonLink
           href={CTA.counselling.href}
-          variant="secondary"
+          variant="outlineLight"
           size="lg"
           // Below lg the sticky bottom bar already offers counselling.
           className="hidden lg:inline-flex"

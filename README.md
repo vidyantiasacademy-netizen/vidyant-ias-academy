@@ -121,17 +121,17 @@ authorises first. See [`docs/architecture.md`](./docs/architecture.md).
 
 ## Logo
 
-The mark is **Kalam — the Nib** (concept 01 of _VidyantIAS Logo Concepts_): a fountain-pen nib whose slit and breather hole together spell a hidden "i". It is drawn, not photographed — `components/ui/NibMark` renders it inline from the geometry in `src/lib/brand/nib.ts`, which is the only place the shape is defined.
+The mark is **Sopan — the Steps** (concept 03 of _VidyantIAS Logo Concepts_): a tick that climbs Prelims, Mains and Interview and turns saffron at the top. It is drawn, not photographed — `components/ui/SopanMark` renders it inline from the geometry in `src/lib/brand/sopan.ts`, which is the only place the shape is defined.
 
-The body uses `currentColor` and the slit is an `evenodd` cut-out, not a white shape, so one path serves every surface: indigo on white, white on indigo, black on a photocopy. The breather hole is the identity's single saffron element — it stands for the student. `mono` punches it out with the slit for one-colour printing and stamps.
+Prelims and Mains use `currentColor`, so one drawing serves every surface: indigo on white, white on indigo, black on a photocopy. The top step (Interview — selected) is the identity's single saffron element — it stands for the student. `mono` draws it in `currentColor` too, for one-colour printing and stamps.
 
-`components/ui/Logo` composes that mark with the logotype (Source Serif 4, set from `BRAND.logotype`) and nothing else — the slogan is not part of the lockup. Props: `tone` (`dark` \| `light`), `size`, `asStatic`. The bar grows (`h-16 sm:h-20 lg:h-24`) and the mobile drawer's `top` offset tracks those heights.
+`components/ui/Logo` composes that mark with the logotype (Inter — bold "Vidyant", light "IAS", set from `BRAND.logotype`) and nothing else — the slogan is not part of the lockup. Props: `tone` (`dark` \| `light`), `size`, `asStatic`. The bar grows (`h-16 sm:h-20 lg:h-24`) and the mobile drawer's `top` offset tracks those heights.
 
 Static assets are generated, never hand-edited — run `npm run brand:assets` after changing the geometry:
 
 | File                                | Use                                               |
 | ----------------------------------- | ------------------------------------------------- |
-| `src/app/icon.svg`                  | favicon / tab icon — white nib on an indigo tile  |
+| `src/app/icon.svg`                  | favicon / tab icon — white tick on an indigo tile |
 | `src/app/apple-icon.png`            | 180px home-screen icon (iOS applies its own mask) |
 | `public/images/logo-mark.svg`       | the bare mark, indigo on light surfaces           |
 | `public/images/logo-mark-light.svg` | the bare mark reversed, used by the OG card       |

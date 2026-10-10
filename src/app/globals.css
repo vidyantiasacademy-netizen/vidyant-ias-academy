@@ -4,7 +4,7 @@
    vidyantIAS design system — colour and type
    ------------------------------------------------------------
    THEME: "Ink Indigo & Kesar" — the palette of the VidyantIAS
-   logo system (Kalam, the nib). Deep indigo is the ink and the
+   logo system (Sopan, the steps). Deep indigo is the ink and the
    authority; saffron appears once, and it always stands for the
    student. Built for the audience this institute actually serves:
    aspirants in small towns and villages, reading on a budget
@@ -163,8 +163,6 @@
   /* Type */
   /* Devanagari falls through to Noto on the Hindi site — Inter has no Hindi glyphs. */
   --font-sans: var(--font-inter), var(--font-devanagari), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  /* Logotype only — the drawn name in the Kalam lockup. */
-  --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
 
   --text-hero: 2.25rem;           /* 36px mobile */
   --text-hero--line-height: 1.02;

@@ -3,7 +3,7 @@ import Link from "@/i18n/Link";
 import { BRAND } from "@/lib/constants/site";
 import { cn } from "@/lib/utils/cn";
 
-import { NibMark } from "./NibMark";
+import { SopanMark } from "./SopanMark";
 
 type LogoTone = "dark" | "light";
 
@@ -19,11 +19,11 @@ interface LogoProps {
   priority?: boolean;
 }
 
-/** Nib height per size token. The logotype is sized from the same step. */
+/** Mark height per size token. The logotype is sized from the same step. */
 const MARK: Record<"sm" | "md" | "lg", string> = {
-  sm: "h-8",
-  md: "h-10 lg:h-12",
-  lg: "h-12 lg:h-14",
+  sm: "h-7",
+  md: "h-8 lg:h-10",
+  lg: "h-10 lg:h-12",
 };
 
 const NAME: Record<"sm" | "md" | "lg", string> = {
@@ -46,29 +46,14 @@ export function Logo({
         className,
       )}
     >
-      {/* `w-auto` keeps the 40:64 aspect; the height classes drive the size. */}
-      <NibMark className={cn("w-auto shrink-0", MARK[size])} />
+      {/* `w-auto` keeps the 64:50 aspect; the height classes drive the size. */}
+      <SopanMark className={cn("w-auto shrink-0", MARK[size])} />
 
-      {/* Serif "Vidyant" for the scholarship, spaced sans caps "IAS" for the
-          service, joined by one kesar pen stroke under the whole word —
-          hairline at the V, widening to a nib-cut end under IAS, the way a
-          Kalam stroke lands. Colour comes from `tone`; the stroke is kesar on
-          both, which holds on white and on indigo. */}
-      <span className={cn("relative inline-flex items-baseline pb-[0.28em] leading-none", NAME[size])}>
-        <span className="font-serif font-semibold tracking-[-0.015em]">
-          {BRAND.logotype.lead}
-        </span>
-        <span className="ml-[0.14em] font-sans text-[0.74em] font-extrabold tracking-[0.12em]">
-          {BRAND.logotype.trail}
-        </span>
-        <svg
-          aria-hidden
-          viewBox="0 0 200 8"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute bottom-0 left-[0.04em] h-[0.2em] w-[calc(100%-0.16em)] text-kesar"
-        >
-          <polygon points="0,7 150,2.2 200,0 193,8 0,8" fill="currentColor" />
-        </svg>
+      {/* Bold "Vidyant", light "IAS", set tight in the sans — the deck's Sopan
+          lockup. No saffron in the name: the top step is the only kesar. */}
+      <span className={cn("inline-flex items-baseline leading-none tracking-[-0.02em]", NAME[size])}>
+        <span className="font-bold">{BRAND.logotype.lead}</span>
+        <span className="font-light">{BRAND.logotype.trail}</span>
       </span>
     </span>
   );
