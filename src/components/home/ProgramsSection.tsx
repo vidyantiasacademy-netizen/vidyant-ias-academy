@@ -2,7 +2,6 @@ import {
   ArrowRight,
   BookOpen,
   Check,
-  ChevronRight,
   Clock,
   Laptop,
   PenLine,
@@ -13,6 +12,7 @@ import {
 
 import Link from "@/i18n/Link";
 import { BuyCourseButton } from "@/components/checkout/BuyCourseButton";
+import { ProgramStagePicker } from "@/components/home/ProgramStagePicker";
 import { Section } from "@/components/layout/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -67,8 +67,8 @@ function isHomepageCategory(
  * costs — and a way to buy it there and then. A price the institute quotes in
  * person is said so plainly, and that card's button opens the enrolment form.
  *
- * Phones (below `md`) get a compact list instead — stage, title and fee per
- * row, each row a link to the course page, where the full card detail lives.
+ * Phones (below `md`) get `ProgramStagePicker` instead: "where are you in
+ * your UPSC journey?", then only the programme for the stage picked.
  */
 export function ProgramsSection({ courses }: { courses: Course[] }) {
   const featured = firstPerCategory(courses)
@@ -85,64 +85,29 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
 
   return (
     <Section id="programs" containerSize="wide">
-      <SectionHeader
-        eyebrow={`Programs · ${EXAM_CYCLE.label}`}
-        title={
-          <>
-            Pick{" "}
-            <span className="-mx-1 box-decoration-clone bg-kesar-100 px-1">
-              your stage.
-            </span>{" "}
-            Enrol today.
-          </>
-        }
-        description="Each program is built around the same system — teaching, practice, testing, evaluation and mentorship — applied to the stage you are actually at. Fees are listed up front."
-        descriptionClassName="max-md:hidden"
-        action={
-          <ButtonLink href={CTA.courses.href} variant="secondary">
-            View all courses
-          </ButtonLink>
-        }
-      />
+      <div className="hidden md:block">
+        <SectionHeader
+          eyebrow={`Programs · ${EXAM_CYCLE.label}`}
+          title={
+            <>
+              Pick{" "}
+              <span className="-mx-1 box-decoration-clone bg-kesar-100 px-1">
+                your stage.
+              </span>{" "}
+              Enrol today.
+            </>
+          }
+          description="Each program is built around the same system — teaching, practice, testing, evaluation and mentorship — applied to the stage you are actually at. Fees are listed up front."
+          action={
+            <ButtonLink href={CTA.courses.href} variant="secondary">
+              View all courses
+            </ButtonLink>
+          }
+        />
+      </div>
 
-      {/* Phones: one tappable row per stage. */}
-      <ul className="mt-6 divide-y divide-line border-y border-line md:hidden">
-        {featured.map((course, index) => {
-          const { icon: Icon, hook } = TILE[course.category];
-          return (
-            <li key={course.id}>
-              <TrackedLink
-                href={`/courses/${course.slug}`}
-                event={ANALYTICS_EVENTS.courseView}
-                payload={{ course: course.id, location: "programs-row" }}
-                className="flex items-center gap-4 py-4 active:bg-paper"
-              >
-                <span
-                  aria-hidden
-                  className={cn(
-                    "flex size-11 shrink-0 items-center justify-center",
-                    index === 0 ? "bg-kesar text-indigo-900" : "bg-indigo-100 text-indigo",
-                  )}
-                >
-                  <Icon className="size-5" strokeWidth={1.75} />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-small font-semibold text-ink-secondary">{hook}</span>
-                  <span className="mt-0.5 block text-body font-bold leading-snug text-indigo">
-                    {course.title}
-                  </span>
-                  <span className="mt-0.5 block text-small font-semibold tabular-nums text-ink">
-                    {course.priceInPaise
-                      ? RUPEES.format(course.priceInPaise / 100)
-                      : "Fee on a free counselling call"}
-                  </span>
-                </span>
-                <ChevronRight aria-hidden className="size-5 shrink-0 text-ink-secondary" />
-              </TrackedLink>
-            </li>
-          );
-        })}
-      </ul>
+      {/* Phones: one question, then the one programme that answers it. */}
+      <ProgramStagePicker courses={featured} />
 
       {/* Two across until a card has ~280px of measure, then all four. */}
       <ul className="mt-8 hidden gap-5 md:grid md:grid-cols-2 lg:mt-10 lg:gap-6 xl:grid-cols-4">
@@ -160,7 +125,9 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
               <article
                 className={cn(
                   "relative flex h-full flex-col border bg-white transition-colors duration-150 hover:border-indigo",
-                  first ? "border-indigo border-t-4 border-t-kesar" : "border-line-strong",
+                  first
+                    ? "border-indigo border-t-4 border-t-kesar"
+                    : "border-line-strong",
                 )}
               >
                 {/* Hangs on the top rule, out of the flow, so the first card's
@@ -179,7 +146,9 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
                     </span>
                   </span>
 
-                  <p className="mt-5 text-small font-semibold text-ink-secondary">{hook}</p>
+                  <p className="mt-5 text-small font-semibold text-ink-secondary">
+                    {hook}
+                  </p>
                   <h3 className="mt-1 text-h4 font-bold leading-tight text-indigo">
                     <TrackedLink
                       href={href}
@@ -199,8 +168,14 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
                   {course.features.length > 0 ? (
                     <ul className="mt-4 space-y-2">
                       {course.features.slice(0, 3).map((feature) => (
-                        <li key={feature} className="flex items-start gap-2 text-small text-ink">
-                          <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-kesar-600" />
+                        <li
+                          key={feature}
+                          className="flex items-start gap-2 text-small text-ink"
+                        >
+                          <Check
+                            aria-hidden
+                            className="mt-0.5 size-4 shrink-0 text-kesar-600"
+                          />
                           {feature}
                         </li>
                       ))}
@@ -220,7 +195,10 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
                     {course.mode.length > 0 ? (
                       <div className="flex items-start gap-2">
                         <dt className="sr-only">Mode</dt>
-                        <Laptop aria-hidden className="mt-0.5 size-4 shrink-0" />
+                        <Laptop
+                          aria-hidden
+                          className="mt-0.5 size-4 shrink-0"
+                        />
                         <dd>{course.mode.join(" · ")}</dd>
                       </div>
                     ) : null}

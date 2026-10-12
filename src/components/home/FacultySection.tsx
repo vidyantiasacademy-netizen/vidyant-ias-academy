@@ -27,8 +27,8 @@ export async function FacultySection() {
 
       <ul className={cn(railList[4], "mt-7 lg:mt-9")}>
         {members.map((member) => (
-          <li key={member.id} className={railItem}>
-            <FacultyCard member={member} />
+          <li key={member.id} className={cn(railItem, "max-sm:w-[62%]")}>
+            <FacultyCard member={member} compact />
           </li>
         ))}
       </ul>

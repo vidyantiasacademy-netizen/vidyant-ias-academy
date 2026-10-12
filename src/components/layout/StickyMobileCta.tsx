@@ -10,7 +10,10 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CONTACT, CTA, ROUTES, whatsappUrl } from "@/lib/constants/site";
 
-/** Persistent mobile conversion bar. Hidden on the pages that host the forms. */
+/**
+ * Persistent conversion bar for tablets (`md` to `lg`); phones get
+ * `MobileTabBar`. Hidden on the pages that host the forms.
+ */
 const HIDDEN_ON: string[] = [ROUTES.counselling, ROUTES.demo, ROUTES.contact];
 
 export function StickyMobileCta() {
@@ -19,7 +22,7 @@ export function StickyMobileCta() {
   if (HIDDEN_ON.includes(pathname)) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line-strong bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line-strong bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] max-md:hidden lg:hidden">
       <div className="flex items-center gap-2.5">
         <TrackedButtonLink
           href={CTA.counselling.href}

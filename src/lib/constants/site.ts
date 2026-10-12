@@ -170,18 +170,16 @@ export const BROCHURE: { href: string | null; note: string } = {
 
 /**
  * Student app.
- * TODO(institute): set `available: true` and add the store links once the app
+ * TODO(institute): set `available: true` and add the Play Store link once the app
  * ships. Until then the homepage asks to be notified rather than linking to a
  * store page that does not exist.
  */
 export const APP: {
   available: boolean;
   android: string | null;
-  ios: string | null;
 } = {
   available: false,
   android: null,
-  ios: null,
 };
 
 /**

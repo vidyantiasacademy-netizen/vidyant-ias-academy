@@ -1,5 +1,6 @@
 import { HomeHero } from "@/components/hero/HomeHero";
 import { AppDownloadSection } from "@/components/home/AppDownloadSection";
+import { CallbackSection } from "@/components/home/CallbackSection";
 // import { BatchesSection } from "@/components/home/BatchesSection";
 import { ContactSection } from "@/components/home/ContactSection";
 import { ExploreCards } from "@/components/home/ExploreCards";
@@ -52,10 +53,11 @@ export default async function HomePage() {
         who are you → what do you offer (and for how much) → why trust you → what do I do next.
       */}
       {/*
-        Phones (below md) get a decluttered page: hero → explore tiles →
-        programs (compact) → faculty → app (compact) → orientation. Everything else is a headline the
-        explore tiles already link to, and the sticky bottom bar carries
-        counselling, WhatsApp and call — so those sections are md-up only.
+        Phones (below md) get a decluttered page: hero → stage picker →
+        explore tiles → faculty → callback form →
+        orientation → app (compact). Everything else is a headline the
+        explore tiles already link to, and the bottom tab bar carries
+        counselling — so those sections are md-up only.
       */}
       <HomeHero />
       <div className="hidden md:block">
@@ -63,9 +65,15 @@ export default async function HomePage() {
       </div>
       {/* The way off the homepage: one card per page. The header nav only
           scrolls between the sections below. */}
-      <ExploreCards />
+      <div className="hidden md:block">
+        <ExploreCards />
+      </div>
       {/* What we sell sits directly under the hero, priced and buyable. */}
       <ProgramsSection courses={courses} />
+      {/* Phones: the page directory follows the stage picker instead. */}
+      <div className="md:hidden">
+        <ExploreCards headingId="explore-heading-phone" />
+      </div>
       {/* Free material right after the paid programs: the low-commitment way in. */}
       <div className="hidden md:block">
         <ResourcesSection resources={resources} />
@@ -79,11 +87,11 @@ export default async function HomePage() {
       {/* <MentorshipSection /> */}
       {/* <PerformanceTracking /> */}
       <FacultySection />
+      {/* Phones only: the short callback form. */}
+      <CallbackSection />
       {/* <ResultsSection /> */}
       {/* <TestimonialsSection /> */}
       {/* <CurrentAffairsSection /> */}
-      {/* App sits between the two indigo bands (system, orientation) so they never touch. */}
-      <AppDownloadSection />
       <OrientationSection />
       {/* <EventsSection /> */}
       {/* <SocialSection /> */}
@@ -91,9 +99,8 @@ export default async function HomePage() {
         <HomeFaq faqs={featuredFaqs} />
         <ContactSection />
       </div>
-      {/* On phones the orientation band closes the page; this would be a
-          second indigo band touching it, and the sticky bar already offers
-          counselling. */}
+      {/* Hidden on phones: it would be a second indigo band touching the
+          orientation band, and the sticky bar already offers counselling. */}
       <CTASection
         className="max-md:hidden"
         title="Your UPSC preparation deserves a clear direction."
@@ -101,6 +108,8 @@ export default async function HomePage() {
         location="home-final"
         illustration={<GeoComposition surface="dark" className="mx-auto hidden size-64 lg:block xl:size-72" />}
       />
+      {/* App closes the page: a paper band between the last indigo band and the footer. */}
+      <AppDownloadSection />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

@@ -40,12 +40,9 @@ const APP_NAV = [
 
 const WEEKLY_GOAL = { done: 6, of: 7, percent: 85 };
 
-/**
- * Official store marks, as on Google's and Apple's own badges: the four-colour
- * Play triangle, and the Apple logo in white on black.
- */
-function StoreGlyph({ platform }: { platform: "android" | "ios" }) {
-  return platform === "android" ? (
+/** Official Google Play mark: the four-colour Play triangle. */
+function PlayGlyph() {
+  return (
     <svg aria-hidden viewBox="30 336.7 120.9 129.2" className="size-6">
       <path
         fill="#FFD400"
@@ -64,29 +61,24 @@ function StoreGlyph({ platform }: { platform: "android" | "ios" }) {
         d="m99.1 401.1-64.3-64.3c-2.6.6-4.8 2.9-4.8 7.6v113.8c0 4.3 1.7 7.4 4.9 7.7l64.2-64.8Z"
       />
     </svg>
-  ) : (
-    <svg aria-hidden viewBox="0 0 24 24" className="size-6" fill="currentColor">
-      <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
-    </svg>
   );
 }
 
 /**
- * Store badge. Until `APP.available`, it renders as a non-interactive
+ * Google Play badge. Until `APP.available`, it renders as a non-interactive
  * "Coming soon" badge — never a link to a listing that does not exist.
+ * Android only: there is no App Store app.
  */
-function StoreBadge({ platform }: { platform: "android" | "ios" }) {
-  const href = APP.available ? APP[platform] : null;
-  const store = platform === "android" ? "Google Play" : "App Store";
-  const lead = href ? (platform === "android" ? "Get it on" : "Download on the") : "Coming soon on";
+function StoreBadge() {
+  const href = APP.available ? APP.android : null;
   const className =
     "inline-flex h-14 items-center gap-3 border-2 border-ink bg-ink px-4 text-white";
   const body = (
     <>
-      <StoreGlyph platform={platform} />
+      <PlayGlyph />
       <span className="flex flex-col leading-none">
-        <span className="text-[0.8125rem] text-white/75">{lead}</span>
-        <span className="mt-1 text-body font-semibold">{store}</span>
+        <span className="text-[0.8125rem] text-white/75">{href ? "Get it on" : "Coming soon on"}</span>
+        <span className="mt-1 text-body font-semibold">Google Play</span>
       </span>
     </>
   );
@@ -97,7 +89,7 @@ function StoreBadge({ platform }: { platform: "android" | "ios" }) {
       target="_blank"
       rel="noreferrer"
       event={ANALYTICS_EVENTS.appDownloadClick}
-      payload={{ platform, location: "home-app" }}
+      payload={{ platform: "android", location: "home-app" }}
       className={cn(className, "transition-colors hover:border-indigo hover:bg-indigo")}
     >
       {body}
@@ -151,12 +143,11 @@ export function AppDownloadSection() {
           <p className="mt-5 hidden max-w-[52ch] text-body text-ink-secondary sm:text-body-lg md:block">
             Track your progress, follow today&apos;s plan, attend live classes, revise notes and
             practise tests — all in one place. Enrolled students use the student portal on the web
-            today; the {BRAND.name} app for Android and iOS is on its way.
+            today; the {BRAND.name} Android app is on its way.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3 md:mt-7">
-            <StoreBadge platform="android" />
-            <StoreBadge platform="ios" />
+            <StoreBadge />
           </div>
 
           {APP.available ? null : (

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Footer } from "@/components/footer/Footer";
 import { ExitIntentOffer } from "@/components/layout/ExitIntentOffer";
 import { FloatingActions } from "@/components/layout/FloatingActions";
+import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import { NotificationStrip } from "@/components/layout/NotificationStrip";
 import { SocialRail } from "@/components/layout/SocialRail";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
@@ -34,6 +35,7 @@ export async function SiteChrome({ children }: { children: ReactNode }) {
         {children}
       </main>
       <Footer />
+      <MobileTabBar />
       <StickyMobileCta />
       <SocialRail />
       <FloatingActions />

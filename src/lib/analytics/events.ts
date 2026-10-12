@@ -31,6 +31,7 @@ export const ANALYTICS_EVENTS = {
   mockTestRegister: "mock_test_register",
   mockTestStart: "mock_test_start",
   mockTestSubmit: "mock_test_submit",
+  tabBarClick: "tab_bar_click",
 } as const;
 
 export type AnalyticsEvent =

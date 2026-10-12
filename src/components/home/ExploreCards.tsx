@@ -24,8 +24,9 @@ import { cn } from "@/lib/utils/cn";
  * page. Copy describes what each page has — no counts or superlatives (see
  * the no-unverified-claims rule).
  *
- * On phones (below `md`) this is the homepage's main menu: two-up tiles, title
- * only, plus FAQ and Contact — the sections those replace are md-up only.
+ * On phones (below `md`) it sits under the stage picker as a compact
+ * three-up grid — icon and title only — plus FAQ and Contact, as the
+ * sections those replace are md-up only.
  */
 const CARDS: {
   title: string;
@@ -119,29 +120,33 @@ const TONES = {
   chilli: "bg-chilli-100 text-chilli-700",
 } as const;
 
-export function ExploreCards() {
+/** `headingId` keeps ids unique when the page renders the block twice (phone and wide). */
+export function ExploreCards({ headingId = "explore-heading" }: { headingId?: string }) {
   return (
-    <section aria-labelledby="explore-heading" className="bg-white py-8 md:py-10 lg:py-12">
+    <section aria-labelledby={headingId} className="bg-white py-8 md:py-10 lg:py-12">
       <Container size="wide">
-        <h2 id="explore-heading" className="sr-only">
-          Explore vidyantIAS
+        <h2
+          id={headingId}
+          className="mb-4 text-h3 font-bold text-indigo md:sr-only"
+        >
+          Free learning &amp; more
         </h2>
-        <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+        <ul className="grid grid-cols-3 gap-2 md:grid-cols-2 md:gap-3 lg:grid-cols-4 lg:gap-4">
           {CARDS.map(({ title, description, href, icon: Icon, tone, badge, phoneOnly }) => (
             <li key={href} className={phoneOnly ? "md:hidden" : undefined}>
               <Link
                 href={href}
-                className="group flex h-full flex-col items-start gap-3 border border-line-strong bg-white p-4 transition-colors hover:border-indigo hover:bg-paper md:flex-row md:gap-4 md:p-5"
+                className="group flex h-full min-h-24 flex-col items-center gap-2 border border-line-strong bg-white px-1.5 py-3 text-center transition-colors hover:border-indigo hover:bg-paper md:flex-row md:items-start md:gap-4 md:p-5 md:text-left"
               >
                 <span
                   aria-hidden
-                  className={cn("flex size-11 shrink-0 items-center justify-center", TONES[tone])}
+                  className={cn("flex size-10 shrink-0 items-center justify-center md:size-11", TONES[tone])}
                 >
                   <Icon className="size-5" strokeWidth={1.75} />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-center gap-2">
-                    <span className="text-body font-bold leading-snug text-indigo">
+                  <span className="flex flex-col items-center gap-1 md:flex-row md:flex-wrap md:gap-2">
+                    <span className="text-small font-bold leading-snug text-indigo md:text-body">
                       {title}
                     </span>
                     {badge ? (

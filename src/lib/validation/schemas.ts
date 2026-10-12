@@ -74,6 +74,15 @@ export const DEMO_SLOTS = [
   "Weekend batch",
 ] as const;
 
+/** The four programme stages, as a student would describe themselves. */
+export const PREPARATION_STAGES = [
+  "Starting out",
+  "Preparing for Prelims",
+  "Preparing for Mains",
+  "Optional subject",
+  "Not sure yet",
+] as const;
+
 export const CALLBACK_TOPICS = [
   "Programmes and syllabus",
   "Fees and instalments",
@@ -151,6 +160,9 @@ export const callbackSchema = z.object({
   course: optionalText(120),
   topic: z.enum(CALLBACK_TOPICS).optional().or(z.literal("")),
   preferredTime: z.enum(COUNSELLING_SLOTS).optional().or(z.literal("")),
+  /** Where the student is — asked by the phone homepage's callback form. */
+  preparationStage: z.enum(PREPARATION_STAGES).optional().or(z.literal("")),
+  targetAttempt: optionalText(40),
   honeypot: honeypotField,
 });
 
