@@ -110,15 +110,17 @@ export const ROUTES = {
  * `src/i18n/dictionaries`, which is what the header renders. Keep the list in
  * page order — the active-section marker depends on it. Separate pages
  * are reached from the homepage cards (`ExploreCards`), the footer and the
- * mobile drawer.
+ * mobile drawer. `onPhone` marks the sections the decluttered phone homepage
+ * still renders (below `md`); the drawer hides the rest there, as their pages
+ * are already listed under `MOBILE_NAV`.
  */
 export const PRIMARY_NAV = [
-  { key: "programs", label: "Programs", id: "programs", href: "/#programs" },
-  { key: "resources", label: "Resources", id: "resources", href: "/#resources" },
-  { key: "whatsNew", label: "What's New", id: "noticeboard", href: "/#noticeboard" },
-  { key: "ourSystem", label: "Our System", id: "learning-system", href: "/#learning-system" },
-  { key: "faq", label: "FAQ", id: "faq", href: "/#faq" },
-  { key: "contact", label: "Contact", id: "contact", href: "/#contact" },
+  { key: "programs", label: "Programs", id: "programs", href: "/#programs", onPhone: true },
+  { key: "resources", label: "Resources", id: "resources", href: "/#resources", onPhone: false },
+  { key: "whatsNew", label: "What's New", id: "noticeboard", href: "/#noticeboard", onPhone: false },
+  { key: "ourSystem", label: "Our System", id: "learning-system", href: "/#learning-system", onPhone: false },
+  { key: "faq", label: "FAQ", id: "faq", href: "/#faq", onPhone: false },
+  { key: "contact", label: "Contact", id: "contact", href: "/#contact", onPhone: false },
 ] as const;
 
 /** Mobile drawer: page links, listed under the homepage sections. */

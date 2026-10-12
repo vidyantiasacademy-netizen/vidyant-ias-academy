@@ -136,6 +136,7 @@ function GoalRing({ percent }: { percent: number }) {
  * Student app block: copy and store badges on the left, the phone with
  * today's plan in the middle, and a progress card overlapping its edge.
  * Every figure on the screens is a labelled sample, not student data.
+ * Phones (below `md`) get the heading and store badges only.
  */
 export function AppDownloadSection() {
   return (
@@ -147,13 +148,13 @@ export function AppDownloadSection() {
             A smarter study experience,{" "}
             <span className="text-ink-secondary">on web and mobile.</span>
           </h2>
-          <p className="mt-5 max-w-[52ch] text-body text-ink-secondary sm:text-body-lg">
+          <p className="mt-5 hidden max-w-[52ch] text-body text-ink-secondary sm:text-body-lg md:block">
             Track your progress, follow today&apos;s plan, attend live classes, revise notes and
             practise tests — all in one place. Enrolled students use the student portal on the web
             today; the {BRAND.name} app for Android and iOS is on its way.
           </p>
 
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-3 md:mt-7">
             <StoreBadge platform="android" />
             <StoreBadge platform="ios" />
           </div>
@@ -178,7 +179,7 @@ export function AppDownloadSection() {
         </div>
 
         {/* Labelled UI illustration, not a screenshot of a shipped product. */}
-        <figure className="relative">
+        <figure className="relative max-md:hidden">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:justify-center sm:gap-0">
             <div className="relative w-full max-w-[17.5rem] shrink-0">
               <PhoneMockup statusBarTone="light">

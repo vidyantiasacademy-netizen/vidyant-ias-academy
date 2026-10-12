@@ -12,9 +12,11 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { upcomingBatches } from "@/data/batches";
 import { getLocale } from "@/i18n/server";
+import { getCurrentStudent, getCurrentUserProfile } from "@/lib/auth/server";
 import { BROCHURE, CTA, EXAM_CYCLE, ROUTES } from "@/lib/constants/site";
 import { getCourseCatalogue } from "@/lib/courses/catalogue";
 import { pageMetadata, SEO_KEYWORDS } from "@/lib/seo/metadata";
+import { ATTEMPT_OPTIONS, type EnrolmentInput } from "@/lib/validation/schemas";
 
 export const generateMetadata = () => pageMetadata({
   title: `Admissions & Batches — ${EXAM_CYCLE.label}`,
@@ -45,9 +47,38 @@ const STEPS = [
   },
 ];
 
+/** Maps the stored attempt count onto the form's options. 0 is ambiguous, so it stays unset. */
+function attemptLabel(attemptsGiven: number | undefined): EnrolmentInput["attempt"] | undefined {
+  if (!attemptsGiven || attemptsGiven < 1) return undefined;
+  return ATTEMPT_OPTIONS[Math.min(attemptsGiven, 3) + 1];
+}
+
+/**
+ * What we already know about a signed-in visitor, so they are not asked to
+ * type it again. A profile read failure only costs the prefill, never the page.
+ */
+async function getApplicant(): Promise<Partial<EnrolmentInput> | undefined> {
+  try {
+    const [profile, student] = await Promise.all([getCurrentUserProfile(), getCurrentStudent()]);
+    if (!profile) return undefined;
+
+    return {
+      name: student?.fullName || profile.displayName || undefined,
+      phone: student?.phone || profile.phone || undefined,
+      email: student?.email || profile.email || undefined,
+      attempt: attemptLabel(student?.attemptsGiven),
+    };
+  } catch {
+    return undefined;
+  }
+}
+
 export default async function EnrolPage({ searchParams }: PageProps<"/[lang]/enrol">) {
   const { course: requestedSlug } = await searchParams;
-  const courses = await getCourseCatalogue(await getLocale());
+  const [courses, applicant] = await Promise.all([
+    getCourseCatalogue(await getLocale()),
+    getApplicant(),
+  ]);
   // Arriving from a course card's "Enrol now": pre-select that programme.
   const defaultCourse = courses.find((course) => course.slug === requestedSlug)?.title;
   const batches = upcomingBatches();
@@ -119,7 +150,12 @@ export default async function EnrolPage({ searchParams }: PageProps<"/[lang]/enr
       <Section containerSize="wide">
         <div className="grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:gap-14">
           <div id="enrolment-form" className="scroll-mt-28">
-            <EnrolmentForm courses={courses} batches={batches} defaultCourse={defaultCourse} />
+            <EnrolmentForm
+              courses={courses}
+              batches={batches}
+              defaultCourse={defaultCourse}
+              applicant={applicant}
+            />
           </div>
 
           <aside className="flex flex-col gap-4">

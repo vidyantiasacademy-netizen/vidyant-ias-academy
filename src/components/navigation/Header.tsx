@@ -236,7 +236,7 @@ export function Header({ notice }: { notice?: ReactNode }) {
                   {PRIMARY_NAV.map((item) => {
                     const active = activeSection === item.id;
                     return (
-                      <li key={item.id}>
+                      <li key={item.id} className={item.onPhone ? undefined : "max-md:hidden"}>
                         <Link
                           href={item.href}
                           onClick={(event) => onSectionClick(event, item.id)}
@@ -358,7 +358,9 @@ function useActiveSection(enabled: boolean) {
       let current: string | null = null;
       for (const item of PRIMARY_NAV) {
         const section = document.getElementById(item.id);
-        if (section && section.getBoundingClientRect().top <= line) current = item.id;
+        // Sections hidden on phones have no boxes, and a zero rect would read as "passed".
+        if (!section || section.getClientRects().length === 0) continue;
+        if (section.getBoundingClientRect().top <= line) current = item.id;
       }
       setActive(current);
     }
