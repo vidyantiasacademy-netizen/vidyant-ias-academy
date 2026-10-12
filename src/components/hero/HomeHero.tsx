@@ -36,12 +36,12 @@ export function HomeHero() {
       />
 
       <Container>
-        <div className="grid py-14 sm:py-20 lg:min-h-[36rem] lg:grid-cols-12 lg:items-center lg:py-24 2xl:min-h-[40rem]">
+        <div className="grid py-10 sm:py-20 lg:min-h-[36rem] lg:grid-cols-12 lg:items-center lg:py-24 2xl:min-h-[40rem]">
           <div className="reveal lg:col-span-7 xl:col-span-6">
             <Eyebrow tone="light">
               {EXAM_CYCLE.label} · {EXAM_CYCLE.admissionNote}
             </Eyebrow>
-            <h1 className="mt-5 max-w-[16ch] text-hero font-bold text-white lg:text-hero-lg">
+            <h1 className="mt-4 max-w-[16ch] text-hero font-bold text-white lg:text-hero-lg">
               UPSC coaching in {BRAND.city}, built around mentorship.
             </h1>
             <p className="mt-5 max-w-[46ch] text-body text-white/90 sm:text-body-lg">

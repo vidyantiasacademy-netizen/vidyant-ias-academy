@@ -5,7 +5,7 @@ import { ContactSection } from "@/components/home/ContactSection";
 import { ExploreCards } from "@/components/home/ExploreCards";
 // import { CurrentAffairsSection } from "@/components/home/CurrentAffairsSection";
 // import { EventsSection } from "@/components/home/EventsSection";
-// import { FacultySection } from "@/components/home/FacultySection";
+import { FacultySection } from "@/components/home/FacultySection";
 import { HomeFaq } from "@/components/home/HomeFaq";
 import { LearningSystem } from "@/components/home/LearningSystem";
 // import { MentorshipSection } from "@/components/home/MentorshipSection";
@@ -51,22 +51,34 @@ export default async function HomePage() {
         Section order answers the four questions a visitor arrives with, in order:
         who are you → what do you offer (and for how much) → why trust you → what do I do next.
       */}
+      {/*
+        Phones (below md) get a decluttered page: hero → explore tiles →
+        programs (compact) → faculty → app (compact) → orientation. Everything else is a headline the
+        explore tiles already link to, and the sticky bottom bar carries
+        counselling, WhatsApp and call — so those sections are md-up only.
+      */}
       <HomeHero />
-      <TrustBar />
+      <div className="hidden md:block">
+        <TrustBar />
+      </div>
       {/* The way off the homepage: one card per page. The header nav only
           scrolls between the sections below. */}
       <ExploreCards />
       {/* What we sell sits directly under the hero, priced and buyable. */}
       <ProgramsSection courses={courses} />
       {/* Free material right after the paid programs: the low-commitment way in. */}
-      <ResourcesSection resources={resources} />
-      <NoticeboardSection />
+      <div className="hidden md:block">
+        <ResourcesSection resources={resources} />
+        <NoticeboardSection />
+      </div>
       {/* <BatchesSection /> */}
       {/* <WhyVidyantIas /> */}
-      <LearningSystem />
+      <div className="hidden md:block">
+        <LearningSystem />
+      </div>
       {/* <MentorshipSection /> */}
       {/* <PerformanceTracking /> */}
-      {/* <FacultySection /> */}
+      <FacultySection />
       {/* <ResultsSection /> */}
       {/* <TestimonialsSection /> */}
       {/* <CurrentAffairsSection /> */}
@@ -75,9 +87,15 @@ export default async function HomePage() {
       <OrientationSection />
       {/* <EventsSection /> */}
       {/* <SocialSection /> */}
-      <HomeFaq faqs={featuredFaqs} />
-      <ContactSection />
+      <div className="hidden md:block">
+        <HomeFaq faqs={featuredFaqs} />
+        <ContactSection />
+      </div>
+      {/* On phones the orientation band closes the page; this would be a
+          second indigo band touching it, and the sticky bar already offers
+          counselling. */}
       <CTASection
+        className="max-md:hidden"
         title="Your UPSC preparation deserves a clear direction."
         description="Speak with our academic team to understand the right preparation path for your attempt."
         location="home-final"

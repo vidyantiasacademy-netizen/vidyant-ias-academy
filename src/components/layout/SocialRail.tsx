@@ -18,6 +18,8 @@ import { cn } from "@/lib/utils/cn";
  *    motion.
  *  - Touch and keyboard have no hover: the tab is a button that toggles the
  *    same state; a tap outside or Escape closes it.
+ *  - Hidden below `md`: on phones it sat over page copy, and the footer
+ *    already carries the same social links.
  */
 export function SocialRail() {
   const { dict } = useI18n();
@@ -44,7 +46,7 @@ export function SocialRail() {
     <div
       ref={rootRef}
       data-open={open || undefined}
-      className="group/rail fixed top-1/2 right-0 z-40 flex -translate-y-1/2 items-center"
+      className="group/rail fixed top-1/2 right-0 z-40 flex -translate-y-1/2 items-center max-md:hidden"
     >
       <ul
         id="social-rail-links"

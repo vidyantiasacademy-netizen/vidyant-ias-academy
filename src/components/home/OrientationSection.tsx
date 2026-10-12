@@ -38,7 +38,8 @@ function dateParts(iso: string) {
  * Lead-generation block for the free orientation: bold type, an eyebrow, a
  * numbered agenda and a ticket card, written for first-time aspirants in their early twenties.
  * When no orientation is scheduled yet, the ticket asks for interest instead of
- * displaying an invented date.
+ * displaying an invented date. On phones (below `md`) only the headline and
+ * the ticket show; the agenda lives on the events page.
  */
 export function OrientationSection() {
   const orientation = nextOrientation();
@@ -62,7 +63,7 @@ export function OrientationSection() {
 
   return (
     <Section tone="indigo" id="orientation" containerSize="wide">
-      <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
+      <div className="grid gap-6 md:gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
         <div className="border-t-2 border-white pt-5 lg:col-span-7">
           <Eyebrow tone="light">Free orientation · In person · {BRAND.city}</Eyebrow>
 
@@ -73,15 +74,15 @@ export function OrientationSection() {
             </span>
           </h2>
 
-          <p className="mt-5 max-w-[46ch] text-body text-white/80 sm:text-body-lg">
+          <p className="mt-5 hidden max-w-[46ch] text-body text-white/80 sm:text-body-lg md:block">
             One free session. No jargon, no sales pitch &ndash; just the whole
             exam, decoded before you spend a rupee or a year on it.
           </p>
 
-          <p className="mt-8 text-eyebrow font-bold uppercase text-white/85">
+          <p className="mt-8 hidden text-eyebrow font-bold uppercase text-white/85 md:block">
             What you&rsquo;ll walk out knowing
           </p>
-          <ol className="mt-3 grid sm:grid-cols-2 sm:gap-x-8">
+          <ol className="mt-3 hidden sm:grid-cols-2 sm:gap-x-8 md:grid">
             {TOPICS.map((topic, index) => (
               <li
                 key={topic}
@@ -101,7 +102,7 @@ export function OrientationSection() {
             size="md"
             event={ANALYTICS_EVENTS.eventRegister}
             payload={{ location: "home-orientation-secondary" }}
-            className="mt-8"
+            className="mt-8 max-md:hidden"
           >
             See everything that&rsquo;s coming up
             <ArrowRight aria-hidden className="size-4" />

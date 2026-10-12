@@ -7,6 +7,8 @@ interface SectionHeaderProps {
   eyebrow?: string;
   title: ReactNode;
   description?: ReactNode;
+  /** Extra classes for the description, e.g. `max-md:hidden` on a decluttered phone layout. */
+  descriptionClassName?: string;
   align?: "left" | "center";
   tone?: "dark" | "light";
   /** Eyebrow colour on light surfaces; light-tone headers always use kesar. */
@@ -27,6 +29,7 @@ export function SectionHeader({
   eyebrow,
   title,
   description,
+  descriptionClassName,
   align = "left",
   tone = "dark",
   accent = "kesar",
@@ -85,6 +88,7 @@ export function SectionHeader({
                 "mt-4 max-w-[60ch] text-body sm:text-body-lg",
                 centered && "mx-auto",
                 tone === "light" ? "text-white/80" : "text-ink-secondary",
+                descriptionClassName,
               )}
             >
               {description}

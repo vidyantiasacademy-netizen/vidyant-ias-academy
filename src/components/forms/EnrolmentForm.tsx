@@ -16,7 +16,10 @@ import {
   ATTEMPT_OPTIONS,
   ATTENDANCE_MODES,
   LEAD_FORMS,
+  emailField,
   enrolmentSchema,
+  nameField,
+  phoneField,
   type EnrolmentInput,
 } from "@/lib/validation/schemas";
 import type { Batch, Course } from "@/types";
@@ -27,6 +30,8 @@ interface EnrolmentFormProps {
   batches: Batch[];
   /** Pre-selects a programme when the visitor arrives from a course page. */
   defaultCourse?: string;
+  /** What a signed-in visitor's profile already holds; those fields are not asked again. */
+  applicant?: Partial<EnrolmentInput>;
 }
 
 /**
@@ -34,8 +39,21 @@ interface EnrolmentFormProps {
  * Admission is confirmed by the academic team, so this captures intent and the
  * details the team needs rather than pretending to take a payment.
  */
-export function EnrolmentForm({ courses, batches, defaultCourse }: EnrolmentFormProps) {
+export function EnrolmentForm({ courses, batches, defaultCourse, applicant }: EnrolmentFormProps) {
   const lead = useLeadForm(LEAD_FORMS.enrolment, ANALYTICS_EVENTS.enrolSubmit);
+
+  // A stored value is only trusted — and its field hidden — if it would pass
+  // validation; otherwise the error would sit on a field nobody can see.
+  const known = {
+    name: nameField.safeParse(applicant?.name).success,
+    phone: phoneField.safeParse(applicant?.phone).success,
+    email: emailField.safeParse(applicant?.email).success,
+  };
+  const knownDetails = [
+    known.name && applicant?.name,
+    known.phone && applicant?.phone,
+    known.email && applicant?.email,
+  ].filter(Boolean);
 
   const {
     register,
@@ -44,7 +62,13 @@ export function EnrolmentForm({ courses, batches, defaultCourse }: EnrolmentForm
   } = useForm<EnrolmentInput>({
     resolver: zodResolver(enrolmentSchema),
     mode: "onBlur",
-    defaultValues: defaultCourse ? { course: defaultCourse } : undefined,
+    defaultValues: {
+      name: known.name ? applicant?.name : undefined,
+      phone: known.phone ? applicant?.phone : undefined,
+      email: known.email ? applicant?.email : undefined,
+      course: defaultCourse,
+      attempt: applicant?.attempt,
+    },
   });
 
   if (lead.isSuccess) {
@@ -72,36 +96,49 @@ export function EnrolmentForm({ courses, batches, defaultCourse }: EnrolmentForm
 
       <Honeypot registration={register("honeypot")} />
 
+      {knownDetails.length > 0 ? (
+        <p className="mt-6 border border-line bg-paper px-4 py-3 text-small text-ink-secondary">
+          Enrolling as <span className="font-semibold text-ink">{knownDetails.join(" · ")}</span> —
+          from your account.
+        </p>
+      ) : null}
+
       <div className="mt-7 grid gap-5 sm:grid-cols-2">
-        <Field id="enrol-name" label="Full name" required error={errors.name?.message}>
-          <Input
-            id="enrol-name"
-            autoComplete="name"
-            aria-invalid={Boolean(errors.name)}
-            {...register("name")}
-          />
-        </Field>
+        {known.name ? null : (
+          <Field id="enrol-name" label="Full name" required error={errors.name?.message}>
+            <Input
+              id="enrol-name"
+              autoComplete="name"
+              aria-invalid={Boolean(errors.name)}
+              {...register("name")}
+            />
+          </Field>
+        )}
 
-        <Field id="enrol-phone" label="Mobile number" required error={errors.phone?.message}>
-          <Input
-            id="enrol-phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            aria-invalid={Boolean(errors.phone)}
-            {...register("phone")}
-          />
-        </Field>
+        {known.phone ? null : (
+          <Field id="enrol-phone" label="Mobile number" required error={errors.phone?.message}>
+            <Input
+              id="enrol-phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              aria-invalid={Boolean(errors.phone)}
+              {...register("phone")}
+            />
+          </Field>
+        )}
 
-        <Field id="enrol-email" label="Email" required error={errors.email?.message}>
-          <Input
-            id="enrol-email"
-            type="email"
-            autoComplete="email"
-            aria-invalid={Boolean(errors.email)}
-            {...register("email")}
-          />
-        </Field>
+        {known.email ? null : (
+          <Field id="enrol-email" label="Email" required error={errors.email?.message}>
+            <Input
+              id="enrol-email"
+              type="email"
+              autoComplete="email"
+              aria-invalid={Boolean(errors.email)}
+              {...register("email")}
+            />
+          </Field>
+        )}
 
         <Field id="enrol-course" label="Programme" required error={errors.course?.message}>
           <Select
@@ -137,7 +174,7 @@ export function EnrolmentForm({ courses, batches, defaultCourse }: EnrolmentForm
         <Field id="enrol-attempt" label="Attempt status" required error={errors.attempt?.message}>
           <Select
             id="enrol-attempt"
-            defaultValue=""
+            defaultValue={applicant?.attempt ?? ""}
             aria-invalid={Boolean(errors.attempt)}
             {...register("attempt")}
           >

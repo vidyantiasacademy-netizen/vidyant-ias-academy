@@ -79,7 +79,9 @@ export function CourseForm({ course }: { course?: Course }) {
         : null,
       durationMonths: durationMonths.trim() ? Number(durationMonths) : null,
       status,
-      sanitySlug: sanitySlug.trim() || null,
+      // Blank means the Sanity page shares the course slug, which is the usual
+      // case — a null here would keep the course off the public catalogue.
+      sanitySlug: sanitySlug.trim() || slug.trim(),
     };
 
     startTransition(async () => {
@@ -220,10 +222,15 @@ export function CourseForm({ course }: { course?: Course }) {
         <Field
           id="sanitySlug"
           label="Website page slug"
-          hint="The slug of this course's page in Sanity Studio, if it has one."
+          hint="The slug of this course's page in Sanity Studio. Leave blank if it matches the slug above."
           error={errors.sanitySlug?.[0]}
         >
-          <Input id="sanitySlug" value={sanitySlug} onChange={(event) => setSanitySlug(event.target.value)} />
+          <Input
+            id="sanitySlug"
+            value={sanitySlug}
+            placeholder={slug.trim() || undefined}
+            onChange={(event) => setSanitySlug(event.target.value)}
+          />
         </Field>
       </Card>
 

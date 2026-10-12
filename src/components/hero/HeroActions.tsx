@@ -69,7 +69,8 @@ export function HeroActions() {
             Attend a free demo class
           </TrackedLink>
         </li>
-        <li>
+        {/* Below lg the sticky bottom bar has a WhatsApp button. */}
+        <li className="hidden lg:block">
           <TrackedAnchor
             href={whatsappUrl()}
             target="_blank"

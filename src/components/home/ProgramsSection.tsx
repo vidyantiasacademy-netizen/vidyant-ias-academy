@@ -2,6 +2,7 @@ import {
   ArrowRight,
   BookOpen,
   Check,
+  ChevronRight,
   Clock,
   Laptop,
   PenLine,
@@ -65,6 +66,9 @@ function isHomepageCategory(
  * without leaving the page — what it is, how long, how it is taught, what it
  * costs — and a way to buy it there and then. A price the institute quotes in
  * person is said so plainly, and that card's button opens the enrolment form.
+ *
+ * Phones (below `md`) get a compact list instead — stage, title and fee per
+ * row, each row a link to the course page, where the full card detail lives.
  */
 export function ProgramsSection({ courses }: { courses: Course[] }) {
   const featured = firstPerCategory(courses)
@@ -93,6 +97,7 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
           </>
         }
         description="Each program is built around the same system — teaching, practice, testing, evaluation and mentorship — applied to the stage you are actually at. Fees are listed up front."
+        descriptionClassName="max-md:hidden"
         action={
           <ButtonLink href={CTA.courses.href} variant="secondary">
             View all courses
@@ -100,8 +105,47 @@ export function ProgramsSection({ courses }: { courses: Course[] }) {
         }
       />
 
+      {/* Phones: one tappable row per stage. */}
+      <ul className="mt-6 divide-y divide-line border-y border-line md:hidden">
+        {featured.map((course, index) => {
+          const { icon: Icon, hook } = TILE[course.category];
+          return (
+            <li key={course.id}>
+              <TrackedLink
+                href={`/courses/${course.slug}`}
+                event={ANALYTICS_EVENTS.courseView}
+                payload={{ course: course.id, location: "programs-row" }}
+                className="flex items-center gap-4 py-4 active:bg-paper"
+              >
+                <span
+                  aria-hidden
+                  className={cn(
+                    "flex size-11 shrink-0 items-center justify-center",
+                    index === 0 ? "bg-kesar text-indigo-900" : "bg-indigo-100 text-indigo",
+                  )}
+                >
+                  <Icon className="size-5" strokeWidth={1.75} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-small font-semibold text-ink-secondary">{hook}</span>
+                  <span className="mt-0.5 block text-body font-bold leading-snug text-indigo">
+                    {course.title}
+                  </span>
+                  <span className="mt-0.5 block text-small font-semibold tabular-nums text-ink">
+                    {course.priceInPaise
+                      ? RUPEES.format(course.priceInPaise / 100)
+                      : "Fee on a free counselling call"}
+                  </span>
+                </span>
+                <ChevronRight aria-hidden className="size-5 shrink-0 text-ink-secondary" />
+              </TrackedLink>
+            </li>
+          );
+        })}
+      </ul>
+
       {/* Two across until a card has ~280px of measure, then all four. */}
-      <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:mt-10 lg:gap-6 xl:grid-cols-4">
+      <ul className="mt-8 hidden gap-5 md:grid md:grid-cols-2 lg:mt-10 lg:gap-6 xl:grid-cols-4">
         {featured.map((course, index) => {
           const { icon: Icon, hook } = TILE[course.category];
           const first = index === 0;
