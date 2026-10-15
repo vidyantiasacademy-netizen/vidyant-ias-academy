@@ -15,6 +15,7 @@ import type {
   Faq,
   FacultyMember,
   FreeResource,
+  PyqPaper,
 } from "./types";
 
 /**
@@ -116,6 +117,7 @@ export const SANITY_TAGS = {
   courses: "sanity:course",
   demoClasses: "sanity:demoClass",
   freeResources: "sanity:freeResource",
+  pyqPapers: "sanity:pyqPaper",
   faqs: "sanity:faq",
   announcements: "sanity:announcement",
 } as const;
@@ -369,6 +371,30 @@ const freeResourcesQuery = defineQuery(`
 
 export async function getFreeResources(locale: Locale = DEFAULT_LOCALE): Promise<FreeResource[]> {
   return (await sanityFetch<FreeResource[]>(freeResourcesQuery, localeParams(locale), { tags: [SANITY_TAGS.freeResources] })) ?? [];
+}
+
+/**
+ * Every PYQ paper — about a thousand rows, small enough to send whole so the
+ * portal can filter and search them without a round trip. Same projection as
+ * the student app's query in `sanity/schemas/pyqPaper.ts`, minus what the web
+ * page does not show.
+ */
+const pyqPapersQuery = defineQuery(`
+  *[_type == "pyqPaper" && defined(file.asset) && !(_id in path("drafts.**"))]
+    | order(year desc, stage asc, paper asc) {
+      _id,
+      year,
+      stage,
+      paper,
+      pageCount,
+      "url": file.asset->url,
+      "size": file.asset->size,
+      "answerKeyUrl": answerKey.asset->url
+    }
+`);
+
+export async function getPyqPapers(): Promise<PyqPaper[]> {
+  return (await sanityFetch<PyqPaper[]>(pyqPapersQuery, {}, { tags: [SANITY_TAGS.pyqPapers] })) ?? [];
 }
 
 const faqsQuery = defineQuery(`

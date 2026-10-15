@@ -53,9 +53,10 @@ a text layer). Paid material must not use this path — the dataset is
 world-readable; use Storage + signed URLs like `getDocumentLink`.
 
 Bulk import: `npm run seed:pyq:sanity -- <manifest.json>` (see
-`scripts/seed-pyq-sanity.mjs`). Mains 2016–2019 (393 papers, all subjects) were
-loaded this way from github.com/Shabber10/ALL-PYQ-Papers, OCR'd and optimised
-first. Prelims papers and answer keys are not loaded yet.
+`scripts/seed-pyq-sanity.mjs`). Prelims 2016–2025 (GS Paper I, CSAT) and Mains
+2016–2025 (all subjects) — 990 papers — were loaded this way from
+github.com/Shabber10/ALL-PYQ-Papers, OCR'd and optimised first. Answer keys are
+not loaded (the source has none).
 
 ## Not yet wired
 

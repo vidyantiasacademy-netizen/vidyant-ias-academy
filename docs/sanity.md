@@ -76,7 +76,7 @@ sanity.io/manage → **API** → **Webhooks** → Create webhook:
 | URL | `https://www.vidyantias.com/api/revalidate/sanity` |
 | Dataset | `production` |
 | Trigger on | Create, Update, Delete |
-| Filter | `_type in ["blog","currentAffair","faculty","course","demoClass","freeResource","faq","announcement","category","subject","tag","author","translation.metadata"]` |
+| Filter | `_type in ["blog","currentAffair","faculty","course","demoClass","freeResource","pyqPaper","faq","announcement","category","subject","tag","author","translation.metadata"]` |
 | Projection | `{_type, "slug": slug.current}` |
 | HTTP method | POST |
 | API version | `v2021-03-25` |
@@ -99,7 +99,7 @@ sanity/
 │   ├── course.ts           marketing copy only — fees and access live in Firestore
 │   ├── demoClass.ts        free/public recordings and live sessions
 │   ├── freeResource.ts     downloadable PDFs
-│   ├── pyqPaper.ts         UPSC previous-year papers (PDF), read directly by the student app
+│   ├── pyqPaper.ts         UPSC previous-year papers (PDF) — student app + portal /dashboard/pyq
 │   ├── faq.ts              question, answer, category, order
 │   ├── announcement.ts     site banner, windowed by startsAt/endsAt
 │   ├── taxonomy.ts         category, subject, tag, author

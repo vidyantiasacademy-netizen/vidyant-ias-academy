@@ -141,6 +141,20 @@ export interface FreeResource {
   price: number | null;
 }
 
+/** A UPSC previous-year paper. Not translated — see `sanity/schemas/pyqPaper.ts`. */
+export interface PyqPaper {
+  _id: string;
+  year: number;
+  stage: "prelims" | "mains";
+  /** As students say it: "GS Paper I", "CSAT", "Optional – Sociology I". */
+  paper: string;
+  pageCount: number | null;
+  url: string | null;
+  /** Bytes, from the asset. */
+  size: number | null;
+  answerKeyUrl: string | null;
+}
+
 export interface Faq {
   _id: string;
   question: string;
