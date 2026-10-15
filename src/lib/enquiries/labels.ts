@@ -39,6 +39,8 @@ export const ENQUIRY_FORM_LABELS: Record<string, string> = {
   enrolment: "Enrolment",
   "mock-test": "Free mock test",
   whatsapp: "WhatsApp chat",
+  "app-support": "App support request",
+  "account-deletion": "Account deletion request",
 };
 
 export function formLabel(form: string): string {
