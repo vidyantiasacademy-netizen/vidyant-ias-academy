@@ -1,6 +1,6 @@
 import "server-only";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { cache } from "react";
 
 import { AppError, ERROR_CODES } from "@/lib/errors";
@@ -106,7 +106,7 @@ async function verifyCookie(checkRevoked: boolean): Promise<SessionUser | null> 
   const store = await cookies();
   const cookie = store.get(SESSION_COOKIE)?.value;
 
-  if (!cookie) return null;
+  if (!cookie) return verifyBearer(checkRevoked);
 
   try {
     const decoded = await getAdminAuth().verifySessionCookie(cookie, checkRevoked);
@@ -124,6 +124,49 @@ async function verifyCookie(checkRevoked: boolean): Promise<SessionUser | null> 
   } catch {
     // Expired, revoked, tampered with, or Firebase is unreachable. All of them
     // mean "not signed in" — never fall through to an authorised state.
+    return null;
+  }
+}
+
+/**
+ * The mobile app's credential: `Authorization: Bearer <Firebase ID token>`.
+ *
+ * A native app has no cookie jar the server can rely on, so it sends the ID
+ * token the Firebase client SDK already refreshes every hour. Consulted only
+ * when there is no session cookie, so the website's behaviour is unchanged.
+ *
+ * The same gates as `createSession` apply on every request, not once: the
+ * token must come from the email/password provider (the centre provisions
+ * accounts; a federated sign-in must not get in through the app either), and a
+ * deactivated account is refused. `checkRevoked` makes a sign-out from the
+ * website — which revokes refresh tokens — end the app's access too.
+ *
+ * Not a CSRF surface: a browser never attaches this header on its own, so a
+ * forged cross-site request carries no credential.
+ */
+async function verifyBearer(checkRevoked: boolean): Promise<SessionUser | null> {
+  const header = (await headers()).get("authorization");
+  if (!header?.startsWith("Bearer ")) return null;
+
+  const idToken = header.slice("Bearer ".length).trim();
+  if (idToken.length < 16 || idToken.length > 4096) return null;
+
+  try {
+    const decoded = await getAdminAuth().verifyIdToken(idToken, checkRevoked);
+    if (decoded.firebase.sign_in_provider !== "password") return null;
+
+    const claims = decoded as unknown as Partial<AppClaims>;
+    if (claims.active === false) return null;
+
+    return {
+      uid: decoded.uid,
+      email: decoded.email ?? null,
+      role: claims.role ?? "STUDENT",
+      active: claims.active ?? true,
+      expiresAt: new Date(decoded.exp * 1000).toISOString(),
+    };
+  } catch {
+    // Expired, revoked, forged or unverifiable — all of them are "signed out".
     return null;
   }
 }

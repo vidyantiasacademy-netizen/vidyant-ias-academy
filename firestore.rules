@@ -377,6 +377,35 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // --------------------------------------------------------- lessonProgress
+
+    // Resume positions and completion, written by the server after the lesson
+    // access check (`lessonProgressService`). A student may read their own —
+    // nothing in it is secret to them — but never write it: a client-writable
+    // progress record is one whose uid field can name somebody else.
+    match /lessonProgress/{progressId} {
+      allow get, list: if isSelf(resource.data.studentUid) || isStaff();
+      allow write: if false;
+    }
+
+    // -------------------------------------------------------------- bookmarks
+
+    // Saved lessons, articles and reviewed questions. Server-written, because
+    // saving a question is authorised against the attempt's release date —
+    // a check rules cannot make.
+    match /bookmarks/{bookmarkId} {
+      allow get, list: if isSelf(resource.data.studentUid);
+      allow write: if false;
+    }
+
+    // ------------------------------------------------------------ pushDevices
+
+    // Push tokens from the mobile app. A token is a delivery address: nobody
+    // but the server that sends pushes needs to read one.
+    match /pushDevices/{deviceId} {
+      allow read, write: if false;
+    }
+
     // ------------------------------------------------------------------ catch
 
     // Anything not matched above is denied. Adding a collection to the app
