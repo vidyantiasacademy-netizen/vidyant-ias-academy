@@ -17,6 +17,7 @@
     "seed:courses:firestore": "node scripts/seed-courses-firestore.mjs",
     "seed:courses:sanity": "sanity exec scripts/seed-courses-sanity.mjs --with-user-token",
     "seed:content:sanity": "sanity exec scripts/seed-content-sanity.mjs --with-user-token",
+    "seed:pyq:sanity": "sanity exec scripts/seed-pyq-sanity.mjs --with-user-token --",
     "emulator:seed": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 node scripts/seed-emulator.mjs",
     "dev:emulator": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 NEXT_PUBLIC_FIREBASE_USE_EMULATORS=true next dev",
     "firebase:deploy:firestore": "firebase deploy --only firestore:rules,firestore:indexes",

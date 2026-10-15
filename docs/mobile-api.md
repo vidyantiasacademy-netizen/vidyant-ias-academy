@@ -33,6 +33,30 @@ check, `password` provider only, `active !== false`. Every `requireAuth()` /
 `lessonProgress`, `bookmarks`, `pushDevices` — server-written only; rules blocks
 and composite indexes added. Deploy with `npm run firebase:deploy:firestore`.
 
+## Read straight from Sanity
+
+**PYQ papers** (`pyqPaper`) have no route here. They are public UPSC papers, so
+the app queries Sanity's CDN directly and a published paper appears with no
+deploy or app update:
+
+```groq
+*[_type == "pyqPaper"] | order(year desc, stage asc, paper asc) {
+  _id, year, stage, paper, pageCount, publishedAt,
+  "url": file.asset->url, "size": file.asset->size,
+  "answerKeyUrl": answerKey.asset->url, "answerKeySize": answerKey.asset->size
+}
+```
+
+`size` is bytes from the asset, for "8.2 MB" before download. Editors should run
+scans through `ocrmypdf --optimize 3` before uploading (10–30 MB → 1–3 MB, plus
+a text layer). Paid material must not use this path — the dataset is
+world-readable; use Storage + signed URLs like `getDocumentLink`.
+
+Bulk import: `npm run seed:pyq:sanity -- <manifest.json>` (see
+`scripts/seed-pyq-sanity.mjs`). Mains 2016–2019 (393 papers, all subjects) were
+loaded this way from github.com/Shabber10/ALL-PYQ-Papers, OCR'd and optimised
+first. Prelims papers and answer keys are not loaded yet.
+
 ## Not yet wired
 
 - **Push delivery.** `pushDevices` holds Expo push tokens. Sending — from

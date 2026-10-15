@@ -99,6 +99,7 @@ sanity/
 │   ├── course.ts           marketing copy only — fees and access live in Firestore
 │   ├── demoClass.ts        free/public recordings and live sessions
 │   ├── freeResource.ts     downloadable PDFs
+│   ├── pyqPaper.ts         UPSC previous-year papers (PDF), read directly by the student app
 │   ├── faq.ts              question, answer, category, order
 │   ├── announcement.ts     site banner, windowed by startsAt/endsAt
 │   ├── taxonomy.ts         category, subject, tag, author

@@ -76,6 +76,17 @@ export const structure: StructureResolver = (S) =>
       byLanguage(S, "course", "Courses"),
       byLanguage(S, "demoClass", "Demo classes"),
       byLanguage(S, "freeResource", "Free resources"),
+      S.listItem()
+        .title("PYQ papers")
+        .schemaType("pyqPaper")
+        .child(
+          S.documentTypeList("pyqPaper")
+            .title("PYQ papers")
+            .defaultOrdering([
+              { field: "year", direction: "desc" },
+              { field: "paper", direction: "asc" },
+            ]),
+        ),
       byLanguage(S, "faq", "FAQs"),
 
       S.divider(),
