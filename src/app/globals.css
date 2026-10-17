@@ -4,7 +4,7 @@
    vidyantIAS design system — colour and type
    ------------------------------------------------------------
    THEME: "Ink Indigo & Kesar" — the palette of the VidyantIAS
-   logo system (Sopan, the steps). Deep indigo is the ink and the
+   logo system (Breakout, the V that leaves the circle). Deep indigo is the ink and the
    authority; saffron appears once, and it always stands for the
    student. Built for the audience this institute actually serves:
    aspirants in small towns and villages, reading on a budget
@@ -118,6 +118,12 @@
   /* The wash that sits behind highlights, stats and badges. */
   --color-kesar-100: #fdf1dd;
 
+  /* ---- Logo (Breakout concept sheet) --------------------- */
+  /* The mark and logotype keep the sheet's exact navy and saffron;
+     nothing else on the site uses these. */
+  --color-logo-navy: #0b1b3f;
+  --color-logo-saffron: #f29a2e;
+
   /* ---- Chilli (Wada 164 "Red Orange") -------------------- */
   /* 4.3:1 on white — decoration, dots and stamp rings only. */
   --color-chilli: #dd4027;
@@ -163,6 +169,8 @@
   /* Type */
   /* Devanagari falls through to Noto on the Hindi site — Inter has no Hindi glyphs. */
   --font-sans: var(--font-inter), var(--font-devanagari), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* The logotype only (`font-brand`). */
+  --font-brand: var(--font-jakarta), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --text-hero: 2.25rem;           /* 36px mobile */
   --text-hero--line-height: 1.02;

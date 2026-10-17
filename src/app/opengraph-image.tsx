@@ -92,10 +92,10 @@ export default async function OpengraphImage() {
       >
         {/* satori renders a plain <img>; next/image is not available here */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <img src={mark} alt="" height={50} width={64} />
-          <div style={{ display: "flex", fontSize: "40px", color: "#ffffff" }}>
-            <span style={{ fontWeight: 700 }}>{BRAND.logotype.lead}</span>
-            <span style={{ fontWeight: 300 }}>{BRAND.logotype.trail}</span>
+          <img src={mark} alt="" height={64} width={52} style={{ objectFit: "contain" }} />
+          <div style={{ display: "flex", fontSize: "40px", fontWeight: 600, color: "#ffffff" }}>
+            <span>{BRAND.logotype.lead}</span>
+            <span>{BRAND.logotype.trail}</span>
           </div>
         </div>
         <div

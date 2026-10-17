@@ -10,9 +10,8 @@ export const BRAND = {
   name: "vidyantIAS",
   legalName: "vidyantIAS",
   /**
-   * The drawn logotype, split so the two weights of the lockup can be set
-   * separately. The logo deck ("VidyantIAS Logo Concepts", concept 03 — Sopan)
-   * sets the name with a capital V; `name` above is the casing used in running
+   * The drawn logotype, split so the lockup can set the two parts separately.
+   * The Breakout lockup sets the name with a capital V; `name` above is the casing used in running
    * copy. TODO(institute): confirm which casing wins, and align the other.
    */
   logotype: { lead: "Vidyant", trail: "IAS" },

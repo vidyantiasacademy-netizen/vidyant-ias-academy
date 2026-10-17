@@ -60,17 +60,10 @@ export function HeroCallbackForm({ courses }: { courses: Course[] }) {
         aria-hidden
         className="h-1.5 bg-kesar"
       />
-      {/* Beside the banner the card stretches to the banner's height; the
-          content centres in whatever height that gives. */}
-      <div className="flex flex-1 flex-col justify-center p-5 sm:p-6 xl:px-7 xl:py-5">
-        {/* Beside the banner the card is as tall as the banner, which grows
-            with the screen. Content is added back in steps as that height
-            allows, so large screens get substance rather than empty padding:
-            xl is compact, 2xl restores the intro, 3xl the counselling link,
-            4xl the "what happens next" steps. */}
-        <p className="flex items-center gap-2.5 text-eyebrow font-bold uppercase text-kesar-600 xl:hidden 2xl:flex">
+      <div className="flex flex-1 flex-col justify-center p-5 sm:p-6 xl:p-8">
+        <p className="flex items-center gap-2.5 text-eyebrow font-bold uppercase text-kesar-600">
           <span aria-hidden className="size-2 shrink-0 bg-current" />
-          Admissions open · {EXAM_CYCLE.label}
+          Free counselling · {EXAM_CYCLE.label}
         </p>
 
         {lead.isSuccess ? (
@@ -105,17 +98,17 @@ export function HeroCallbackForm({ courses }: { courses: Course[] }) {
               });
             })}
           >
-            <h2 className="mt-4 text-h4 font-bold text-indigo xl:mt-0 2xl:mt-4 3xl:text-h3">
+            <h2 className="mt-3 text-h3 font-bold text-indigo">
               Talk to an academic counsellor
             </h2>
-            <p className="mt-2 text-small text-ink-secondary xl:hidden 2xl:block">
+            <p className="mt-2 text-small text-ink-secondary">
               Three fields. We call you back and answer whatever you need to
               decide.
             </p>
 
             <Honeypot registration={register("honeypot")} />
 
-            <div className="mt-5 grid gap-3.5 sm:grid-cols-2 xl:mt-4 xl:gap-3">
+            <div className="mt-5 grid gap-3.5 sm:grid-cols-2">
               <Field
                 id="hero-name"
                 label="Full name"
@@ -174,7 +167,7 @@ export function HeroCallbackForm({ courses }: { courses: Course[] }) {
                 type="submit"
                 size="lg"
                 fullWidth
-                className="whitespace-nowrap sm:h-12 sm:self-end xl:px-3 xl:text-small"
+                className="whitespace-nowrap sm:h-12 sm:self-end"
                 disabled={lead.isSubmitting}
               >
                 {lead.isSubmitting ? (
@@ -194,11 +187,11 @@ export function HeroCallbackForm({ courses }: { courses: Course[] }) {
               </div>
             ) : null}
 
-            <ul className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line pt-4 xl:mt-3 xl:flex-nowrap xl:gap-x-3 xl:border-t-0 xl:pt-0 2xl:mt-4 2xl:gap-x-4 2xl:border-t 2xl:pt-3.5">
+            <ul className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line pt-4">
               {ASSURANCES.map((item) => (
                 <li
                   key={item}
-                  className="flex items-center gap-1.5 text-small text-ink-secondary xl:gap-1 xl:text-[0.8125rem] 2xl:gap-1.5 2xl:text-small"
+                  className="flex items-center gap-1.5 text-small text-ink-secondary"
                 >
                   <Check aria-hidden className="size-4 text-kesar-600" />
                   {item}
@@ -210,13 +203,13 @@ export function HeroCallbackForm({ courses }: { courses: Course[] }) {
               href={CTA.counselling.href}
               variant="link"
               size="sm"
-              className="mt-4 justify-start px-0 xl:hidden 3xl:inline-flex"
+              className="mt-3 justify-start px-0"
             >
               Or book a full counselling session
               <ArrowRight aria-hidden className="size-4" />
             </ButtonLink>
 
-            <ol className="mt-6 hidden gap-3 border-t border-line pt-5 4xl:grid 4xl:grid-cols-3">
+            <ol className="mt-5 hidden gap-3 border-t border-line pt-5 3xl:grid">
               {NEXT_STEPS.map((step, i) => (
                 <li key={step} className="flex items-start gap-3">
                   <span

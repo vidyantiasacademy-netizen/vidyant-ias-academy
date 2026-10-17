@@ -1,4 +1,4 @@
-import { ArrowRight, ListChecks, MonitorPlay } from "lucide-react";
+import { ArrowRight, Download, ListChecks, MonitorPlay } from "lucide-react";
 
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { TrackedAnchor, TrackedButtonLink, TrackedLink } from "@/components/ui/TrackedLink";
@@ -8,15 +8,15 @@ import { CTA, whatsappUrl } from "@/lib/constants/site";
 const PAYLOAD = { location: "home-hero" } as const;
 
 const quietLink =
-  "inline-flex min-h-11 items-center gap-2 text-small font-bold text-white underline decoration-white/40 decoration-2 underline-offset-4 transition-colors hover:decoration-kesar";
+  "inline-flex min-h-11 items-center gap-2 text-small font-bold text-indigo underline decoration-line-strong decoration-2 underline-offset-4 transition-colors hover:decoration-kesar";
 
 /**
  * The hero's actions, in three weights so the next step is never in doubt:
  * one kesar primary (the priced programme cards below, where a course can be
- * bought), one white-outlined secondary (a free counselling call — desktop only, as
- * phones have it in the sticky bottom bar), and quiet text links for the
- * visitor who wants to try before they talk. Styled for the hero's dark
- * photograph — white type throughout.
+ * bought), one indigo-outlined secondary (the brochure — counselling is the
+ * lead form beside the hero copy), and quiet text links for the
+ * visitor who wants to try before they talk. Styled for the hero's light
+ * wash — indigo type throughout.
  */
 export function HeroActions() {
   return (
@@ -33,16 +33,17 @@ export function HeroActions() {
           See courses &amp; fees
           <ArrowRight aria-hidden className="size-5" />
         </TrackedButtonLink>
+        {/* Counselling is the lead form beside these actions, so the second
+            action is the brochure — the lighter commitment. */}
         <TrackedButtonLink
-          href={CTA.counselling.href}
-          variant="outlineLight"
+          href={CTA.brochure.href}
+          variant="secondary"
           size="lg"
-          // Below lg the sticky bottom bar already offers counselling.
-          className="hidden lg:inline-flex"
-          event={ANALYTICS_EVENTS.counsellingClick}
-          payload={{ ...PAYLOAD, action: "counselling" }}
+          event={ANALYTICS_EVENTS.brochureClick}
+          payload={{ ...PAYLOAD, action: "brochure" }}
         >
-          {CTA.counselling.label}
+          <Download aria-hidden className="size-5" />
+          {CTA.brochure.label}
         </TrackedButtonLink>
       </div>
 

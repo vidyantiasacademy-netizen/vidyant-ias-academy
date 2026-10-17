@@ -59,7 +59,7 @@ export default async function HomePage() {
         explore tiles already link to, and the bottom tab bar carries
         counselling — so those sections are md-up only.
       */}
-      <HomeHero />
+      <HomeHero courses={courses} />
       <div className="hidden md:block">
         <TrustBar />
       </div>
