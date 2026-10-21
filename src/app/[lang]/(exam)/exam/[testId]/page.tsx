@@ -7,6 +7,7 @@ import { getCurrentStudent } from "@/lib/auth/server";
 import { BRAND } from "@/lib/constants/site";
 import { isAppError } from "@/lib/errors";
 import { describeExamRules, resolveExamSecurity } from "@/lib/exam/policy";
+import { hasPassed, isAhead } from "@/lib/utils/instant";
 
 import { testService } from "@/services/tests/test.service";
 
@@ -36,7 +37,7 @@ export default async function ExamPage({ params }: PageProps<"/[lang]/exam/[test
 
   // Descriptive papers are written on paper and photographed; there is nothing
   // for the MCQ runner to render.
-  if (test.kind === "mains-descriptive") redirect(`/dashboard/tests/${testId}`);
+  if (test.kind === "mains-descriptive") redirect(`/dashboard/mains/${testId}`);
 
   const resultHref = `/dashboard/tests/${testId}/result`;
 
@@ -45,15 +46,15 @@ export default async function ExamPage({ params }: PageProps<"/[lang]/exam/[test
   const existing = await testService.findOwnAttempt(testId);
   if (existing && existing.status !== "in-progress") redirect(resultHref);
 
-  const now = new Date().toISOString();
+  const now = new Date().getTime();
 
-  if (test.opensAt && now < test.opensAt) {
+  if (test.opensAt && isAhead(test.opensAt, now)) {
     return (
       <ExamUnavailable message="This paper has not opened yet. Check the schedule on your test series page." />
     );
   }
 
-  if (test.closesAt && now > test.closesAt) {
+  if (test.closesAt && hasPassed(test.closesAt, now)) {
     return <ExamUnavailable message="This paper has closed." />;
   }
 

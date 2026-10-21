@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { ReleaseResultsButton } from "@/components/admin/PaperActions";
@@ -9,6 +10,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import Link from "@/i18n/Link";
 import { isAtLeast } from "@/lib/auth/roles";
 import { formatIst } from "@/lib/exam/ist";
+import { isAhead } from "@/lib/utils/instant";
 import { mockTestService, type MockAttemptRow } from "@/services/mock-tests/mock-test.service";
 import { testService } from "@/services/tests/test.service";
 import type { AttemptStatus, TerminationReason } from "@/types/db";
@@ -48,18 +50,20 @@ export default async function TestResultsPage({
     testService.listResultsForStaff(testId),
   ]);
 
+  // A Mains paper's copies, scores and release live on its Answer Writing page.
+  if (test.kind === "mains-descriptive") redirect(`/admin/answer-writing/${test.id}`);
+
   const visitors =
     test.audience === "public" ? await mockTestService.listForStaff(testId) : null;
 
-  const nowIso = new Date().toISOString();
+  const now = new Date().getTime();
   const scored = rows.flatMap((row) => (row.result ? [row.result] : []));
   const sitting = rows.filter((row) => row.attempt.status === "in-progress").length;
-  const hidden = scored.filter((result) => !result.publishedAt || result.publishedAt > nowIso);
+  const hidden = scored.filter((result) => !result.publishedAt || isAhead(result.publishedAt, now));
   const average = scored.length
     ? scored.reduce((sum, result) => sum + result.score, 0) / scored.length
     : null;
-  const stillOpen = !test.closesAt || test.closesAt > nowIso;
-  const isMcq = test.kind !== "mains-descriptive";
+  const stillOpen = !test.closesAt || isAhead(test.closesAt, now);
 
   const release =
     scored.length === 0
@@ -86,7 +90,7 @@ export default async function TestResultsPage({
           </p>
         </div>
 
-        {isMcq && scored.length > 0 && sitting === 0 ? (
+        {scored.length > 0 && sitting === 0 ? (
           <ReleaseResultsButton testId={test.id} stillOpen={stillOpen} />
         ) : null}
       </div>
@@ -96,16 +100,10 @@ export default async function TestResultsPage({
           {sitting} student{sitting === 1 ? " is" : "s are"} still sitting this paper. Results can be
           released once every sitting has ended.
         </p>
-      ) : hidden.length > 0 && test.resultsVisibleFrom && test.resultsVisibleFrom > nowIso ? (
+      ) : hidden.length > 0 && test.resultsVisibleFrom && isAhead(test.resultsVisibleFrom, now) ? (
         <p className="mt-6 border border-line-strong bg-paper px-4 py-3 text-small">
           Scheduled to release {formatIst(test.resultsVisibleFrom)}. Release now to show them
           earlier and fill in ranks.
-        </p>
-      ) : null}
-
-      {!isMcq ? (
-        <p className="mt-6 border border-line-strong bg-paper px-4 py-3 text-small">
-          Mains papers are marked by faculty, so scores appear here only once they are evaluated.
         </p>
       ) : null}
 

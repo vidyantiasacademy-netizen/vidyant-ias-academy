@@ -7,6 +7,7 @@ import { action, roleGuard } from "@/lib/auth/guards";
 import { AppError, ERROR_CODES } from "@/lib/errors";
 import { LOCKED_TEST_FIELDS, paperLockReason, publishBlocker } from "@/lib/exam/authoring";
 import { MAX_IMPORT_ROWS } from "@/lib/exam/question-csv";
+import { toUtcIsoOrNull } from "@/lib/utils/instant";
 import { questionSchema, testSchema } from "@/lib/validation/entities";
 import { testService } from "@/services/tests/test.service";
 import type { QuestionDoc, Test } from "@/types/db";
@@ -74,8 +75,14 @@ export const updateTestAction = action(
 
     if (reason) {
       // A paper written before `audience` existed has no field, which means
-      // "enrolled" — not a change when the form sends that value back.
-      const before = { ...current, audience: current.audience ?? "enrolled" };
+      // "enrolled" — not a change when the form sends that value back. Likewise
+      // a paper stored before times were normalised says `+05:30` where the
+      // form now sends the same moment as `Z`.
+      const before = {
+        ...current,
+        audience: current.audience ?? "enrolled",
+        opensAt: toUtcIsoOrNull(current.opensAt),
+      };
       const after = { ...fields, audience: fields.audience ?? "enrolled" };
 
       const changed = LOCKED_TEST_FIELDS.some(

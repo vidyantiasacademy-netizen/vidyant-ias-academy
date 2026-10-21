@@ -20,10 +20,13 @@ export const metadata: Metadata = {
 export default async function TestsPage() {
   await requireFacultyPage("/admin/tests");
 
-  const [tests, courses] = await Promise.all([
+  const [allTests, courses] = await Promise.all([
     testService.listForStaff(),
     courseService.listForStaff(),
   ]);
+
+  // Mains papers are written offline and evaluated; they live under Answer Writing.
+  const tests = allTests.filter((test) => test.kind !== "mains-descriptive");
 
   const courseTitle = new Map(courses.map((course) => [course.id, course.title]));
 
@@ -34,6 +37,11 @@ export default async function TestsPage() {
           <h1 className="text-h2 font-bold">Tests</h1>
           <p className="mt-2 text-body text-ink-secondary">
             MCQ papers for the online exam runner. A paper is a draft until you publish it.
+            Descriptive Mains papers are under{" "}
+            <Link href="/admin/answer-writing" className="font-semibold text-indigo underline">
+              Answer Writing
+            </Link>
+            .
           </p>
         </div>
         {courses.length > 0 ? (

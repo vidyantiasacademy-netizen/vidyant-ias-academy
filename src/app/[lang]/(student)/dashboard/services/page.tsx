@@ -65,6 +65,7 @@ const SERVICES: ServiceTileProps[] = [
     description: "Evaluated answer copies with remarks.",
     icon: <Copy aria-hidden className="size-5" />,
     tone: "indigo",
+    href: "/dashboard/mains",
   },
   {
     label: "Fees",

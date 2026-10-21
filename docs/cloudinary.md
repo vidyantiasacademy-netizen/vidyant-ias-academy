@@ -61,6 +61,8 @@ Reads go through `storageService.getSignedUrl()`, which authorises the caller
 | `courses/{courseId}/…` | FACULTY and above, or a student with an active enrollment in that course |
 | `questions/…` | Any active user (a question image during a test) |
 | `tests/…`, `faculty/…` | FACULTY and above / ADMIN and above |
+| `tests/{testId}/paper/…` | Also an enrolled student once the Mains paper opens — signed by `getQuestionPaperUrlForStudent` after `answerWritingService` checks |
+| `tests/{testId}/evaluated/{uid}/…` | Also that student, once their evaluation is released — signed by `getEvaluatedCopyUrlForStudent` |
 
 Writes are authorised the same way in `assertCanWrite()`.
 

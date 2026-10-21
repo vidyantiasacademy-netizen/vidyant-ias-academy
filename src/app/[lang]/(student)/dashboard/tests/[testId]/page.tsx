@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { CalendarClock, ShieldCheck } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge";
@@ -6,6 +7,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { BRAND } from "@/lib/constants/site";
 import { describeExamRules, resolveExamSecurity } from "@/lib/exam/policy";
+import { hasPassed, isAhead } from "@/lib/utils/instant";
 import { testService } from "@/services/tests/test.service";
 
 /**
@@ -44,13 +46,16 @@ export default async function PaperPage({
   // `getTest` is the authorisation: it refuses a draft paper and one from a
   // course this student has not enrolled in.
   const test = await testService.getTest(testId);
+
+  // Mains papers are written offline and uploaded — their page is under /mains.
+  if (test.kind === "mains-descriptive") redirect(`/dashboard/mains/${testId}`);
+
   const attempt = await testService.findOwnAttempt(testId);
   const policy = resolveExamSecurity(test);
 
-  const now = new Date().toISOString();
-  const notOpenYet = Boolean(test.opensAt && now < test.opensAt);
-  const closed = Boolean(test.closesAt && now > test.closesAt);
-  const isDescriptive = test.kind === "mains-descriptive";
+  const now = new Date().getTime();
+  const notOpenYet = Boolean(test.opensAt && isAhead(test.opensAt, now));
+  const closed = Boolean(test.closesAt && hasPassed(test.closesAt, now));
   const finished = attempt && attempt.status !== "in-progress";
 
   return (
@@ -85,12 +90,6 @@ export default async function PaperPage({
           <ButtonLink href={`/dashboard/tests/${test.id}/result`} variant="primary">
             View scorecard
           </ButtonLink>
-        ) : isDescriptive ? (
-          <p className="text-body text-ink-secondary">
-            This is a descriptive paper. Write it by hand within the window above and
-            upload the photographed answer sheet from Services — it is evaluated by
-            faculty, not scored here.
-          </p>
         ) : notOpenYet ? (
           <p className="text-body text-ink-secondary">
             The paper opens at the time shown above.
@@ -104,7 +103,7 @@ export default async function PaperPage({
         )}
       </div>
 
-      {!isDescriptive && !finished ? (
+      {!finished ? (
         <Card tone="paper" padding="md" className="mt-10">
           <h2 className="flex items-center gap-2 text-body-lg font-semibold">
             <ShieldCheck aria-hidden className="size-5 text-indigo" />

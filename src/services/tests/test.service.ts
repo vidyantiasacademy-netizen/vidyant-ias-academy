@@ -14,6 +14,7 @@ import {
 } from "@/lib/exam/policy";
 import { scoreMcqPaper } from "@/lib/exam/scoring";
 import { optionSeed, seededShuffle } from "@/lib/exam/shuffle";
+import { hasPassed, isAhead, toUtcIsoOrNull } from "@/lib/utils/instant";
 import type { ScoredPaper } from "@/lib/exam/analytics";
 import type { ExamPayload, ExamQuestion } from "@/lib/exam/types";
 import { COLLECTIONS, docId } from "@/lib/firebase/collections";
@@ -345,13 +346,13 @@ export async function createAttempt(testId: string): Promise<TestAttempt> {
     });
   }
 
-  if (test.opensAt && nowIso < test.opensAt) {
+  if (test.opensAt && isAhead(test.opensAt, now.getTime())) {
     throw new AppError(ERROR_CODES.FORBIDDEN, {
       message: "This test has not opened yet.",
     });
   }
 
-  if (test.closesAt && nowIso > test.closesAt) {
+  if (test.closesAt && hasPassed(test.closesAt, now.getTime())) {
     throw new AppError(ERROR_CODES.FORBIDDEN, {
       message: "This test has closed.",
     });
@@ -1011,7 +1012,8 @@ async function finalise(
     rank: null,
     percentile: null,
     subjectBreakdown: scored.subjectBreakdown,
-    publishedAt: test.resultsVisibleFrom ?? nowIso,
+    // UTC, so later text comparisons and orderings of `publishedAt` hold.
+    publishedAt: toUtcIsoOrNull(test.resultsVisibleFrom) ?? nowIso,
   };
 
   const resultRef = collection(COLLECTIONS.results).doc(docId.result(attempt.id));
@@ -1087,7 +1089,7 @@ export async function getResult(attemptId: string): Promise<Result | null> {
   if (!isAtLeast(user.role, "FACULTY")) {
     if (result.studentUid !== user.uid) throw new AppError(ERROR_CODES.FORBIDDEN);
 
-    if (result.publishedAt && result.publishedAt > new Date().toISOString()) {
+    if (result.publishedAt && isAhead(result.publishedAt)) {
       throw new AppError(ERROR_CODES.FORBIDDEN, {
         message: "Results for this test are not out yet.",
       });
@@ -1164,7 +1166,7 @@ export async function getReview(attemptId: string): Promise<ReviewQuestion[]> {
     if (
       !result ||
       !result.publishedAt ||
-      result.publishedAt > new Date().toISOString()
+      isAhead(result.publishedAt)
     ) {
       throw new AppError(ERROR_CODES.FORBIDDEN, {
         message: "Answers and explanations for this paper are not out yet.",
@@ -1242,9 +1244,9 @@ export async function listOwnPublishedResults(): Promise<ScoredPaper[]> {
     .where("studentUid", "==", user.uid)
     .get();
 
-  const nowIso = new Date().toISOString();
+  const now = Date.now();
   const results = (toEntities<ResultDoc>(snapshot.docs) as Result[]).filter(
-    (result) => result.publishedAt !== null && result.publishedAt <= nowIso,
+    (result) => result.publishedAt !== null && hasPassed(result.publishedAt, now),
   );
 
   const testIds = [...new Set(results.map((result) => result.testId))];
@@ -1394,7 +1396,8 @@ export async function releaseResults(testId: string): Promise<{ released: number
   const results = (toEntities<ResultDoc>(resultSnapshot.docs) as Result[]).sort(
     (a, b) => b.score - a.score,
   );
-  const nowIso = new Date().toISOString();
+  const now = Date.now();
+  const nowIso = new Date(now).toISOString();
   const total = results.length;
 
   let released = 0;
@@ -1406,7 +1409,7 @@ export async function releaseResults(testId: string): Promise<{ released: number
     const below = total - (index + results.slice(index).filter((other) => other.score === result.score).length);
     const percentile = total > 1 ? Number(((below / (total - 1)) * 100).toFixed(2)) : 100;
 
-    const unreleased = !result.publishedAt || result.publishedAt > nowIso;
+    const unreleased = !result.publishedAt || isAhead(result.publishedAt, now);
     if (unreleased) released += 1;
 
     return {
@@ -1429,7 +1432,7 @@ export async function releaseResults(testId: string): Promise<{ released: number
   }
 
   const test = requireEntity<Test>(await collection(COLLECTIONS.tests).doc(testId).get(), "test");
-  if (!test.resultsVisibleFrom || test.resultsVisibleFrom > nowIso) {
+  if (!test.resultsVisibleFrom || isAhead(test.resultsVisibleFrom, now)) {
     await collection(COLLECTIONS.tests)
       .doc(testId)
       .update({ resultsVisibleFrom: nowIso, ...auditOnUpdate(actor.uid) });

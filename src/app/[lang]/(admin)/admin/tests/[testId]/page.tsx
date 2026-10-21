@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { BarChart3, FileUp, Pencil, Plus } from "lucide-react";
 
 import Link from "@/i18n/Link";
@@ -45,12 +46,15 @@ export default async function TestPage({
     testService.listQuestionsForStaff(testId),
     testService.hasAttempts(testId),
   ]);
+
+  // Mains papers are authored and evaluated under Answer Writing.
+  if (test.kind === "mains-descriptive") redirect(`/admin/answer-writing/${test.id}`);
+
   const course = await courseService.getById(test.courseId);
 
   const lockReason = paperLockReason(test, sat);
   const blocker =
     test.status === "published" ? null : publishBlocker(test, questions);
-  const isMcq = test.kind !== "mains-descriptive";
 
   const live = questions.filter((question) => question.status === "published");
   const liveMarks = live.reduce((sum, question) => sum + question.marks, 0);
@@ -83,30 +87,19 @@ export default async function TestPage({
               Results
             </ButtonLink>
           ) : null}
-          {isMcq ? (
-            <>
-              <ButtonLink
-                href={`/admin/tests/${test.id}/settings`}
-                variant="secondary"
-                size="sm"
-              >
-                <Pencil aria-hidden className="size-4" />
-                Settings
-              </ButtonLink>
-              {sat && test.status === "published" ? null : (
-                <PaperStatusButton testId={test.id} status={test.status} />
-              )}
-            </>
-          ) : null}
+          <ButtonLink
+            href={`/admin/tests/${test.id}/settings`}
+            variant="secondary"
+            size="sm"
+          >
+            <Pencil aria-hidden className="size-4" />
+            Settings
+          </ButtonLink>
+          {sat && test.status === "published" ? null : (
+            <PaperStatusButton testId={test.id} status={test.status} />
+          )}
         </div>
       </div>
-
-      {!isMcq ? (
-        <p className="mt-6 border border-line-strong bg-paper px-4 py-3 text-small">
-          Mains papers are evaluated by faculty rather than sat in the online
-          runner, so they are not authored here.
-        </p>
-      ) : null}
 
       <dl className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
@@ -147,7 +140,7 @@ export default async function TestPage({
           <h2 id="questions-heading" className="text-h3 font-bold">
             Questions
           </h2>
-          {isMcq && !lockReason ? (
+          {!lockReason ? (
             <div className="flex flex-wrap gap-3">
               {draftCount > 0 ? (
                 <PublishDraftsButton testId={test.id} count={draftCount} />
@@ -235,7 +228,7 @@ export default async function TestPage({
                           </p>
                         </div>
 
-                        {isMcq && !lockReason ? (
+                        {!lockReason ? (
                           <div className="flex shrink-0 items-center">
                             <Link
                               href={`/admin/tests/${test.id}/questions/${question.id}`}

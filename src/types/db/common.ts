@@ -8,7 +8,11 @@
  * straight column mapping instead of a vendor type unwrap.
  */
 
-/** ISO-8601, e.g. `2026-04-12T06:30:00.000Z`. */
+/**
+ * ISO-8601 in UTC, e.g. `2026-04-12T06:30:00.000Z`. Written that way so values
+ * sort and compare as text; compare them with `lib/utils/instant.ts` anyway,
+ * since a value from elsewhere may carry an offset.
+ */
 export type IsoDateTime = string;
 
 /** `YYYY-MM-DD`. Used where a clock time would be meaningless (exam dates). */

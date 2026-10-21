@@ -6,6 +6,7 @@ import { summarisePerformance, type PerformanceSummary } from "@/lib/exam/analyt
 import { describeExamRules, resolveExamSecurity } from "@/lib/exam/policy";
 import { COLLECTIONS } from "@/lib/firebase/collections";
 import { collection, toEntity } from "@/lib/firebase/firestore";
+import { earliestFirst, hasPassed, isAhead, latestFirst } from "@/lib/utils/instant";
 import { activityService } from "@/services/activity/activity.service";
 import { courseService } from "@/services/courses/course.service";
 import { notificationService } from "@/services/notifications/notification.service";
@@ -282,8 +283,9 @@ export async function saveProgress(
 
 function windowOf(test: Test, nowIso: string): PaperWindowName {
   if (!test.opensAt) return "unscheduled";
-  if (nowIso < test.opensAt) return "upcoming";
-  if (test.closesAt && nowIso > test.closesAt) return "closed";
+  const now = Date.parse(nowIso);
+  if (isAhead(test.opensAt, now)) return "upcoming";
+  if (test.closesAt && hasPassed(test.closesAt, now)) return "closed";
   return "open";
 }
 
@@ -354,7 +356,7 @@ async function buildPapers(courses: { course: Course }[]): Promise<PaperView[]> 
         nowIso,
       ),
     )
-    .sort((a, b) => (b.opensAt ?? "").localeCompare(a.opensAt ?? ""));
+    .sort((a, b) => latestFirst(a.opensAt, b.opensAt));
 }
 
 export async function listPapers(): Promise<PaperView[]> {
@@ -401,7 +403,7 @@ export async function getPaperDetail(testId: string): Promise<PaperDetailView> {
   let blockedReason: string | null = null;
   if (test.kind === "mains-descriptive") {
     blockedReason =
-      "This is a descriptive paper. Write it by hand within the window and submit the answer sheet as your centre instructs — it is evaluated by faculty.";
+      "This is a descriptive paper. Open Mains Answer Writing in the student portal on the web to download the question paper and upload your answer sheet — it is evaluated by faculty.";
   } else if (attempt && attempt.status !== "in-progress") {
     blockedReason = "You have already sat this paper.";
   } else if (paper.window === "upcoming") {
@@ -690,11 +692,11 @@ export async function getHome(): Promise<HomeView> {
       inProgress: sittable.filter((paper) => paper.attempt?.status === "in-progress"),
       open: sittable
         .filter((paper) => paper.window === "open" && !paper.attempt)
-        .sort((a, b) => (a.closesAt ?? "9999").localeCompare(b.closesAt ?? "9999"))
+        .sort((a, b) => earliestFirst(a.closesAt, b.closesAt))
         .slice(0, 3),
       upcoming: papers
         .filter((paper) => paper.window === "upcoming")
-        .sort((a, b) => (a.opensAt ?? "").localeCompare(b.opensAt ?? ""))
+        .sort((a, b) => earliestFirst(a.opensAt, b.opensAt))
         .slice(0, 3),
       recentlyReleased: papers
         .filter((paper) => paper.resultReleased)

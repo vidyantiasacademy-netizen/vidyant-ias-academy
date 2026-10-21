@@ -7,13 +7,15 @@ import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { requireAuth } from "@/lib/auth/server";
 import { ROUTES } from "@/lib/constants/site";
+import { latestFirst } from "@/lib/utils/instant";
 import { courseService } from "@/services/courses/course.service";
 import { testService } from "@/services/tests/test.service";
 import type { Course, Test, TestAttempt, TestKind } from "@/types/db";
 
 /**
- * The Prelims and Mains tabs are the same board over a different set of paper
- * kinds, so they share this component rather than two near-identical pages.
+ * The test calendar over a set of paper kinds — the Prelims tab. Mains papers
+ * have their own board (`/dashboard/mains`), since a copy written offline has a
+ * different life from a timed sitting.
  *
  * Papers are gathered across every active enrollment: a student on both a
  * foundation course and a standalone test series should see one calendar, not
@@ -93,7 +95,7 @@ export async function TestSeriesBoard({
   const papers = perCourse.flat().filter((test) => kinds.includes(test.kind));
 
   // Newest first, with unscheduled papers after the dated ones.
-  papers.sort((a, b) => (b.opensAt ?? "").localeCompare(a.opensAt ?? ""));
+  papers.sort((a, b) => latestFirst(a.opensAt, b.opensAt));
 
   const attemptByTest = new Map<string, TestAttempt>();
   for (const attempt of attempts) {

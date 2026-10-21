@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 import { ResultScorecard, ReviewList } from "@/components/exam/ResultScorecard";
 import { ButtonLink } from "@/components/ui/Button";
@@ -28,6 +29,10 @@ export default async function ResultPage({
   const { testId } = await params;
 
   const test = await testService.getTest(testId);
+
+  // A Mains copy is evaluated, not scored here; its result is on its own page.
+  if (test.kind === "mains-descriptive") redirect(`/dashboard/mains/${testId}`);
+
   const attempt = await testService.findOwnAttempt(testId);
 
   if (!attempt) {

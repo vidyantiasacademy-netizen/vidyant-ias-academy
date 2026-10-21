@@ -266,6 +266,23 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // ------------------------------------------------------ answerSubmissions
+
+    // Mains answer copies: the pages a student uploaded and their evaluation.
+    //
+    // Server-written only. The state machine (draft → submitted → in review →
+    // evaluated), the deadline, and the check that every page reference sits in
+    // the student's own folder are `answerWritingService`'s, inside
+    // transactions — none of which a rule can express.
+    //
+    // Students cannot read it either, including their own copy: the evaluation
+    // is drafted on this document before it is released, and Firestore cannot
+    // hide one field from a read. The portal serves them a projection.
+    match /answerSubmissions/{submissionId} {
+      allow get, list: if isFaculty();
+      allow write: if false;
+    }
+
     // ---------------------------------------------------------------- results
 
     // Scorecards. Read-only for the owner, and only once published — the
