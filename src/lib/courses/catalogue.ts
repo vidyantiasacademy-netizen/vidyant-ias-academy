@@ -111,7 +111,7 @@ function courseImage(
   const hero = content.heroImage;
   if (hero?.url) {
     return {
-      src: projectedImageUrl(hero, { width: 960, height: 600 }),
+      src: projectedImageUrl(hero, { width: 960, height: 640 }),
       alt: hero.alt ?? content.title,
       lqip: hero.lqip ?? undefined,
     };

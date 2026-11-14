@@ -8,6 +8,7 @@ import { BuyCourseButton } from "@/components/checkout/BuyCourseButton";
 import { TrackedButtonLink, TrackedLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { COURSE_CATEGORY_LABELS } from "@/lib/courses/labels";
+import { STAGE_CATEGORIES, usePrepStage } from "@/lib/prep-stage";
 import { cn } from "@/lib/utils/cn";
 import type { Course, CourseCategory } from "@/types";
 
@@ -30,7 +31,13 @@ export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
     "all",
     ...CATEGORY_ORDER.filter((category) => courses.some((course) => course.category === category)),
   ];
-  const [active, setActive] = useState<Tab>("all");
+  // Opens on the stage the student picked in the hero. A tab click wins until
+  // they pick a different stage, which re-points the shelf.
+  const stage = usePrepStage();
+  const stageTab = stage ? STAGE_CATEGORIES[stage].find((category) => tabs.includes(category)) : undefined;
+  const [chosen, setChosen] = useState<{ tab: Tab; stage: typeof stage } | null>(null);
+  const active: Tab = (chosen?.stage === stage ? chosen.tab : undefined) ?? stageTab ?? "all";
+  const setActive = (tab: Tab) => setChosen({ tab, stage });
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const baseId = useId();
 
@@ -53,7 +60,7 @@ export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
           role="tablist"
           aria-label="Filter programs by stage"
           onKeyDown={onKeyDown}
-          className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0"
+          className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0"
         >
           {tabs.map((tab, index) => {
             const selected = tab === active;
@@ -90,13 +97,13 @@ export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
         aria-labelledby={`${baseId}-tab-${active}`}
         className={cn(
           "mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none]",
-          "-mx-4 px-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 lg:gap-6",
+          "-mx-5 px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4",
         )}
       >
         {shown.map((course, index) => (
           <li
             key={course.id}
-            className="w-[84%] shrink-0 snap-start sm:w-auto"
+            className="w-[72%] shrink-0 snap-start sm:w-auto"
           >
             <ProgramCard course={course} priority={index < 3} />
           </li>
@@ -129,18 +136,18 @@ function ProgramCard({ course, priority }: { course: Course; priority: boolean }
           alt=""
           fill
           priority={priority}
-          sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 84vw"
+          sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, 72vw"
           placeholder={course.image.lqip ? "blur" : "empty"}
           blurDataURL={course.image.lqip}
           className="object-cover transition-transform duration-300 ease-[var(--ease-brand)] group-hover/card:scale-[1.02]"
         />
       </TrackedLink>
 
-      <div className="flex flex-1 flex-col p-5">
+      <div className="flex flex-1 flex-col p-4">
         <p className="text-eyebrow font-bold uppercase text-kesar-600">
           {COURSE_CATEGORY_LABELS[course.category]}
         </p>
-        <h3 className="mt-2 text-h4 font-bold leading-tight text-indigo">
+        <h3 className="mt-1.5 text-[1.1875rem] font-bold leading-snug tracking-[-0.01em] text-indigo">
           <TrackedLink
             href={href}
             event={ANALYTICS_EVENTS.courseView}
@@ -151,15 +158,16 @@ function ProgramCard({ course, priority }: { course: Course; priority: boolean }
           </TrackedLink>
         </h3>
         {meta.length > 0 ? (
-          <p className="mt-2 text-small text-ink-secondary">{meta.join(" · ")}</p>
+          <p className="mt-1 text-small text-ink-secondary">{meta.join(" · ")}</p>
         ) : null}
 
-        <div className="mt-auto flex flex-col gap-2 pt-5">
+        <div className="mt-auto flex flex-col gap-1.5 pt-4">
           <TrackedButtonLink
             href={href}
             event={ANALYTICS_EVENTS.courseCtaClick}
             payload={{ course: course.id, location: "programs-card" }}
             variant="secondary"
+            size="sm"
             fullWidth
           >
             View course details

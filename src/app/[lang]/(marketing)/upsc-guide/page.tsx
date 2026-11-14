@@ -10,9 +10,9 @@ import { ROUTES } from "@/lib/constants/site";
 import { pageMetadata } from "@/lib/seo/metadata";
 
 export const generateMetadata = () => pageMetadata({
-  title: "UPSC Exam Guide — Eligibility, Pattern, Syllabus & How to Start",
+  title: "UPSC Exam Guide: Eligibility, Pattern, Syllabus",
   description:
-    "Everything a first-time UPSC aspirant needs before choosing a coaching institute: eligibility and age limit, the exam pattern and marks, the full syllabus, and a beginner's preparation roadmap.",
+    "What a first-time UPSC aspirant needs to know: eligibility and age limit, exam pattern and marks, the full syllabus, and a beginner's roadmap.",
   path: ROUTES.upscGuide,
   keywords: ["UPSC exam guide", "UPSC for beginners", "IAS exam details", "UPSC CSE"],
 });

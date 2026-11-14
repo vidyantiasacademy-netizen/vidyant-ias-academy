@@ -10,7 +10,7 @@ import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { BRAND, CTA, ROUTES } from "@/lib/constants/site";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { faqSchema } from "@/lib/seo/structured-data";
+import { faqSchema, jsonLd } from "@/lib/seo/structured-data";
 
 export const generateMetadata = () => pageMetadata({
   title: "For Parents — Supporting Your Child's UPSC Preparation",
@@ -227,7 +227,7 @@ export default function ParentsPage() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(FAQS)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema(FAQS)) }}
       />
     </>
   );

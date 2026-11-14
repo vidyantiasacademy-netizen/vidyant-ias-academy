@@ -10,6 +10,7 @@ import { getLocale } from "@/i18n/server";
 import { ROUTES } from "@/lib/constants/site";
 import { getCurrentAffair, getCurrentAffairs } from "@/lib/sanity/queries";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { articleSchema, jsonLd } from "@/lib/seo/structured-data";
 
 export async function generateStaticParams() {
   return (await getCurrentAffairs(200)).map((item) => ({ slug: item.slug }));
@@ -33,6 +34,8 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/current-af
     description: item.seo?.description ?? item.summary ?? item.title,
     path: `${ROUTES.currentAffairs}/${item.slug}`,
     noIndex: item.seo?.noIndex ?? false,
+    type: "article",
+    publishedTime: item.date,
   });
 }
 
@@ -42,7 +45,8 @@ export default async function CurrentAffairPage({
   params,
 }: PageProps<"/[lang]/current-affairs/[slug]">) {
   const { slug } = await params;
-  const item = await getCurrentAffair(slug, await getLocale());
+  const locale = await getLocale();
+  const item = await getCurrentAffair(slug, locale);
 
   if (!item) notFound();
 
@@ -51,6 +55,21 @@ export default async function CurrentAffairPage({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            articleSchema({
+              headline: item.title,
+              description: item.summary,
+              path: `${ROUTES.currentAffairs}/${item.slug}`,
+              locale,
+              datePublished: item.date,
+              section: item.category,
+            }),
+          ),
+        }}
+      />
       <PageHero
         eyebrow={item.category}
         title={item.title}

@@ -21,7 +21,7 @@ import { ATTEMPT_OPTIONS, type EnrolmentInput } from "@/lib/validation/schemas";
 export const generateMetadata = () => pageMetadata({
   title: `Admissions & Batches — ${EXAM_CYCLE.label}`,
   description:
-    "Enrol at vidyantIAS Pune for UPSC CSE 2026. Batch start dates, modes of attendance, the admission steps and transparent fees — pay online for listed programmes or confirm on a call.",
+    `Enrol at vidyantIAS Pune for ${EXAM_CYCLE.label}. Batch start dates, modes of attendance, the admission steps and transparent fees — pay online for listed programmes or confirm on a call.`,
   path: ROUTES.enrol,
   keywords: [...SEO_KEYWORDS.primary, "UPSC admission Pune", "UPSC batch Pune"],
 });

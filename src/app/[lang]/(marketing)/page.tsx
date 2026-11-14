@@ -13,6 +13,7 @@ import { LearningSystem } from "@/components/home/LearningSystem";
 import { NoticeboardSection } from "@/components/home/NoticeboardSection";
 import { OrientationSection } from "@/components/home/OrientationSection";
 // import { PerformanceTracking } from "@/components/home/PerformanceTracking";
+import { ProgrammeAdviceSection } from "@/components/home/ProgrammeAdviceSection";
 import { ProgramsSection } from "@/components/home/ProgramsSection";
 import { ResourcesSection } from "@/components/home/ResourcesSection";
 // import { ResultsSection } from "@/components/home/ResultsSection";
@@ -23,16 +24,17 @@ import { TrustBar } from "@/components/home/TrustBar";
 import { GeoComposition } from "@/components/ui/Geometry";
 import { CTASection } from "@/components/ui/CTASection";
 import { getLocale } from "@/i18n/server";
-import { BRAND } from "@/lib/constants/site";
+import { BRAND, EXAM_CYCLE } from "@/lib/constants/site";
 import { getSiteFaqs, getSiteResources } from "@/lib/content/site";
 import { getCourseCatalogue } from "@/lib/courses/catalogue";
 import { pageMetadata, SEO_KEYWORDS } from "@/lib/seo/metadata";
-import { faqSchema } from "@/lib/seo/structured-data";
+import { faqSchema, jsonLd } from "@/lib/seo/structured-data";
 
 export const generateMetadata = () => pageMetadata({
-  title: `${BRAND.name} — UPSC Coaching & Mentorship in ${BRAND.city}`,
+  // Keyword first, brand last: "UPSC coaching in Pune" is what aspirants type.
+  title: `UPSC Coaching in ${BRAND.city} with Mentorship | ${BRAND.name}`,
   description:
-    "vidyantIAS is a UPSC preparation institute in Pune offering Foundation, Prelims, Mains and Optional programs for UPSC CSE 2026, with personal mentorship, structured testing and Mains answer evaluation. Enrol, book a free counselling session or attend a free demo class.",
+    `UPSC coaching in Pune for ${EXAM_CYCLE.label}: Foundation, Prelims, Mains and Optional, with a mentor from day one. Free notes, mock tests and counselling.`,
   path: "/",
   keywords: [...SEO_KEYWORDS.primary, ...SEO_KEYWORDS.secondary],
 });
@@ -59,7 +61,7 @@ export default async function HomePage() {
         explore tiles already link to, and the bottom tab bar carries
         counselling — so those sections are md-up only.
       */}
-      <HomeHero courses={courses} />
+      <HomeHero courses={courses} locale={locale} />
       <div className="hidden md:block">
         <TrustBar />
       </div>
@@ -70,6 +72,8 @@ export default async function HomePage() {
       </div>
       {/* What we sell sits directly under the hero, priced and buyable. */}
       <ProgramsSection courses={courses} />
+      {/* Tablet and up: the callback form, once the programmes have been seen. */}
+      <ProgrammeAdviceSection courses={courses} />
       {/* Phones: the page directory follows the stage picker instead. */}
       <div className="md:hidden">
         <ExploreCards headingId="explore-heading-phone" />
@@ -113,7 +117,7 @@ export default async function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLd(
             faqSchema(
               featuredFaqs.map((faq) => ({
                 question: faq.question,

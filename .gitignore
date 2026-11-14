@@ -65,3 +65,6 @@ ui-debug.log
 # cloudflare wrangler local state
 .wrangler/
 .dev.vars*
+
+# Claude Code skills (local tooling, not app code)
+.claude/skills/

@@ -9,6 +9,7 @@ import { getLocale } from "@/i18n/server";
 import { ROUTES } from "@/lib/constants/site";
 import { getBlogPost, getBlogSlugs } from "@/lib/sanity/queries";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { articleSchema, jsonLd } from "@/lib/seo/structured-data";
 
 export async function generateStaticParams() {
   return (await getBlogSlugs()).map((slug) => ({ slug }));
@@ -32,6 +33,8 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/blog/[slug
     description: post.seo?.description ?? post.excerpt ?? post.title,
     path: `${ROUTES.blog}/${post.slug}`,
     noIndex: post.seo?.noIndex ?? false,
+    type: "article",
+    publishedTime: post.publishedAt,
   });
 }
 
@@ -39,7 +42,8 @@ const DATE = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "long", y
 
 export default async function BlogPostPage({ params }: PageProps<"/[lang]/blog/[slug]">) {
   const { slug } = await params;
-  const post = await getBlogPost(slug, await getLocale());
+  const locale = await getLocale();
+  const post = await getBlogPost(slug, locale);
 
   if (!post) notFound();
 
@@ -51,6 +55,24 @@ export default async function BlogPostPage({ params }: PageProps<"/[lang]/blog/[
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            articleSchema({
+              type: "BlogPosting",
+              headline: post.title,
+              description: post.excerpt,
+              path: `${ROUTES.blog}/${post.slug}`,
+              locale,
+              datePublished: post.publishedAt,
+              image: post.coverImage?.url,
+              authorName: post.authorName,
+              section: post.categories?.[0],
+            }),
+          ),
+        }}
+      />
       <PageHero
         eyebrow={post.categories?.[0] ?? "Blog"}
         title={post.title}

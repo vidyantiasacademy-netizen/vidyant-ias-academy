@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* Desktop on a short screen (small laptops): the homepage hero compacts so it
+   still fits under the header without scrolling. */
+@custom-variant short {
+  @media (min-width: 64rem) and (max-height: 760px) {
+    @slot;
+  }
+}
+
 /* ============================================================
    vidyantIAS design system — colour and type
    ------------------------------------------------------------

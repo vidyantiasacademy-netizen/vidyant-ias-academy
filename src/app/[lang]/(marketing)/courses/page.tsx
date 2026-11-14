@@ -14,9 +14,9 @@ import { pageMetadata, SEO_KEYWORDS } from "@/lib/seo/metadata";
 import type { CourseCategory } from "@/types";
 
 export const generateMetadata = () => pageMetadata({
-  title: "UPSC Courses in Pune — Foundation, Prelims, Mains & Optional",
+  title: "UPSC Courses in Pune: Foundation to Mains",
   description:
-    "Compare vidyantIAS UPSC programs in Pune: Foundation, Prelims, Mains, Optional subjects and the test series. Each program includes structured testing, answer evaluation and personal mentorship.",
+    "Compare UPSC programs in Pune: Foundation, Prelims, Mains, Optional and test series, each with structured testing, answer evaluation and a personal mentor.",
   path: ROUTES.courses,
   keywords: [...SEO_KEYWORDS.secondary, ...SEO_KEYWORDS.primary],
 });

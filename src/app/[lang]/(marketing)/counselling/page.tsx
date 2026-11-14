@@ -13,7 +13,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 export const generateMetadata = () => pageMetadata({
   title: "Free UPSC Counselling in Pune",
   description:
-    "Book a free counselling session with the vidyantIAS academic team. Get a preparation roadmap for your target attempt — programs, timelines, optional subject and mentorship, with no obligation to enrol.",
+    "Book a free UPSC counselling call in Pune: a roadmap for your attempt covering programs, timelines and your optional, with no obligation to enrol.",
   path: ROUTES.counselling,
   keywords: ["UPSC counselling Pune", "IAS counselling Pune", "UPSC mentorship Pune"],
 });

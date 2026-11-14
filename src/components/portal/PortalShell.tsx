@@ -4,6 +4,7 @@ import { PortalBackLink } from "@/components/portal/PortalBackLink";
 import { PortalNav } from "@/components/portal/PortalNav";
 import type { PortalBackLink as BackLink } from "@/components/portal/back-links";
 import { SignOutButton } from "@/components/portal/SignOutButton";
+import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 
 /**
@@ -46,7 +47,7 @@ export function PortalShell({
       </a>
 
       <header className="border-b border-line bg-white">
-        <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
+        <Container className="flex h-16 items-center gap-6">
           {/* `Logo` links to the homepage itself unless `asStatic` is set. */}
           <Logo tone="dark" size="sm" />
 
@@ -59,11 +60,11 @@ export function PortalShell({
           </span>
 
           <SignOutButton />
-        </div>
+        </Container>
       </header>
 
       <main id="portal-main" className="flex-1 bg-paper">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <Container className="py-10">
           {/* Way out first, then the tabs. Both live in the page rather than
               the header: on a phone the header is already carrying the logo,
               the name and sign-out, and a second row of links there pushes the
@@ -73,7 +74,7 @@ export function PortalShell({
           <PortalNav nav={nav} title={title} />
 
           <div className="mt-8">{children}</div>
-        </div>
+        </Container>
       </main>
     </>
   );
