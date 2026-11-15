@@ -58,7 +58,7 @@ export async function Footer() {
       <Container size="wide" className="relative py-14 lg:py-20">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-x-8">
           <div className="sm:col-span-2 lg:col-span-4">
-            <Logo tone="light" size="md" asStatic />
+            <Logo tone="light" size="md" asStatic withTagline />
             <p className="mt-5 max-w-xs text-small text-white/80">{BRAND.tagline}</p>
             <ul className="mt-7 flex items-center gap-3">
               {SOCIAL_LINKS.map((social) => (

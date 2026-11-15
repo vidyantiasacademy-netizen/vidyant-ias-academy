@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Devanagari, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter, Noto_Sans_Devanagari } from "next/font/google";
 
 import { LOCALE_META, LOCALES } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/server";
@@ -15,16 +15,6 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-/**
- * The logotype's face — "VidyantIAS" next to the Breakout mark, and nothing
- * else. One weight, Latin only: the name is the only text set in it.
- */
-const brand = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: "700",
-  display: "swap",
-  variable: "--font-jakarta",
-});
 
 /**
  * Devanagari for the Hindi site. Inter has no Devanagari glyphs, so it sits
@@ -100,7 +90,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   return (
     <html
       lang={LOCALE_META[locale].htmlLang}
-      className={`${inter.variable} ${brand.variable} ${devanagari.variable} h-full`}
+      className={`${inter.variable} ${devanagari.variable} h-full`}
     >
       <body className="flex min-h-full flex-col bg-white antialiased">
         <I18nProvider locale={locale} dict={dict}>

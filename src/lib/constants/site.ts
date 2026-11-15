@@ -10,15 +10,15 @@ export const BRAND = {
   name: "vidyantIAS",
   legalName: "vidyantIAS",
   /**
-   * The drawn logotype, split so the lockup can set the two parts separately.
-   * The Breakout lockup sets the name with a capital V; `name` above is the casing used in running
-   * copy. TODO(institute): confirm which casing wins, and align the other.
+   * The drawn logotype, split so its two colours can be set separately
+   * ("Vidyant" in the ink, "IAS" in saffron). The logo artwork sets the name
+   * with a capital V; `name` above is the casing used in running copy. TODO(institute): confirm which casing wins, and align the other.
    */
   logotype: { lead: "Vidyant", trail: "IAS" },
   city: "Pune",
   state: "Maharashtra",
   /** The line that sits under the logo. */
-  slogan: "Knowledge. Direction. Excellence.",
+  slogan: "Right knowledge. Right direction. Every step.",
   tagline: "Prepare with clarity. Practice with purpose. Improve with mentorship.",
   /** The single promise the hero leads with. One sentence, no numbers. */
   usp: "A mentorship-first UPSC institute: concept-led classes, a fixed test calendar, Mains answer evaluation and one mentor who tracks your progress from day one.",
