@@ -136,9 +136,9 @@ export function AccountMenu({
         aria-expanded={open}
         aria-haspopup="menu"
         onClick={() => setOpen((value) => !value)}
-        className="flex h-10 items-center gap-2 pr-2 text-small font-bold text-indigo transition-colors hover:bg-paper"
+        className="flex h-10 items-center gap-2 pr-2 text-small font-bold text-white transition-colors hover:bg-white/10"
       >
-        <span className="flex size-10 items-center justify-center bg-indigo text-small font-bold text-white">
+        <span className="flex size-10 items-center justify-center bg-logo-saffron-600 text-small font-bold text-white">
           {initial(account.displayName)}
         </span>
         <span className="max-w-28 truncate">{shortName(account.displayName)}</span>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Devanagari } from "next/font/google";
+import { DM_Serif_Display, Inter, Noto_Sans_Devanagari } from "next/font/google";
 
 import { LOCALE_META, LOCALES } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/server";
@@ -13,6 +13,15 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+});
+
+/** Display serif for the homepage hero headline only. */
+const display = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-dm-serif",
 });
 
 
@@ -90,7 +99,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   return (
     <html
       lang={LOCALE_META[locale].htmlLang}
-      className={`${inter.variable} ${devanagari.variable} h-full`}
+      className={`${inter.variable} ${display.variable} ${devanagari.variable} h-full`}
     >
       <body className="flex min-h-full flex-col bg-white antialiased">
         <I18nProvider locale={locale} dict={dict}>

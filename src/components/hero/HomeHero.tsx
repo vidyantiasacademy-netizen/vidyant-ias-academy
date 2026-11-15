@@ -1,101 +1,164 @@
-import { ChevronRight, Megaphone } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  CalendarDays,
+  ChartNoAxesColumnIncreasing,
+  Play,
+  Target,
+  UserCheck,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import Image from "next/image";
-import { Suspense } from "react";
 
-import { HeroToday, HeroTodayFallback } from "@/components/hero/HeroToday";
-import { PrepStagePicker } from "@/components/hero/PrepStagePicker";
 import { Container } from "@/components/ui/Container";
 import { TrackedLink } from "@/components/ui/TrackedLink";
-import type { Locale } from "@/i18n/config";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
-import { BRAND, CTA, EXAM_CYCLE } from "@/lib/constants/site";
-import type { Course } from "@/types";
+import { CTA, EXAM_CYCLE } from "@/lib/constants/site";
+
+const PILLARS: { icon: LucideIcon; label: [string, string] }[] = [
+  { icon: BookOpen, label: ["Conceptual", "Clarity"] },
+  { icon: Users, label: ["Small", "Batches"] },
+  { icon: UserCheck, label: ["Personal", "Mentorship"] },
+  { icon: ChartNoAxesColumnIncreasing, label: ["Rigorous", "Practice"] },
+  { icon: Target, label: ["Continuous", "Improvement"] },
+];
 
 /**
- * Homepage hero, built to give before it asks. One row on a 12-column grid
- * over a full-bleed photograph, sized on desktop to the screen under the
- * header so the whole offer is visible without scrolling:
+ * Homepage hero. Copy on the left over warm cream, the photograph on the
+ * right fading into it, and a saffron-and-navy wave closing the band.
  *
- * - Left: admissions pill, headline, one line of promise, then "Where are you
- *   in your preparation?" — a one-tap stage picker that swaps the actions for
- *   the programme and the free first step that fit that student
- *   (`PrepStagePicker`).
- * - Right: the photograph, clear. No lead form here: the hero gives first;
- *   the callback form waits under Programs (`ProgrammeAdviceSection`), once
- *   the student has seen what is on offer.
- * - Foot: the "Today" strip — the latest current affairs, an open mock test,
- *   the previous-year paper library (`HeroToday`). It streams in, so the
- *   photograph and headline are never held up by a CMS or Firestore call.
+ * - Exam badge, a serif headline whose last words are set in saffron italic
+ *   with a hand-drawn swoosh, one line of promise.
+ * - Two actions: explore courses (primary) and book a free demo class.
+ * - Five pillars of the programme, one icon each.
  *
- * A white wash runs from near-solid behind the copy to clear on the right, so
- * the type holds AA while the sunrise and Parliament House stay visible. On
- * tablets the wash covers the picture evenly; on phones the wash clears towards the bottom and the strip sits over the
- * foot of the photograph.
+ * Phones stack the photograph under the copy; from `lg` it sits behind the
+ * right half, full height.
  */
-export function HomeHero({ courses, locale }: { courses: Course[]; locale: Locale }) {
+export function HomeHero() {
   return (
-    <section className="relative isolate overflow-hidden border-b border-line bg-white lg:flex lg:h-[calc(100svh-9.5rem)] lg:max-h-[52rem] lg:min-h-fit lg:flex-col">
-      <Container className="lg:flex lg:flex-1 lg:items-center">
-        <div className="grid w-full pt-6 pb-64 md:py-10 lg:grid-cols-12 lg:items-center lg:gap-10 lg:py-5 xl:gap-16 short:py-3">
-          <div className="reveal lg:col-span-7">
-            <TrackedLink
-              href={CTA.enrol.href}
-              event={ANALYTICS_EVENTS.enrolClick}
-              payload={{ location: "home-hero", action: "admissions-pill" }}
-              className="inline-flex min-h-10 items-center gap-2 bg-kesar-100 px-3 text-small font-semibold text-indigo transition-colors hover:bg-kesar"
-            >
-              <Megaphone aria-hidden className="size-4 shrink-0 text-kesar-700" />
-              {EXAM_CYCLE.label} · {EXAM_CYCLE.admissionNote}
-              <ChevronRight aria-hidden className="size-4 shrink-0" />
-            </TrackedLink>
-            <h1 className="mt-3 max-w-[16ch] short:max-w-[22ch] text-hero font-bold text-indigo 2xl:text-hero-lg">
-              {/* Spoken to the student, its last words underlined in kesar. */}
-              Your UPSC journey,{" "}
-              <span className="underline decoration-kesar decoration-[0.09em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">
-                with a plan.
+    <section className="relative isolate overflow-hidden bg-cream">
+      {/* Desktop: photograph on the right half, fading into the cream. */}
+      <div aria-hidden className="absolute inset-y-0 right-0 -z-10 hidden w-[58%] lg:block">
+        <Image
+          src="/images/hero-lbsnaa.jpg"
+          alt=""
+          fill
+          sizes="58vw"
+          loading="eager"
+          fetchPriority="high"
+          className="object-cover object-[70%_center]"
+        />
+        <div className="absolute inset-y-0 left-0 w-1/2 bg-linear-to-r from-cream via-cream/70 to-cream/0" />
+      </div>
+
+      <Container>
+        <div className="pt-8 pb-10 md:pt-12 lg:max-w-[46rem] lg:pt-16 lg:pb-28 xl:max-w-[50rem] short:pt-8 short:pb-20">
+          <div className="reveal">
+            {/* Exam badge: a saffron rule, then the pill. */}
+            <div className="flex items-center gap-4">
+              <span aria-hidden className="h-12 w-0.5 bg-logo-saffron" />
+              <p className="inline-flex items-center gap-2.5 rounded-md bg-kesar-100 px-4 py-2 text-small font-semibold text-logo-navy md:text-body">
+                <CalendarDays aria-hidden className="size-5 shrink-0" />
+                UPSC Civil Services Examination {EXAM_CYCLE.year}
+              </p>
+            </div>
+
+            <h1 className="mt-6 font-display text-[2.5rem] leading-[1.05] tracking-[-0.01em] text-logo-navy sm:text-[3.25rem] xl:text-[4rem] short:text-[3.25rem]">
+              Your UPSC Preparation Deserves the{" "}
+              <span className="relative inline-block italic text-logo-saffron-600">
+                Right Direction.
+                {/* Swoosh under the accent words. */}
+                <svg
+                  aria-hidden
+                  viewBox="0 0 300 16"
+                  preserveAspectRatio="none"
+                  className="absolute -bottom-2 left-[22%] h-3 w-[70%] text-logo-saffron-600"
+                >
+                  <path
+                    d="M2 13 C 80 2, 200 0, 298 9"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </span>
             </h1>
-            <p className="mt-3 text-body text-ink-secondary md:mt-4 md:text-body-lg short:hidden">
-              UPSC coaching in {BRAND.city} with a mentor from day one. Start free,
-              right here.
+
+            <p className="mt-7 max-w-[48ch] text-body text-ink md:text-body-lg">
+              Concept-driven learning. Focused practice. Personal mentorship.
+              A clearer path to {EXAM_CYCLE.label}.
             </p>
 
-            <PrepStagePicker courses={courses} />
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-6">
+              <TrackedLink
+                href={CTA.courses.href}
+                event={ANALYTICS_EVENTS.courseCtaClick}
+                payload={{ location: "home-hero", action: "explore-courses" }}
+                className="inline-flex h-14 items-center justify-center gap-3 rounded-md bg-logo-saffron-600 px-8 text-body font-semibold text-white transition-colors hover:bg-logo-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+              >
+                {CTA.courses.label}
+                <ArrowRight aria-hidden className="size-5" />
+              </TrackedLink>
+              <TrackedLink
+                href={CTA.demo.href}
+                event={ANALYTICS_EVENTS.demoClick}
+                payload={{ location: "home-hero", action: "book-demo" }}
+                className="inline-flex h-14 items-center justify-center gap-3 rounded-md border-2 border-logo-navy bg-white/60 px-8 text-body font-semibold text-logo-navy transition-colors hover:bg-logo-navy hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+              >
+                <Play aria-hidden className="size-5 fill-current" />
+                Book a Free Demo Class
+              </TrackedLink>
+            </div>
+
+            <ul className="mt-10 grid grid-cols-3 gap-y-6 sm:grid-cols-5 lg:mt-12">
+              {PILLARS.map(({ icon: Icon, label }, i) => (
+                <li
+                  key={label.join(" ")}
+                  className={
+                    "flex flex-col items-center gap-2 px-2 text-center" +
+                    (i > 0 ? " sm:border-l sm:border-line-strong" : "")
+                  }
+                >
+                  <Icon aria-hidden strokeWidth={1.75} className="size-9 text-logo-saffron-600" />
+                  <span className="text-small font-semibold leading-tight text-logo-navy">
+                    {label[0]}
+                    <br />
+                    {label[1]}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </Container>
 
-      {/* Phones: over the foot of the photograph. Tablet and up: under the row. */}
-      <Container className="relative z-10 -mt-24 pb-6 md:mt-0 md:pb-8 lg:pb-5 short:pb-3">
-        <Suspense fallback={<HeroTodayFallback />}>
-          <HeroToday locale={locale} />
-        </Suspense>
-      </Container>
-
-      {/* The photograph is the LCP element on the homepage, so it loads
-          eagerly at high priority. Full-bleed behind the copy at every width. */}
-      <div className="absolute inset-0 -z-20">
+      {/* Phones and tablets: the photograph under the copy. */}
+      <div className="relative aspect-[16/10] lg:hidden">
         <Image
-          src="/images/hero-study-overlook.png"
+          src="/images/hero-lbsnaa.jpg"
           alt=""
           fill
           sizes="100vw"
           loading="eager"
           fetchPriority="high"
-          className="object-cover object-[78%_center] md:object-[70%_center]"
+          className="object-cover object-[75%_center]"
         />
+        <div aria-hidden className="absolute inset-x-0 top-0 h-1/3 bg-linear-to-b from-cream to-cream/0" />
       </div>
-      {/* Phones: a white wash, solid behind the copy and clearing towards the
-          bottom, so indigo type stays legible and the photo shows under the
-          buttons. */}
-      <div
+
+      {/* Saffron sweep over a navy wave, closing the band. */}
+      <svg
         aria-hidden
-        className="absolute inset-0 -z-10 bg-linear-to-b from-white from-15% via-white/80 via-45% to-white/0 to-70% md:hidden"
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 hidden bg-white/75 md:block lg:bg-transparent lg:bg-linear-to-r lg:from-white/95 lg:from-20% lg:via-white/70 lg:via-42% lg:to-white/0 lg:to-62%"
-      />
+        viewBox="0 0 1600 120"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 bottom-0 h-12 w-full md:h-20 lg:h-24"
+      >
+        <path d="M0 40 C 400 120, 1000 120, 1600 30 L1600 120 L0 120 Z" className="fill-logo-saffron" />
+        <path d="M0 62 C 420 132, 1000 130, 1600 52 L1600 120 L0 120 Z" className="fill-logo-navy" />
+      </svg>
     </section>
   );
 }
