@@ -3,6 +3,7 @@ import { join } from "node:path";
 
 import { ImageResponse } from "next/og";
 
+import { LOGO_HEX, MARK_VIEWBOX } from "@/lib/brand/mark";
 import { BRAND } from "@/lib/constants/site";
 
 export const alt = `${BRAND.name} — UPSC preparation in ${BRAND.city}`;
@@ -28,17 +29,17 @@ export default async function OpengraphImage() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        background: "#1d2470",
+        background: LOGO_HEX.navy,
         padding: "72px",
         fontFamily: "sans-serif",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-        <div style={{ width: "48px", height: "2px", background: "#f39a1e" }} />
+        <div style={{ width: "48px", height: "2px", background: LOGO_HEX.saffron }} />
         <div
           style={{
             display: "flex",
-            color: "#f39a1e",
+            color: LOGO_HEX.saffron,
             fontSize: "24px",
             letterSpacing: "6px",
             textTransform: "uppercase",
@@ -74,7 +75,7 @@ export default async function OpengraphImage() {
             display: "flex",
             fontSize: "62px",
             fontWeight: 700,
-            color: "#f39a1e",
+            color: LOGO_HEX.saffron,
           }}
         >
           Improve with mentorship.
@@ -92,10 +93,10 @@ export default async function OpengraphImage() {
       >
         {/* satori renders a plain <img>; next/image is not available here */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <img src={mark} alt="" height={64} width={52} style={{ objectFit: "contain" }} />
-          <div style={{ display: "flex", fontSize: "40px", fontWeight: 600, color: "#ffffff" }}>
-            <span>{BRAND.logotype.lead}</span>
-            <span>{BRAND.logotype.trail}</span>
+          <img src={mark} alt="" height={64} width={Math.round((64 * MARK_VIEWBOX.width) / MARK_VIEWBOX.height)} />
+          <div style={{ display: "flex", gap: "10px", fontSize: "44px", fontWeight: 800, letterSpacing: "-1px" }}>
+            <span style={{ color: LOGO_HEX.cream }}>{BRAND.logotype.lead}</span>
+            <span style={{ color: LOGO_HEX.saffron }}>{BRAND.logotype.trail}</span>
           </div>
         </div>
         <div

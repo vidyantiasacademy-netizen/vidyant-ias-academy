@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="17.3 13 65.7 80.3" width="65.7" height="80.3" role="img" aria-label="VidyantIAS">
-  <path d="M63.26 29.45A33.2 33.2 0 1 0 73.66 36.31L54.70 83.70L46.00 83.70L28.60 40.20L41.00 40.20L50.40 61.60Z" fill="#f8f3e7"/>
-  <path d="M63.26 29.45L70.64 13.0L82.98 13.0L73.66 36.31Z" fill="#f29a2e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 294 322" width="294" height="322" role="img" aria-label="VidyantIAS">
+  <mask id="v" maskUnits="userSpaceOnUse" x="0" y="0" width="294" height="322">
+    <circle cx="134" cy="187" r="132" fill="#fff"/>
+    <path d="M54 128H102L142 225L212 42H254L158 288H118Z" fill="#000"/>
+  </mask>
+  <circle cx="134" cy="187" r="132" fill="#f2eee4" mask="url(#v)"/>
+  <path d="M140 223C150 182 170 132 185 92C192 72 200 50 206 31C232 16 260 8 290 4C276 17 266 28 258 40C244 64 235 87 224 106C205 137 170 182 142 225Z" fill="#f68b43"/>
 </svg>

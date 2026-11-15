@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { PhotoUploadButton } from "@/components/portal/PhotoUploadButton";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { BreakoutMark } from "@/components/ui/BreakoutMark";
+import { BrandMark } from "@/components/ui/BrandMark";
 import { getCurrentStudent, getCurrentUserProfile } from "@/lib/auth/server";
 import { BRAND } from "@/lib/constants/site";
 import { courseService } from "@/services/courses/course.service";
@@ -74,7 +74,7 @@ export default async function ICardPage() {
                 other saffron on the card is the roll number. */}
             <div className="flex items-center justify-between gap-4 px-6 pt-6">
               <span className="flex items-center gap-2.5">
-                <BreakoutMark className="h-5 w-auto text-white" />
+                <BrandMark tone="light" className="h-6 w-auto" />
                 <span className="text-body font-semibold">{BRAND.name}</span>
               </span>
 

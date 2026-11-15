@@ -23,7 +23,7 @@ import { dirname, join } from "node:path";
 import { ImageResponse } from "next/og.js";
 import sharp from "sharp";
 
-import { BRAND_HEX, BREAKOUT_BREAK, BREAKOUT_DISC, BREAKOUT_VIEWBOX } from "../src/lib/brand/breakout.ts";
+import { LOGO_HEX, MARK_VIEWBOX } from "../src/lib/brand/mark.ts";
 import { SEED_COURSES } from "./seed/courses.mjs";
 
 const WIDTH = 1200;
@@ -36,7 +36,7 @@ const C = {
   indigo900: "#141a50",
   kesar: "#f39a1e",
   kesar100: "#fdf1dd",
-  cream: BRAND_HEX.cream,
+  cream: LOGO_HEX.cream,
   ink: "#3c4264",
 };
 
@@ -257,10 +257,10 @@ const h = (type, style, ...children) => ({
 
 const dataUri = (markup) => `data:image/svg+xml;base64,${Buffer.from(markup).toString("base64")}`;
 
-const { x: MX, y: MY, width: MW, height: MH } = BREAKOUT_VIEWBOX;
-const MARK = dataUri(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${MX} ${MY} ${MW} ${MH}"><path d="${BREAKOUT_DISC}" fill="${BRAND_HEX.navy}"/><path d="${BREAKOUT_BREAK}" fill="${BRAND_HEX.saffron}"/></svg>`,
-);
+/** The bare mark for light surfaces, as written by `npm run brand:assets`. */
+const MARK = dataUri(readFileSync("public/images/logo-mark.svg", "utf8"));
+const MARK_HEIGHT = 81;
+const MARK_WIDTH = Math.round((MARK_HEIGHT * MARK_VIEWBOX.width) / MARK_VIEWBOX.height);
 
 function poster({ eyebrow, title, subtitle, covers, art }, { modes, modules }) {
   const img = (src, style) => ({ type: "img", props: { src, style } });
@@ -289,7 +289,7 @@ function poster({ eyebrow, title, subtitle, covers, art }, { modes, modules }) {
     // Line drawing, bottom right.
     img(dataUri(art()), { position: "absolute", right: 56, bottom: 52, width: 500 }),
     // Mark, top right.
-    img(MARK, { position: "absolute", top: 56, right: 64, width: 66, height: 81 }),
+    img(MARK, { position: "absolute", top: 56, right: 64, width: MARK_WIDTH, height: MARK_HEIGHT }),
 
     h(
       "div",
