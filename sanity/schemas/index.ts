@@ -10,6 +10,7 @@ import { faq } from "./faq";
 import { freeResource } from "./freeResource";
 import { blockContent, curriculumModule, seo, source } from "./objects";
 import { pyqPaper } from "./pyqPaper";
+import { studyNote } from "./studyNote";
 import { author, category, subject, tag } from "./taxonomy";
 
 /**
@@ -30,6 +31,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   course,
   demoClass,
   freeResource,
+  studyNote,
   pyqPaper,
   faq,
 

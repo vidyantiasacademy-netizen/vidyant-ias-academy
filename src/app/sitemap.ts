@@ -5,6 +5,7 @@ import { LOCALES, LOCALE_META, localizeHref } from "@/i18n/config";
 import { ROUTES, SITE_URL } from "@/lib/constants/site";
 import { getSiteCurrentAffairs, getSitePosts } from "@/lib/content/site";
 import { getCourseCatalogue } from "@/lib/courses/catalogue";
+import { getStudyNotes } from "@/lib/sanity/queries";
 import { getFacultyRoster } from "@/lib/faculty/roster";
 
 type Entry = MetadataRoute.Sitemap[number];
@@ -30,11 +31,12 @@ function localized(path: string, entry: Omit<Entry, "url" | "alternates">): Entr
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-  const [faculty, courses, posts, affairs] = await Promise.all([
+  const [faculty, courses, posts, affairs, notes] = await Promise.all([
     getFacultyRoster(),
     getCourseCatalogue(),
     getSitePosts(),
     getSiteCurrentAffairs(undefined, 200),
+    getStudyNotes(),
   ]);
 
   const staticRoutes: Array<{
@@ -54,6 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: ROUTES.testimonials, priority: 0.6, changeFrequency: "monthly" },
     { path: ROUTES.resources, priority: 0.7, changeFrequency: "weekly" },
     { path: ROUTES.currentAffairs, priority: 0.7, changeFrequency: "daily" },
+    { path: ROUTES.notes, priority: 0.8, changeFrequency: "weekly" },
     { path: ROUTES.quizzes, priority: 0.7, changeFrequency: "weekly" },
     { path: ROUTES.mockTest, priority: 0.9, changeFrequency: "weekly" },
     { path: ROUTES.upscGuide, priority: 0.8, changeFrequency: "monthly" },
@@ -101,6 +104,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.5,
       }),
     ),
+    // Translations share a slug, so one entry per slug covers every language.
+    ...[...new Set(notes.map((note) => note.slug))].flatMap((slug) => {
+      const note = notes.find((n) => n.slug === slug)!;
+      return localized(`${ROUTES.notes}/${slug}`, {
+        lastModified: new Date(`${note.revisedAt}T00:00:00Z`),
+        changeFrequency: "monthly",
+        priority: 0.6,
+      });
+    }),
     ...affairs.flatMap((item) =>
       localized(`/current-affairs/${item.slug}`, {
         lastModified: new Date(item.publishedAt),

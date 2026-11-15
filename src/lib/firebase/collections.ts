@@ -22,6 +22,8 @@ export const COLLECTIONS = {
   results: "results",
   proctorEvents: "proctorEvents",
   mockAttempts: "mockAttempts",
+  /** Mains answer copies — uploaded pages and their evaluation. Server-written. */
+  answerSubmissions: "answerSubmissions",
   doubts: "doubts",
   mentorship: "mentorship",
   notifications: "notifications",
@@ -52,6 +54,8 @@ export const docId = {
   answer: (attemptId: string, questionId: string) => `${attemptId}_${questionId}`,
   /** One result per attempt. */
   result: (attemptId: string) => attemptId,
+  /** One answer copy per student per Mains paper, so a retried upload lands on it. */
+  answerSubmission: (testId: string, studentUid: string) => `${testId}_${studentUid}`,
   /** One enrollment per student per course. Re-enrolling reactivates. */
   enrollment: (studentUid: string, courseId: string) => `${studentUid}_${courseId}`,
   /** One progress record per student per lesson, so a resume beat overwrites. */

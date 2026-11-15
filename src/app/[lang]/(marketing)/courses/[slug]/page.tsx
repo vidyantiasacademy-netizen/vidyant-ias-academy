@@ -28,7 +28,7 @@ import { getCatalogueCourse, getCourseCatalogue } from "@/lib/courses/catalogue"
 import { COURSE_CATEGORY_LABELS } from "@/lib/courses/labels";
 import { getFacultyRoster } from "@/lib/faculty/roster";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { courseSchema } from "@/lib/seo/structured-data";
+import { courseSchema, jsonLd } from "@/lib/seo/structured-data";
 
 export async function generateStaticParams() {
   const catalogue = await getCourseCatalogue();
@@ -282,7 +282,7 @@ export default async function CourseDetailPage({ params }: PageProps<"/[lang]/co
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema(course)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(courseSchema(course)) }}
       />
     </>
   );

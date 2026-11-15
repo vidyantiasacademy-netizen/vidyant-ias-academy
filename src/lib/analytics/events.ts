@@ -32,6 +32,11 @@ export const ANALYTICS_EVENTS = {
   mockTestStart: "mock_test_start",
   mockTestSubmit: "mock_test_submit",
   tabBarClick: "tab_bar_click",
+  prepStageSelect: "prep_stage_select",
+  todayStripClick: "today_strip_click",
+  guideClick: "guide_click",
+  noteOpen: "note_open",
+  noteDownload: "note_download",
 } as const;
 
 export type AnalyticsEvent =

@@ -21,7 +21,7 @@ import { pageMetadata, SEO_KEYWORDS } from "@/lib/seo/metadata";
 export const generateMetadata = () => pageMetadata({
   title: "About Our UPSC Institute in Pune",
   description:
-    "vidyantIAS is a UPSC preparation institute in Pune built around a single idea: learning, practice, evaluation and mentorship belong together. Read our philosophy, approach and how our programs are structured.",
+    "A UPSC institute in Pune built on one idea: learning, practice, evaluation and mentorship belong together. Our approach and how our programs work.",
   path: ROUTES.about,
   keywords: [...SEO_KEYWORDS.primary, "UPSC institute Pune philosophy"],
 });

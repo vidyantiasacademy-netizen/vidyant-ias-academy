@@ -142,6 +142,27 @@ export interface FreeResource {
 }
 
 /** A UPSC previous-year paper. Not translated — see `sanity/schemas/pyqPaper.ts`. */
+/** A free study note as listed on /notes. */
+export interface StudyNoteListItem {
+  _id: string;
+  title: string;
+  slug: string;
+  subject: string | null;
+  /** `paper` of the referenced subject (gs1…, essay, optional) — for grouping. */
+  paper: string | null;
+  stages: string[];
+  summary: string;
+  pdfUrl: string;
+  /** PDF size in bytes, from the asset. */
+  pdfSize: number | null;
+  pages: number | null;
+  revisedAt: string;
+}
+
+export interface StudyNote extends StudyNoteListItem {
+  seo: Seo | null;
+}
+
 export interface PyqPaper {
   _id: string;
   year: number;

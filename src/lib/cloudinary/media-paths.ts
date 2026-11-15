@@ -24,6 +24,27 @@
  * mints a URL that expires in minutes.
  */
 
+/**
+ * Folders whose contents are checked by prefix when a reference comes back
+ * from the browser — the server must know an uploaded answer sheet really is
+ * this student's, for this paper, before storing a pointer to it.
+ */
+export const MEDIA_PREFIXES = {
+  /** A student's uploaded pages for one Mains copy (`answerSubmissions` id). */
+  studentAnswerSheets: (studentUid: string, submissionId: string) =>
+    `students/${studentUid}/answers/${submissionId}/`,
+
+  /** The PDF a Mains paper is written on. Signed for enrolled students by the service. */
+  testQuestionPaper: (testId: string) => `tests/${testId}/paper/`,
+
+  /**
+   * A student's copy as the evaluator annotated it. Under `tests/`, not the
+   * student's folder, so it stays unreadable until the result is released.
+   */
+  evaluatedCopy: (testId: string, studentUid: string) =>
+    `tests/${testId}/evaluated/${studentUid}/`,
+} as const;
+
 export const MEDIA_PATHS = {
   /** Profile photos. Owner-writable, staff-readable. */
   userAvatar: (uid: string, name: string) => `users/${uid}/avatar/${name}`,
@@ -44,12 +65,23 @@ export const MEDIA_PATHS = {
   /** Question papers and keys. Faculty and admins only — never students. */
   testDocument: (testId: string, name: string) => `tests/${testId}/${name}`,
 
+  /** A Mains paper's printable PDF. Staff write; enrolled students read through the service. */
+  testQuestionPaper: (testId: string, name: string) =>
+    `${MEDIA_PREFIXES.testQuestionPaper(testId)}${name}`,
+
+  /** An evaluator's annotated copy of one student's Mains answer sheet. */
+  evaluatedCopy: (testId: string, studentUid: string, name: string) =>
+    `${MEDIA_PREFIXES.evaluatedCopy(testId, studentUid)}${name}`,
+
   /** Images embedded in a question (maps, passages, data tables). */
   questionImage: (questionId: string, name: string) => `questions/${questionId}/${name}`,
 
-  /** Photographed Mains answer sheets. The student writes, faculty reads. */
-  studentAnswerSheet: (studentUid: string, attemptId: string, name: string) =>
-    `students/${studentUid}/answers/${attemptId}/${name}`,
+  /**
+   * Photographed or scanned Mains answer sheets. The student writes, faculty
+   * reads. The middle segment is the `answerSubmissions` id.
+   */
+  studentAnswerSheet: (studentUid: string, submissionId: string, name: string) =>
+    `${MEDIA_PREFIXES.studentAnswerSheets(studentUid, submissionId)}${name}`,
 
   /** Attachments on a doubt. */
   doubtAttachment: (studentUid: string, doubtId: string, name: string) =>
@@ -108,6 +140,24 @@ export function uniqueAssetName(name: string): string {
 /** Joins a public id and the format Cloudinary reported into a stored reference. */
 export function toMediaRef(publicId: string, format: string): string {
   return `${publicId}.${format}`;
+}
+
+/**
+ * True when `ref` is a media reference sitting directly in `prefix` (no deeper
+ * folder) with one of `formats`. The check a server runs on a reference the
+ * browser hands back after a direct upload: the signature authorised a write
+ * there, but nothing stops a client from *claiming* a different path.
+ */
+export function isMediaRefIn(
+  ref: string,
+  prefix: string,
+  formats: readonly string[],
+): boolean {
+  if (!ref.startsWith(prefix)) return false;
+
+  const { publicId, format } = fromMediaRef(ref.slice(prefix.length));
+
+  return /^[\w-]+$/.test(publicId) && formats.includes(format.toLowerCase());
 }
 
 /**

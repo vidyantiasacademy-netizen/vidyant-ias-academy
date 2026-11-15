@@ -16,6 +16,8 @@ import type {
   FacultyMember,
   FreeResource,
   PyqPaper,
+  StudyNote,
+  StudyNoteListItem,
 } from "./types";
 
 /**
@@ -118,6 +120,7 @@ export const SANITY_TAGS = {
   demoClasses: "sanity:demoClass",
   freeResources: "sanity:freeResource",
   pyqPapers: "sanity:pyqPaper",
+  studyNotes: "sanity:studyNote",
   faqs: "sanity:faq",
   announcements: "sanity:announcement",
 } as const;
@@ -126,6 +129,7 @@ export const SANITY_TAGS = {
 export const SANITY_TAG = {
   blogPost: (slug: string) => `sanity:blog:${slug}`,
   currentAffair: (slug: string) => `sanity:currentAffair:${slug}`,
+  studyNote: (slug: string) => `sanity:studyNote:${slug}`,
 } as const;
 
 const latestBlogsQuery = defineQuery(`
@@ -252,6 +256,58 @@ export async function getCurrentAffair(
     currentAffairQuery,
     { slug, ...localeParams(locale) },
     { tags: [SANITY_TAG.currentAffair(slug)] },
+  );
+}
+
+/** Shared projection for a note card; the detail query adds SEO. */
+const STUDY_NOTE_FIELDS = `
+  _id,
+  title,
+  "slug": slug.current,
+  "subject": ${label("subject")},
+  "paper": subject->paper,
+  "stages": coalesce(stages, []),
+  summary,
+  "pdfUrl": file.asset->url,
+  "pdfSize": file.asset->size,
+  pages,
+  revisedAt
+`;
+
+/** Notes are PDFs: one without its file attached is not listed or served. */
+const HAS_PDF = "defined(file.asset)";
+
+const studyNotesQuery = defineQuery(`
+  *[_type == "studyNote" && defined(slug.current) && ${HAS_PDF} && !(_id in path("drafts.**")) && ${IN_LOCALE}]
+    | order(subject->title asc, order asc, revisedAt desc) {${STUDY_NOTE_FIELDS}}
+`);
+
+/** Every published note with a PDF, grouped by subject then editorial order. */
+export async function getStudyNotes(locale: Locale = DEFAULT_LOCALE): Promise<StudyNoteListItem[]> {
+  return (
+    (await sanityFetch<StudyNoteListItem[]>(
+      studyNotesQuery,
+      localeParams(locale),
+      { tags: [SANITY_TAGS.studyNotes] },
+    )) ?? []
+  );
+}
+
+const studyNoteQuery = defineQuery(`
+  *[_type == "studyNote" && ${HAS_PDF} && !(_id in path("drafts.**")) && ${BY_SLUG_IN_LOCALE}[0] {
+    ${STUDY_NOTE_FIELDS},
+    "seo": ${SEO}
+  }
+`);
+
+export async function getStudyNote(
+  slug: string,
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<StudyNote | null> {
+  return sanityFetch<StudyNote>(
+    studyNoteQuery,
+    { slug, ...localeParams(locale) },
+    { tags: [SANITY_TAG.studyNote(slug)] },
   );
 }
 

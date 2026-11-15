@@ -25,6 +25,7 @@ import type {
   MockState,
   PublicPaper,
 } from "@/lib/mock-test/types";
+import { hasPassed, isAhead, latestFirst } from "@/lib/utils/instant";
 import { LEAD_FORMS } from "@/lib/validation/schemas";
 import type {
   ExamSecurityPolicy,
@@ -81,8 +82,8 @@ function isPublicMcq(test: Test): boolean {
   );
 }
 
-function isOpen(test: Test, nowIso = new Date().toISOString()): boolean {
-  return (!test.opensAt || test.opensAt <= nowIso) && (!test.closesAt || test.closesAt > nowIso);
+function isOpen(test: Test, now = Date.now()): boolean {
+  return (!test.opensAt || hasPassed(test.opensAt, now)) && (!test.closesAt || isAhead(test.closesAt, now));
 }
 
 /** Every public paper a visitor can start right now, newest first. No session needed. */
@@ -95,11 +96,11 @@ export async function listOpenPapers(): Promise<PublicPaper[]> {
       .where("status", "==", "published")
       .get();
 
-    const nowIso = new Date().toISOString();
+    const now = Date.now();
 
     return (toEntities<TestDoc>(snapshot.docs) as Test[])
-      .filter((test) => isPublicMcq(test) && isOpen(test, nowIso))
-      .sort((a, b) => (b.opensAt ?? b.createdAt).localeCompare(a.opensAt ?? a.createdAt))
+      .filter((test) => isPublicMcq(test) && isOpen(test, now))
+      .sort((a, b) => latestFirst(a.opensAt ?? a.createdAt, b.opensAt ?? b.createdAt))
       .map(toPublicPaper);
   } catch (error) {
     // Same contract as the course catalogue: an outage empties the list, it
@@ -595,7 +596,7 @@ export async function getResult(
       ? Math.round((below.data().count / (totalCandidates - 1)) * 100)
       : null;
 
-  const keyVisible = !test.resultsVisibleFrom || test.resultsVisibleFrom <= new Date().toISOString();
+  const keyVisible = !test.resultsVisibleFrom || hasPassed(test.resultsVisibleFrom);
 
   return {
     attemptId: attempt.id,

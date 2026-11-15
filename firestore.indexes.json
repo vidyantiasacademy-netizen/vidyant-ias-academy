@@ -207,6 +207,24 @@
       ]
     },
     {
+      "//": "answerWritingService.listQueue — Mains copies waiting for an evaluator, oldest first.",
+      "collectionGroup": "answerSubmissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "submittedAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "//": "answerWritingService.listPapersForStaff — Mains papers, newest first.",
+      "collectionGroup": "tests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "kind", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
       "//": "A student's results, newest first.",
       "collectionGroup": "results",
       "queryScope": "COLLECTION",
@@ -409,6 +427,22 @@
     {
       "collectionGroup": "doubts",
       "fieldPath": "answer",
+      "indexes": []
+    },
+    {
+      "//": [
+        "A Mains copy's evaluation — marks, remarks of up to 4,000 characters,",
+        "feedback — and its list of uploaded pages. Read whole, never queried.",
+        "Disabling the map disables every field inside it, so a long remark in",
+        "Hindi cannot push an index entry past Firestore's limit."
+      ],
+      "collectionGroup": "answerSubmissions",
+      "fieldPath": "evaluation",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "answerSubmissions",
+      "fieldPath": "files",
       "indexes": []
     }
   ]

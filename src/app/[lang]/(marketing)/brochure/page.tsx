@@ -12,7 +12,7 @@ import { pageMetadata, SEO_KEYWORDS } from "@/lib/seo/metadata";
 export const generateMetadata = () => pageMetadata({
   title: `Download the ${EXAM_CYCLE.label} Brochure`,
   description:
-    "Download the vidyantIAS brochure: programmes, batch structure, the test and evaluation calendar, mentorship model and fee structure for UPSC CSE 2026.",
+    `Download the vidyantIAS brochure: programmes, batch structure, the test and evaluation calendar, mentorship model and fee structure for ${EXAM_CYCLE.label}.`,
   path: ROUTES.brochure,
   keywords: [...SEO_KEYWORDS.primary, "vidyantIAS brochure", "UPSC course details Pune"],
 });

@@ -65,6 +65,34 @@ export async function notifyMany(
   input: Omit<NotifyInput, "userUid">,
 ): Promise<number> {
   const actor = await requireRole("ADMIN");
+  return writeMany(userUids, input, actor.uid);
+}
+
+/**
+ * The same notice to several users, triggered by the system rather than typed
+ * by an admin — e.g. "your evaluated copy is back" when a paper's results are
+ * released. No role check, like `notify()`: callers are services that have
+ * already authorised the action that caused it.
+ */
+export async function notifyUsers(
+  userUids: string[],
+  input: Omit<NotifyInput, "userUid">,
+  actorUid = "system",
+): Promise<number> {
+  if (input.href && !input.href.startsWith("/")) {
+    throw new AppError(ERROR_CODES.VALIDATION_ERROR, {
+      cause: new Error(`notification href must be in-app: ${input.href}`),
+    });
+  }
+
+  return writeMany(userUids, input, actorUid);
+}
+
+async function writeMany(
+  userUids: string[],
+  input: Omit<NotifyInput, "userUid">,
+  actorUid: string,
+): Promise<number> {
   const db = collection(COLLECTIONS.notifications).firestore;
 
   for (let index = 0; index < userUids.length; index += 500) {
@@ -82,7 +110,7 @@ export async function notifyMany(
 
       batch.set(collection(COLLECTIONS.notifications).doc(), {
         ...doc,
-        ...auditOnCreate(actor.uid),
+        ...auditOnCreate(actorUid),
       });
     }
 
@@ -131,6 +159,7 @@ export async function markRead(notificationId: string): Promise<void> {
 export const notificationService = {
   notify,
   notifyMany,
+  notifyUsers,
   listOwn,
   countUnread,
   markRead,

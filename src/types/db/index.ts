@@ -10,6 +10,7 @@ export * from "./common";
 export * from "./user";
 export * from "./academics";
 export * from "./assessment";
+export * from "./answer-writing";
 export * from "./engagement";
 export * from "./payment";
 export * from "./activity";

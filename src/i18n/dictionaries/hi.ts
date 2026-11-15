@@ -35,6 +35,7 @@ export const hi: Dictionary = {
     results: "परिणाम",
     resources: "संसाधन",
     currentAffairs: "करंट अफ़ेयर्स",
+    notes: "नोट्स",
     enrol: "प्रवेश और बैच",
     quizzes: "क्विज़",
     practiceQuizzes: "अभ्यास क्विज़",

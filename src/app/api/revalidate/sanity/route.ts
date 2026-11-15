@@ -19,7 +19,7 @@ import { SANITY_TAG, SANITY_TAGS } from "@/lib/sanity/queries";
  *   URL      https://www.vidyantias.com/api/revalidate/sanity
  *   Dataset  production
  *   Trigger  Create, Update, Delete
- *   Filter   _type in ["blog","currentAffair","faculty","course","demoClass","freeResource","pyqPaper","faq","announcement","category","subject","tag","author","translation.metadata"]
+ *   Filter   _type in ["blog","currentAffair","faculty","course","demoClass","freeResource","studyNote","pyqPaper","faq","announcement","category","subject","tag","author","translation.metadata"]
  *   Projection  {_type, "slug": slug.current}
  *   Secret   the value of SANITY_REVALIDATE_SECRET
  */
@@ -51,6 +51,8 @@ function tagsFor({ _type, slug }: WebhookPayload): string[] {
       return [SANITY_TAGS.freeResources];
     case "pyqPaper":
       return [SANITY_TAGS.pyqPapers];
+    case "studyNote":
+      return slug ? [SANITY_TAGS.studyNotes, SANITY_TAG.studyNote(slug)] : [SANITY_TAGS.studyNotes];
     case "faq":
       return [SANITY_TAGS.faqs];
     case "announcement":

@@ -406,7 +406,7 @@ export function ExamRunner({ payload, test, watermark, resultHref }: ExamRunnerP
       </p>
 
       <header className="sticky top-0 z-20 border-b border-line bg-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-3 px-5 py-3 sm:px-8 lg:px-12">
           <div className="min-w-0">
             <h1 className="truncate text-body-lg font-semibold">{test.title}</h1>
             <p className="text-small text-ink-secondary tabular-nums">
@@ -438,7 +438,7 @@ export function ExamRunner({ payload, test, watermark, resultHref }: ExamRunnerP
         ) : null}
       </header>
 
-      <div className="mx-auto grid w-full max-w-7xl flex-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[1fr_17rem]">
+      <div className="mx-auto grid w-full max-w-7xl flex-1 gap-6 px-5 py-6 sm:px-8 lg:grid-cols-[1fr_17rem] lg:px-12">
         <div className="min-w-0">
           <QuestionPanel
             question={question}

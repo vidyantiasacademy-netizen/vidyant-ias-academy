@@ -12,13 +12,13 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ROUTES } from "@/lib/constants/site";
 import { formatIst } from "@/lib/exam/ist";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { faqSchema } from "@/lib/seo/structured-data";
+import { faqSchema, jsonLd } from "@/lib/seo/structured-data";
 import { mockTestService } from "@/services/mock-tests/mock-test.service";
 
 export const generateMetadata = () => pageMetadata({
   title: "Free UPSC Prelims Mock Test — Get Your Rank",
   description:
-    "Take a free, timed UPSC Prelims mock test online. See your score, your rank among everyone who has taken it, your weakest subjects, and the answer key with explanations.",
+    "Take a free, timed UPSC Prelims mock test online. Get your score, your rank, your weakest subjects and the answer key with explanations.",
   path: ROUTES.mockTest,
   keywords: [
     "free UPSC mock test",
@@ -179,7 +179,7 @@ export default async function MockTestPage() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(FAQS)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema(FAQS)) }}
       />
     </>
   );

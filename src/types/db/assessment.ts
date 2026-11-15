@@ -40,6 +40,18 @@ export interface ExamSecurityPolicy {
  */
 export type TestAudience = "enrolled" | "public";
 
+/**
+ * One question on a Mains paper, as the evaluator marks it. The question itself
+ * is printed in the paper's PDF; this is only what marking needs.
+ */
+export interface MainsQuestionSlot {
+  /** As printed on the paper, e.g. "Q1" or "5(a)". Unique within the paper. */
+  label: string;
+  maxMarks: number;
+  /** The word limit printed with the question, e.g. 150. Advisory. */
+  wordLimit: number | null;
+}
+
 /** `tests/{testId}` — the paper. Questions live in their own collection. */
 export interface TestDoc {
   courseId: string;
@@ -62,6 +74,16 @@ export interface TestDoc {
   security: ExamSecurityPolicy | null;
   /** Missing means `enrolled`. */
   audience?: TestAudience;
+  /**
+   * Mains papers only: media reference of the PDF students download, write on
+   * and upload back. Lives under `tests/{testId}/paper/` — see `MEDIA_PATHS`.
+   */
+  questionPaperPath?: string | null;
+  /**
+   * Mains papers only: how the paper is marked, question by question.
+   * `questionCount` and `totalMarks` are derived from it, so they cannot drift.
+   */
+  markingScheme?: MainsQuestionSlot[];
   status: PublishStatus;
 }
 
@@ -251,8 +273,14 @@ export type Answer = Entity<AnswerDoc>;
 /**
  * `results/{resultId}` — the scorecard. Id is `{attemptId}` so one attempt has
  * exactly one result. Read-only for everyone except the evaluator.
+ *
+ * A Mains paper has no `testAttempts` sitting — it is written offline — so its
+ * scorecard is keyed by the `answerSubmissions` id instead, and `attemptId`
+ * holds that id. The two id spaces cannot collide: submission ids contain an
+ * underscore, Firestore's generated ids never do.
  */
 export interface ResultDoc {
+  /** A `testAttempts` id, or for a Mains paper an `answerSubmissions` id. */
   attemptId: string;
   testId: string;
   studentUid: Uid;

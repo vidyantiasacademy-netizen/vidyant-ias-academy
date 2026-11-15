@@ -121,6 +121,6 @@ export const config = {
    * that includes the root `opengraph-image`, which has no file extension.
    */
   matcher: [
-    "/((?!api|studio|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|opengraph-image|.*\\.(?:png|jpg|jpeg|svg|webp|ico|pdf)$).*)",
+    "/((?!api|studio|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|llms.txt|opengraph-image|.*\\.(?:png|jpg|jpeg|svg|webp|ico|pdf)$).*)",
   ],
 };

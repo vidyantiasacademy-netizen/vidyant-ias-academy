@@ -120,6 +120,45 @@ export async function getQuestionImageUrlForVisitor(
   return sign(ref, ttlMinutes);
 }
 
+/**
+ * A Mains paper's question paper, for a student.
+ *
+ * `tests/` is staff-only in `assertCanRead`, because keys and model answers
+ * live there too. This signs one folder of it — `tests/{testId}/paper/` — and
+ * nothing else. The caller, `answerWritingService`, must already have checked
+ * the student's enrollment and that the paper has opened.
+ */
+export function getQuestionPaperUrlForStudent(
+  ref: string,
+  ttlMinutes = DEFAULT_TTL_MINUTES,
+): string {
+  if (!/^tests\/[\w-]+\/paper\/[\w-]+\.pdf$/.test(ref)) {
+    throw new AppError(ERROR_CODES.FORBIDDEN);
+  }
+
+  return sign(ref, ttlMinutes);
+}
+
+/**
+ * The evaluator's annotated copy, for the student it belongs to.
+ *
+ * Kept under `tests/` rather than the student's own folder so that it cannot
+ * be read before release — `assertCanRead` would hand a student anything in
+ * `students/{uid}/`. The uid in the path must be the caller's; the release check
+ * is `answerWritingService`'s, which must run before this.
+ */
+export async function getEvaluatedCopyUrlForStudent(
+  ref: string,
+  ttlMinutes = DEFAULT_TTL_MINUTES,
+): Promise<string> {
+  const user = await requireAuth();
+  const owner = /^tests\/[\w-]+\/evaluated\/([^/]+)\/[\w-]+\.\w+$/.exec(ref)?.[1];
+
+  if (owner !== user.uid) throw new AppError(ERROR_CODES.FORBIDDEN);
+
+  return sign(ref, ttlMinutes);
+}
+
 function sign(ref: string, ttlMinutes: number): string {
   const { publicId, format } = fromMediaRef(ref);
 
@@ -284,6 +323,22 @@ export async function removeOwnAvatar(ref: string): Promise<void> {
   await destroy(ref);
 }
 
+/**
+ * Deletes a page the caller uploaded to their own answer sheet and then took
+ * back out. The prefix keeps this to the caller's own answer folders; that the
+ * copy is still an unsubmitted draft — so the page is not evidence of anything
+ * evaluated — is `answerWritingService`'s check, made before calling this.
+ */
+export async function removeOwnAnswerSheetPage(ref: string): Promise<void> {
+  const user = await requireAuth();
+
+  if (!ref.startsWith(`students/${user.uid}/answers/`)) {
+    throw new AppError(ERROR_CODES.FORBIDDEN);
+  }
+
+  await destroy(ref);
+}
+
 export interface UploadTicket {
   /** Where the browser POSTs the file. */
   uploadUrl: string;
@@ -393,10 +448,13 @@ function toUploadError(error: unknown): AppError {
 export const storageService = {
   getSignedUrl,
   getQuestionImageUrlForVisitor,
+  getQuestionPaperUrlForStudent,
+  getEvaluatedCopyUrlForStudent,
   getLessonDocumentUrl,
   remove,
   uploadOwnAvatar,
   uploadAvatarFor,
   removeOwnAvatar,
+  removeOwnAnswerSheetPage,
   signUpload,
 };

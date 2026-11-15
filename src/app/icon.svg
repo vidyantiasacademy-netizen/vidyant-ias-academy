@@ -1,11 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="VidyantIAS">
-  <rect width="512" height="512" rx="112" fill="#1d2470"/>
-  <g transform="translate(96 131) scale(5)">
-  <g transform="translate(37 -6.1) rotate(45)">
-    <rect x="0" y="40" width="28" height="10" rx="1.6" fill="#ffffff"/>
-    <rect x="18" y="26" width="10" height="24" rx="1.6" fill="#ffffff"/>
-    <rect x="18" y="10" width="10" height="13" rx="1.6" fill="#ffffff"/>
-    <rect x="18" y="-8" width="10" height="15" rx="1.6" fill="#f39a1e"/>
-  </g>
+  <rect width="512" height="512" rx="112" fill="#0b1b3f"/>
+  <g transform="translate(3.5 -9.75) scale(5)">
+  <path d="M63.26 29.45A33.2 33.2 0 1 0 73.66 36.31L54.70 83.70L46.00 83.70L28.60 40.20L41.00 40.20L50.40 61.60Z" fill="#f8f3e7"/>
+  <path d="M63.26 29.45L70.64 13.0L82.98 13.0L73.66 36.31Z" fill="#f29a2e"/>
   </g>
 </svg>

@@ -10,9 +10,8 @@ export const BRAND = {
   name: "vidyantIAS",
   legalName: "vidyantIAS",
   /**
-   * The drawn logotype, split so the two weights of the lockup can be set
-   * separately. The logo deck ("VidyantIAS Logo Concepts", concept 03 — Sopan)
-   * sets the name with a capital V; `name` above is the casing used in running
+   * The drawn logotype, split so the lockup can set the two parts separately.
+   * The Breakout lockup sets the name with a capital V; `name` above is the casing used in running
    * copy. TODO(institute): confirm which casing wins, and align the other.
    */
   logotype: { lead: "Vidyant", trail: "IAS" },
@@ -34,8 +33,8 @@ export const BRAND = {
  * TODO(institute): roll this forward when admissions move to the next cycle.
  */
 export const EXAM_CYCLE = {
-  label: "UPSC CSE 2026",
-  year: "2026",
+  label: "UPSC CSE 2027",
+  year: "2027",
   admissionNote: "Admissions open",
 } as const;
 
@@ -84,6 +83,7 @@ export const ROUTES = {
   testimonials: "/testimonials",
   resources: "/resources",
   currentAffairs: "/current-affairs",
+  notes: "/notes",
   quizzes: "/quizzes",
   upscGuide: "/upsc-guide",
   mockTest: "/mock-test",
@@ -133,6 +133,7 @@ export const MOBILE_NAV = [
   { key: "mockTest", label: "Free Mock Test", href: ROUTES.mockTest },
   { key: "quizzes", label: "Quizzes", href: ROUTES.quizzes },
   { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
+  { key: "notes", label: "Notes", href: ROUTES.notes },
   { key: "resources", label: "Resources", href: ROUTES.resources },
   { key: "upscGuide", label: "UPSC Exam Guide", href: ROUTES.upscGuide },
   { key: "parents", label: "For Parents", href: ROUTES.parents },
@@ -211,6 +212,7 @@ export const FOOTER_NAV = {
     { key: "mockTest", label: "Free Mock Test", href: ROUTES.mockTest },
     { key: "upscGuide", label: "UPSC Exam Guide", href: ROUTES.upscGuide },
     { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
+    { key: "notes", label: "Notes", href: ROUTES.notes },
     { key: "practiceQuizzes", label: "Practice Quizzes", href: ROUTES.quizzes },
     { key: "blog", label: "Blog", href: ROUTES.blog },
     { key: "starterKit", label: "UPSC Starter Kit", href: `${ROUTES.resources}#upsc-starter-kit` },

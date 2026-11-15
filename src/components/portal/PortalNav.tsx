@@ -37,7 +37,7 @@ export function PortalNav({ nav, title }: { nav: PortalNavItem[]; title: string 
       aria-label={title}
       // Full-bleed to the container's gutter on a phone, so the band reads as a
       // band rather than a floating card.
-      className="focus-invert -mx-4 overflow-x-auto sm:mx-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="focus-invert -mx-5 overflow-x-auto sm:mx-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       <div className="flex w-max min-w-full items-end gap-1 border-b border-white/35 bg-indigo px-2 pt-2 sm:gap-2 sm:px-3 sm:pt-3">
         {nav.map((item) => {

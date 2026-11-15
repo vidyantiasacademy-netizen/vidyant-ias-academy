@@ -8,7 +8,7 @@ import { getLocale } from "@/i18n/server";
 import { CTA, ROUTES } from "@/lib/constants/site";
 import { getSiteFaqs } from "@/lib/content/site";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { faqSchema } from "@/lib/seo/structured-data";
+import { faqSchema, jsonLd } from "@/lib/seo/structured-data";
 
 export const generateMetadata = () => pageMetadata({
   title: "Frequently Asked Questions",
@@ -60,7 +60,7 @@ export default async function FaqPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLd(
             faqSchema(
               faqs.map((faq) => ({ question: faq.question, answer: faq.answer })),
             ),

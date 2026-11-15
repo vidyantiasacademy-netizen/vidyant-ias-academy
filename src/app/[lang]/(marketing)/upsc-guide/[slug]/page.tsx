@@ -19,7 +19,7 @@ import {
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CTA, ROUTES } from "@/lib/constants/site";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { faqSchema } from "@/lib/seo/structured-data";
+import { faqSchema, jsonLd } from "@/lib/seo/structured-data";
 
 export const dynamicParams = false;
 
@@ -230,7 +230,7 @@ export default async function GuidePage({ params }: PageProps<"/[lang]/upsc-guid
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(guide.faqs)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema(guide.faqs)) }}
       />
     </>
   );

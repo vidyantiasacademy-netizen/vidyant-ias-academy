@@ -22,13 +22,15 @@ export const STUDENT_BACK_LINKS: PortalBackLink[] = [
   { prefix: "/dashboard/services/", href: "/dashboard/services", label: "Back to services" },
   { prefix: "/dashboard/courses/", href: "/dashboard", label: "Back to dashboard" },
   // A paper and its scorecard both belong to the Prelims calendar. Mains papers
-  // are not sat in the runner, so they never land here.
+  // are not sat in the runner; they redirect to their own page under /mains/.
   { prefix: "/dashboard/tests/", href: "/dashboard/prelims", label: "Back to the test series" },
+  { prefix: "/dashboard/mains/", href: "/dashboard/mains", label: "Back to answer writing" },
 ];
 
 export const ADMIN_BACK_LINKS: PortalBackLink[] = [
   { prefix: "/admin/courses/", href: "/admin/courses", label: "Back to courses" },
   { prefix: "/admin/tests/", href: "/admin/tests", label: "Back to tests" },
+  { prefix: "/admin/answer-writing/", href: "/admin/answer-writing", label: "Back to answer writing" },
   { prefix: "/admin/users/", href: "/admin/users", label: "Back to users" },
   { prefix: "/admin/leads/", href: "/admin/leads", label: "Back to leads" },
 ];

@@ -18,6 +18,7 @@ import type { Course, CourseCategory } from "@/types";
 import type { CourseDoc } from "@/types/db";
 
 import { COURSE_FAQ_IDS, DELIVERY_MODE_LABELS } from "./labels";
+import { COURSE_POSTER_SLUGS } from "./posters";
 
 /**
  * The course catalogue the public site renders — the join of two sources.
@@ -98,13 +99,28 @@ const STAGE_PHOTO: Record<CourseCategory, keyof typeof IMAGES> = {
   "test-series": "lectureHall",
 };
 
-function courseImage(content: CourseContent, category: CourseCategory): Course["image"] {
+/**
+ * Card art, in order: the Sanity hero image, the designed poster from
+ * `npm run courses:posters`, then the stage photo.
+ */
+function courseImage(
+  slug: string,
+  content: CourseContent,
+  category: CourseCategory,
+): Course["image"] {
   const hero = content.heroImage;
   if (hero?.url) {
     return {
-      src: projectedImageUrl(hero, { width: 960, height: 600 }),
+      src: projectedImageUrl(hero, { width: 960, height: 640 }),
       alt: hero.alt ?? content.title,
       lqip: hero.lqip ?? undefined,
+    };
+  }
+
+  if (COURSE_POSTER_SLUGS.has(slug)) {
+    return {
+      src: `/images/courses/posters/${slug}.webp`,
+      alt: `${content.title} — programme poster`,
     };
   }
 
@@ -148,7 +164,7 @@ function toCourse(
       return slug && subject !== undefined ? [{ slug, subject }] : [];
     }),
     faqIds: COURSE_FAQ_IDS[record.category] ?? [],
-    image: courseImage(content, record.category),
+    image: courseImage(record.slug, content, record.category),
     status: "published",
   };
 }

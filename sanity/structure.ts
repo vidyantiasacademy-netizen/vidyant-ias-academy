@@ -76,6 +76,7 @@ export const structure: StructureResolver = (S) =>
       byLanguage(S, "course", "Courses"),
       byLanguage(S, "demoClass", "Demo classes"),
       byLanguage(S, "freeResource", "Free resources"),
+      byLanguage(S, "studyNote", "Notes", { field: "revisedAt", direction: "desc" }),
       S.listItem()
         .title("PYQ papers")
         .schemaType("pyqPaper")

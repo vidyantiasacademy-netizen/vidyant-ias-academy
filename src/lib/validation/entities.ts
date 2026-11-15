@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { toUtcIso } from "@/lib/utils/instant";
 import { ACTIVITY_TYPES, PROCTOR_EVENT_TYPES } from "@/types/db";
 
 import { nameField, optionalText, phoneField } from "./schemas";
@@ -20,6 +21,13 @@ import { nameField, optionalText, phoneField } from "./schemas";
 const id = z.string().min(1).max(128);
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected YYYY-MM-DD.");
 const isoDateTime = z.string().datetime({ offset: true });
+
+/**
+ * A stored moment, normalised to UTC. Forms send IST (`+05:30`); storing that
+ * as-is is what made text comparisons with server `Z` times five and a half
+ * hours wrong. See `lib/utils/instant.ts`.
+ */
+export const utcInstant = isoDateTime.transform(toUtcIso);
 
 /** Money arrives as rupees from a form and is stored as paise. */
 export const moneySchema = z.object({
@@ -109,9 +117,9 @@ export const testSchema = z.object({
   totalMarks: z.number().min(1).max(2000),
   durationMinutes: z.number().int().min(5).max(480),
   negativeMarksPerQuestion: z.number().min(0).max(5),
-  opensAt: isoDateTime.nullable(),
-  closesAt: isoDateTime.nullable(),
-  resultsVisibleFrom: isoDateTime.nullable(),
+  opensAt: utcInstant.nullable(),
+  closesAt: utcInstant.nullable(),
+  resultsVisibleFrom: utcInstant.nullable(),
   security: examSecuritySchema.nullable(),
   audience: z.enum(["enrolled", "public"]).optional(),
   status: z.enum(["draft", "published", "archived"]),

@@ -5,10 +5,10 @@ import {
   CircleHelp,
   ClipboardCheck,
   Compass,
-  Library,
   ListChecks,
   MapPin,
   Newspaper,
+  NotebookPen,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -82,10 +82,10 @@ const CARDS: {
     tone: "chilli",
   },
   {
-    title: "Free Resources",
-    description: "Syllabus, booklist, PYQ strategy and a study planner.",
-    href: ROUTES.resources,
-    icon: Library,
+    title: "Notes",
+    description: "Subject-wise notes as PDFs to download, plus the syllabus and booklist.",
+    href: ROUTES.notes,
+    icon: NotebookPen,
     tone: "indigo",
   },
   {

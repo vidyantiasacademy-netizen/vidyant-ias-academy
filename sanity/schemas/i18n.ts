@@ -28,6 +28,7 @@ export const TRANSLATED_DOCUMENT_TYPES = [
   "course",
   "demoClass",
   "freeResource",
+  "studyNote",
   "faq",
 ] as const;
 

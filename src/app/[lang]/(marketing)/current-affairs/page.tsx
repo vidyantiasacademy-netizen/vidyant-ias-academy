@@ -18,7 +18,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 export const generateMetadata = () => pageMetadata({
   title: "UPSC Current Affairs Analysis",
   description:
-    "Daily current affairs explained for UPSC by vidyantIAS Pune: what happened, why it matters for the examination, the static syllabus link and where it can be used in Prelims or Mains.",
+    "UPSC current affairs explained: what happened, why it matters for the exam, its static syllabus link, and how to use it in Prelims or Mains.",
   path: ROUTES.currentAffairs,
   keywords: ["UPSC current affairs", "current affairs for IAS", "UPSC daily news analysis"],
 });

@@ -125,6 +125,18 @@ copy/paste block and the violation budget. `null` means the institute default in
 `src/lib/exam/policy.ts`, never "unproctored": a paper created before the field
 existed must not be the one that ships without invigilation.
 
+`opensAt`, `closesAt` and `resultsVisibleFrom` are stored in UTC (`…Z`). The
+form takes IST and the validation schemas normalise it; papers written before
+that stored `+05:30`, which compared as text against the server's `Z` clock was
+five and a half hours wrong. Compare these with `src/lib/utils/instant.ts`, never
+as strings; `npm run migrate:utc-instants` rewrites any older document.
+
+A Mains paper (`kind: "mains-descriptive"`) is written offline instead of in the
+runner, and carries two more fields: `questionPaperPath`, the PDF students write
+on, and `markingScheme[]`, the label, maximum marks and word limit of each
+question. Its `questionCount` and `totalMarks` are derived from the scheme. See
+`docs/answer-writing.md`.
+
 ### `questions/{questionId}`
 The question bank and PYQ database. `testIds` is an array, so one bank serves
 many papers. **No student may read this collection** — Firestore cannot withhold
@@ -165,7 +177,19 @@ recorded can see which were not.
 
 ### `results/{attemptId}`
 The scorecard: score, counts, negative marks, `rank`, `percentile`, and
-`subjectBreakdown[]`. Nobody writes this from a client, ever.
+`subjectBreakdown[]`. Nobody writes this from a client, ever. A Mains paper has
+no sitting, so its scorecard is keyed by the `answerSubmissions` id and
+`attemptId` holds that id — the id spaces cannot collide, since a submission id
+contains an underscore and a generated id never does.
+
+### `answerSubmissions/{testId_studentUid}`
+One student's copy of one Mains paper: the uploaded pages (`files[]`, in order),
+`paperOpenedAt` and `submittedAt`, the evaluator, and the `evaluation` — marks
+and remarks per question, a five-point rubric, written feedback, and the
+checked copy's media reference. `status` moves `draft → submitted → in-review →
+evaluated`, each step a transaction in `answerWritingService`. **Closed to every
+client read and write**, the student's own included: the evaluation is drafted
+on this document before release, and Firestore cannot hide one field.
 
 ### `mockAttempts/{attemptId}`
 One website visitor's sitting of a free public mock test (a `tests` paper with

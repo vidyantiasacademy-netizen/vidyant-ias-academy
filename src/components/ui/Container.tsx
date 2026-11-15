@@ -14,6 +14,12 @@ interface ContainerProps extends ComponentProps<"div"> {
    existing callers; narrow is a reading measure and stays put. */
 const PAGE = "max-w-[1280px] 2xl:max-w-[1440px] 3xl:max-w-[1760px] 4xl:max-w-[2160px]";
 
+/* Side gutters: 20px phone, 32px tablet, 48px laptop, 64px on 1920px+. The
+   phone step leaves room for a thumb at the edge; the desktop steps keep text
+   off the window edge when the viewport is only just wider than the measure.
+   Full-bleed scrollers inside a container undo the phone step with `-mx-5`. */
+const GUTTER = "px-5 sm:px-8 lg:px-12 3xl:px-16";
+
 const sizes = {
   default: PAGE,
   narrow: "max-w-[820px]",
@@ -28,7 +34,7 @@ export function Container({
 }: ContainerProps) {
   return (
     <Tag
-      className={cn("mx-auto w-full px-4 sm:px-6 lg:px-8 3xl:px-12", sizes[size], className)}
+      className={cn("mx-auto w-full", GUTTER, sizes[size], className)}
       {...props}
     />
   );

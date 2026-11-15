@@ -11,7 +11,7 @@ import { TrackedAnchor } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { BRAND, CONTACT, ROUTES, whatsappUrl } from "@/lib/constants/site";
 import { pageMetadata, SEO_KEYWORDS } from "@/lib/seo/metadata";
-import { organizationSchema } from "@/lib/seo/structured-data";
+import { jsonLd, organizationSchema } from "@/lib/seo/structured-data";
 
 export const generateMetadata = () => pageMetadata({
   title: `Contact & Centre Address in ${BRAND.city}`,
@@ -151,7 +151,7 @@ export default function ContactPage() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(organizationSchema()) }}
       />
     </>
   );
