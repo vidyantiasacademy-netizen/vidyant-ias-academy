@@ -1,10 +1,11 @@
-import { ArrowRight, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { TrackedAnchor, TrackedLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { ROUTES } from "@/lib/constants/site";
+import { pdfVersion } from "@/lib/notes/version";
 import type { StudyNoteListItem } from "@/lib/sanity/types";
 
 /** "1.4 MB" — shown before a download, for students on mobile data. */
@@ -24,16 +25,19 @@ export function formatRevised(date: string) {
   }).format(new Date(`${date}T00:00:00Z`));
 }
 
-/** Sanity serves a file as a download (not inline) with `?dl=<filename>`. */
+/**
+ * The watermarked download (`/notes/<slug>/pdf`), versioned by the upload so
+ * the CDN can keep each version for good.
+ */
 export function pdfDownloadHref(note: Pick<StudyNoteListItem, "pdfUrl" | "slug">) {
-  return note.pdfUrl ? `${note.pdfUrl}?dl=${encodeURIComponent(`${note.slug}.pdf`)}` : null;
+  return `${ROUTES.notes}/${note.slug}/pdf?v=${pdfVersion(note.pdfUrl)}`;
 }
 
-/** "12 min read · 8-page PDF · Revised 3 Nov 2026" */
+/** "8-page PDF · 1.4 MB · Revised 3 Nov 2026" */
 export function noteMeta(note: StudyNoteListItem) {
   return [
-    note.hasContent && note.readingMinutes ? `${note.readingMinutes} min read` : null,
-    note.pdfUrl ? (note.pages ? `${note.pages}-page PDF` : "PDF") : null,
+    note.pages ? `${note.pages}-page PDF` : "PDF",
+    formatBytes(note.pdfSize),
     `Revised ${formatRevised(note.revisedAt)}`,
   ]
     .filter(Boolean)
@@ -41,15 +45,12 @@ export function noteMeta(note: StudyNoteListItem) {
 }
 
 /**
- * One free note: subject, title, what it covers, and the two ways to use it —
- * read it on the page, or download the PDF (with its size, so a student on
- * mobile data knows the cost before tapping).
+ * One note: subject, title, what it covers, and the download, with its page
+ * count and size so a student on mobile data knows the cost before tapping.
+ * The title opens the note's own page, the link a student shares.
  */
 export function NoteCard({ note, headingLevel = "h3" }: { note: StudyNoteListItem; headingLevel?: "h2" | "h3" }) {
   const Heading = headingLevel;
-  const readHref = `${ROUTES.notes}/${note.slug}`;
-  const download = pdfDownloadHref(note);
-  const size = formatBytes(note.pdfSize);
   const payload = { location: "notes-card", note: note.slug, subject: note.subject ?? "" };
 
   return (
@@ -69,7 +70,7 @@ export function NoteCard({ note, headingLevel = "h3" }: { note: StudyNoteListIte
 
       <Heading className="mt-3 text-h4 font-bold text-indigo">
         <TrackedLink
-          href={readHref}
+          href={`${ROUTES.notes}/${note.slug}`}
           event={ANALYTICS_EVENTS.noteOpen}
           payload={payload}
           className="hover:underline hover:decoration-kesar hover:decoration-2 hover:underline-offset-4"
@@ -80,31 +81,18 @@ export function NoteCard({ note, headingLevel = "h3" }: { note: StudyNoteListIte
       <p className="mt-2 line-clamp-3 text-small text-ink-secondary">{note.summary}</p>
       <p className="mt-3 text-[0.8125rem] text-ink-muted">{noteMeta(note)}</p>
 
-      {/* Pushes the actions to the card foot, so a row of cards lines up. */}
+      {/* Pushes the download to the card foot, so a row of cards lines up. */}
       <div aria-hidden className="flex-1" />
-      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-line pt-4">
-        {note.hasContent ? (
-          <TrackedLink
-            href={readHref}
-            event={ANALYTICS_EVENTS.noteOpen}
-            payload={payload}
-            className="inline-flex min-h-11 items-center gap-1.5 text-small font-bold text-indigo"
-          >
-            Read note
-            <ArrowRight aria-hidden className="size-4" />
-          </TrackedLink>
-        ) : null}
-        {download ? (
-          <TrackedAnchor
-            href={download}
-            event={ANALYTICS_EVENTS.noteDownload}
-            payload={payload}
-            className="inline-flex min-h-11 items-center gap-1.5 text-small font-bold text-indigo underline decoration-line-strong decoration-2 underline-offset-4 hover:decoration-kesar"
-          >
-            <Download aria-hidden className="size-4" />
-            PDF{size ? ` · ${size}` : ""}
-          </TrackedAnchor>
-        ) : null}
+      <div className="mt-4 border-t border-line pt-4">
+        <TrackedAnchor
+          href={pdfDownloadHref(note)}
+          event={ANALYTICS_EVENTS.noteDownload}
+          payload={payload}
+          className="inline-flex min-h-11 items-center gap-2 bg-indigo px-4 text-small font-bold text-white transition-colors hover:bg-indigo-900"
+        >
+          <Download aria-hidden className="size-4" />
+          Download PDF
+        </TrackedAnchor>
       </div>
     </article>
   );

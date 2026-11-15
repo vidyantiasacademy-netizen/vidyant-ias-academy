@@ -34,7 +34,7 @@ export const generateMetadata = () => pageMetadata({
   // Keyword first, brand last: "UPSC coaching in Pune" is what aspirants type.
   title: `UPSC Coaching in ${BRAND.city} with Mentorship | ${BRAND.name}`,
   description:
-    `UPSC coaching in Pune for ${EXAM_CYCLE.label}: Foundation, Prelims, Mains and Optional, with a mentor from day one. Free notes, mock tests and counselling.`,
+    `UPSC coaching in Pune for ${EXAM_CYCLE.label}: Foundation, Prelims, Mains and Optional, with a mentor from day one. Notes, free mock tests and counselling.`,
   path: "/",
   keywords: [...SEO_KEYWORDS.primary, ...SEO_KEYWORDS.secondary],
 });

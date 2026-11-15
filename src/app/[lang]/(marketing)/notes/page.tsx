@@ -13,11 +13,11 @@ import { getStudyNotes } from "@/lib/sanity/queries";
 import { pageMetadata } from "@/lib/seo/metadata";
 
 export const generateMetadata = () => pageMetadata({
-  title: "Free UPSC Notes, Subject-wise (PDF & Online)",
+  title: "UPSC Notes PDF, Subject-wise",
   description:
-    "Free UPSC notes from vidyantIAS Pune, subject by subject: read them online or download the PDF. No sign-up and no form.",
+    "UPSC notes from vidyantIAS Pune, subject by subject, as PDFs to download. No sign-up, no form, and every note shows when it was last revised.",
   path: ROUTES.notes,
-  keywords: ["free UPSC notes", "UPSC notes PDF", "IAS notes subject wise", "UPSC study notes"],
+  keywords: ["UPSC notes PDF", "UPSC notes", "IAS notes subject wise", "UPSC study notes"],
 });
 
 export default async function NotesPage() {
@@ -26,10 +26,10 @@ export default async function NotesPage() {
   return (
     <>
       <PageHero
-        eyebrow="Free Notes"
-        title="Free UPSC notes, subject by subject."
-        description="Read them here or download the PDF. No sign-up, no form, and every note shows when it was last revised."
-        breadcrumbs={[{ label: "Home", href: ROUTES.home }, { label: "Free Notes" }]}
+        eyebrow="Notes"
+        title="UPSC notes, subject by subject."
+        description="Download the PDF and keep it. No sign-up, no form, and every note shows when it was last revised."
+        breadcrumbs={[{ label: "Home", href: ROUTES.home }, { label: "Notes" }]}
       />
 
       <Section containerSize="wide">

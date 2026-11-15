@@ -35,7 +35,7 @@ export const en = {
     results: "Results",
     resources: "Resources",
     currentAffairs: "Current Affairs",
-    notes: "Free Notes",
+    notes: "Notes",
     enrol: "Admissions & Batches",
     quizzes: "Quizzes",
     practiceQuizzes: "Practice Quizzes",

@@ -100,13 +100,13 @@ export async function getHeroToday(locale: Locale): Promise<TodayItem[]> {
     });
   }
 
-  // Free notes take the first empty slot, ahead of the generic fallbacks.
+  // Notes take the first empty slot, ahead of the generic fallbacks.
   if (notes.length > 0 && items.length < 3) {
     items.push({
       kind: "notes",
-      kicker: "Revise · free notes",
+      kicker: "Download · notes",
       title: `${notes.length} subject-wise ${notes.length === 1 ? "note" : "notes"}`,
-      meta: "Read or download",
+      meta: "PDF",
       href: ROUTES.notes,
     });
   }

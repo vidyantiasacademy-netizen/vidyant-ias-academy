@@ -3,23 +3,30 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { isUniquePerLanguage, languageField } from "./i18n";
 
 /**
- * Free study notes, subject by subject, for any aspirant — readable on the
- * site (`/notes/<slug>`) and, when a PDF is attached, downloadable.
+ * Notes, subject by subject, for any aspirant: each one is a PDF to
+ * download. The editor uploads the PDF and fills in details about it (title,
+ * subject, stages, summary, revised date); there is no text body to write. `/notes` lists them; `/notes/<slug>` is the note's download page
+ * (summary, page count, size), the link a student shares.
  *
- * A note needs at least one of the two: written content or a PDF. Both is
- * best — the page is searchable and readable on a phone, and the PDF is what
- * a student prints.
- *
- * Free means public: the PDF is served from Sanity's world-readable CDN, so
+ * Public means public: the PDF is served from Sanity's world-readable CDN, so
  * nothing paid or enrolled-only belongs here (lesson notes for enrolled
  * students live in Firebase Storage behind a signed URL instead).
  */
 export const studyNote = defineType({
   name: "studyNote",
-  title: "Study note",
+  title: "Note",
   type: "document",
   fields: [
     languageField,
+    defineField({
+      name: "file",
+      type: "file",
+      title: "PDF",
+      description:
+        "Upload the note as a PDF. The VidyantIAS watermark is added on download, so upload it plain. Keep it under ~5 MB: students are often on mobile data. Public once published.",
+      options: { accept: "application/pdf" },
+      validation: (rule) => rule.required().assetRequired(),
+    }),
     defineField({
       name: "title",
       type: "string",
@@ -56,34 +63,9 @@ export const studyNote = defineType({
       validation: (rule) => rule.required().max(240),
     }),
     defineField({
-      name: "content",
-      type: "blockContent",
-      description: "The note itself, read on the page. Optional if a PDF is attached.",
-      validation: (rule) =>
-        rule.custom((value, context) => {
-          const doc = context.document as { file?: { asset?: unknown } } | undefined;
-          const hasContent = Array.isArray(value) && value.length > 0;
-          return hasContent || doc?.file?.asset ? true : "Add the note text, a PDF, or both.";
-        }),
-    }),
-    defineField({
-      name: "file",
-      type: "file",
-      title: "PDF",
-      description:
-        "Optional download. Keep it under ~5 MB — students are often on mobile data. Public once published.",
-      options: { accept: "application/pdf" },
-    }),
-    defineField({
       name: "pages",
       type: "number",
-      description: "PDF page count, shown before download.",
-      validation: (rule) => rule.integer().min(1),
-    }),
-    defineField({
-      name: "readingMinutes",
-      type: "number",
-      title: "Reading time (minutes)",
+      description: "Optional. PDF page count, shown before download.",
       validation: (rule) => rule.integer().min(1),
     }),
     defineField({

@@ -26,6 +26,11 @@ const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
 const sanityProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 
 const nextConfig: NextConfig = {
+  // The note-PDF route reads the watermark from disk at request time; file
+  // tracing cannot see a path built at runtime, so ship it explicitly.
+  outputFileTracingIncludes: {
+    "/[lang]/notes/[slug]/pdf": ["./src/assets/note-watermark.png"],
+  },
   experimental: {
     serverActions: {
       // The 1 MB default is too small for a CSV question import: the client

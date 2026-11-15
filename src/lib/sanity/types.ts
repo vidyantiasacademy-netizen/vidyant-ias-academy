@@ -152,17 +152,14 @@ export interface StudyNoteListItem {
   paper: string | null;
   stages: string[];
   summary: string;
-  hasContent: boolean;
-  pdfUrl: string | null;
+  pdfUrl: string;
   /** PDF size in bytes, from the asset. */
   pdfSize: number | null;
   pages: number | null;
-  readingMinutes: number | null;
   revisedAt: string;
 }
 
 export interface StudyNote extends StudyNoteListItem {
-  content: PortableTextBlocks | null;
   seo: Seo | null;
 }
 

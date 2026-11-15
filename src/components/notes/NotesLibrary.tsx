@@ -14,7 +14,7 @@ const normalise = (value: string) =>
   value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
 /**
- * The /notes library: search plus a subject filter over every free note.
+ * The /notes library: search plus a subject filter over every note.
  * With no filter the notes are grouped under subject headings, the way a
  * student thinks about the syllabus; a search or a subject flattens them into
  * one grid of matches.
@@ -101,7 +101,7 @@ export function NotesLibrary({ notes }: { notes: StudyNoteListItem[] }) {
 
       <p aria-live="polite" className="mt-5 text-small text-ink-muted">
         {visible.length === notes.length
-          ? `${notes.length} free ${notes.length === 1 ? "note" : "notes"}`
+          ? `${notes.length} ${notes.length === 1 ? "note" : "notes"}`
           : `Showing ${visible.length} of ${notes.length} notes`}
       </p>
 

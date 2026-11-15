@@ -82,8 +82,8 @@ const CARDS: {
     tone: "chilli",
   },
   {
-    title: "Free Notes",
-    description: "Subject-wise notes to read online or download, plus the syllabus and booklist.",
+    title: "Notes",
+    description: "Subject-wise notes as PDFs to download, plus the syllabus and booklist.",
     href: ROUTES.notes,
     icon: NotebookPen,
     tone: "indigo",

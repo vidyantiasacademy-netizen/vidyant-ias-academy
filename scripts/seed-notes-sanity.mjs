@@ -1,19 +1,27 @@
 /**
- * Seeds one sample free note (`studyNote`) so editors can see the shape of a
- * finished note in the Studio before writing their own.
+ * Seeds one sample note (`studyNote`) so editors can see the shape of a
+ * finished note in the Studio before writing their own. Notes are PDFs: the
+ * text below is rendered to a PDF with headless Chrome, uploaded to Sanity
+ * and attached as the note's file.
  *
- * Created as a DRAFT: it shows in Studio → Free notes but not on the site
- * until an editor reviews and publishes it. The content is factual (Part III
- * of the Constitution) so publishing it is safe, but it is the faculty's call.
+ * Without a published note it creates a DRAFT (Studio → Notes), which an
+ * editor reviews and publishes. With the note already published, it swaps in
+ * the freshly rendered PDF and keeps everything else the editors wrote.
  *
  *   npm run seed:notes:sanity
  *   npm run seed:notes:sanity -- --replace   # overwrite the draft
- *   npm run seed:notes:sanity -- --dry-run
+ *   npm run seed:notes:sanity -- --dry-run   # render the PDF only, write nothing
  *   npm run seed:notes:sanity -- --publish   # publish the draft (makes it public)
  *
- * Deterministic id + `createIfNotExists`, so Studio edits survive a re-run.
+ * Needs Google Chrome (or set CHROME_PATH).
  */
-import { blocks, sanityFlags, seedClient, wordCount } from "./seed/sanity.mjs";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+
+import { sanityFlags, seedClient } from "./seed/sanity.mjs";
 
 const flags = sanityFlags();
 const client = seedClient(flags);
@@ -90,8 +98,6 @@ const note = {
   stages: ["Prelims", "Mains"],
   summary:
     "The six groups of rights, who they protect, the five writs, and the one-line facts Prelims keeps asking about.",
-  content: blocks(body),
-  readingMinutes: Math.max(1, Math.round(wordCount(body) / 200)),
   revisedAt: new Date().toISOString().slice(0, 10),
   order: 1,
 };
@@ -129,16 +135,94 @@ if (!subject) {
   process.exit(1);
 }
 
+// ── Render the note to a PDF ────────────────────────────────────────────────
+
+const escape = (text) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+function bodyHtml(items) {
+  return items
+    .map((item) => {
+      if (typeof item === "string") return `<p>${escape(item)}</p>`;
+      if (item.h2) return `<h2>${escape(item.h2)}</h2>`;
+      const tag = item.numbers ? "ol" : "ul";
+      const list = item.numbers ?? item.bullets;
+      return `<${tag}>${list.map((li) => `<li>${escape(li)}</li>`).join("")}</${tag}>`;
+    })
+    .join("\n");
+}
+
+const revised = new Intl.DateTimeFormat("en-IN", {
+  day: "numeric", month: "long", year: "numeric", timeZone: "UTC",
+}).format(new Date(`${note.revisedAt}T00:00:00Z`));
+
+const html = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>${escape(note.title)}</title>
+<style>
+  @page { size: A4; margin: 18mm 18mm 20mm; }
+  * { box-sizing: border-box; }
+  body { font: 10.5pt/1.55 -apple-system, "Helvetica Neue", Arial, sans-serif; color: #1f2333; margin: 0; }
+  header { border-top: 6px solid #f29a2e; padding-top: 10px; display: flex; justify-content: space-between; align-items: baseline; }
+  .brand { font-weight: 800; color: #1e2470; font-size: 12pt; letter-spacing: -0.01em; }
+  .kicker { font-size: 8pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9a5a00; }
+  h1 { color: #1e2470; font-size: 21pt; line-height: 1.15; margin: 18px 0 6px; letter-spacing: -0.01em; }
+  .meta { color: #5a5f73; font-size: 9pt; margin: 0 0 14px; padding-bottom: 12px; border-bottom: 1.5px solid #1e2470; }
+  .summary { font-size: 11.5pt; color: #3a3f52; }
+  h2 { color: #1e2470; font-size: 13pt; margin: 20px 0 6px; padding-top: 8px; border-top: 1px solid #d9dbe5; break-after: avoid; }
+  ul, ol { padding-left: 20px; margin: 6px 0; }
+  li { margin: 4px 0; break-inside: avoid; }
+  footer { margin-top: 26px; padding-top: 8px; border-top: 1px solid #d9dbe5; font-size: 8pt; color: #5a5f73; }
+</style></head>
+<body>
+  <header><span class="brand">VidyantIAS</span><span class="kicker">Notes · ${escape(subject.title)}</span></header>
+  <h1>${escape(note.title)}</h1>
+  <p class="meta">${note.stages.join(" · ")} · Revised ${revised}</p>
+  <p class="summary">${escape(note.summary)}</p>
+  ${bodyHtml(body)}
+  <footer>VidyantIAS, Pune · Free to keep, print and share.</footer>
+</body></html>`;
+
+const dir = mkdtempSync(join(tmpdir(), "vi-note-"));
+const htmlPath = join(dir, "note.html");
+const pdfPath = join(dir, `${note.slug.current}.pdf`);
+writeFileSync(htmlPath, html);
+
+const chrome = process.env.CHROME_PATH ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+execFileSync(chrome, [
+  "--headless", "--disable-gpu", "--no-pdf-header-footer",
+  `--print-to-pdf=${pdfPath}`, pathToFileURL(htmlPath).href,
+], { stdio: "ignore" });
+
+const pdf = readFileSync(pdfPath);
+const pages = (pdf.toString("latin1").match(/\/Type\s*\/Page(?!s)/g) ?? []).length || undefined;
+console.log(`PDF: ${pdfPath} · ${pages ?? "?"} pages · ${Math.round(pdf.length / 1024)} KB`);
+
 if (flags.dryRun) {
-  console.log(`Would ${flags.replace ? "replace" : "create if missing"}: ${note._id}`);
-  console.log(`  "${note.title}" · ${subject.title} · ${note.content.length} blocks · ${note.readingMinutes} min read`);
+  console.log(`Would upload it and ${flags.replace ? "replace" : "create or update"}: ${note._id}`);
   process.exit(0);
 }
 
-const result = flags.replace
-  ? await client.createOrReplace(note)
-  : await client.createIfNotExists(note);
+// ── Upload and attach ───────────────────────────────────────────────────────
 
-console.log(`Draft ready: ${result._id}`);
-console.log(`  "${note.title}" · ${subject.title} · ${note.readingMinutes} min read`);
-console.log("Open Studio → Free notes → English to review and publish.");
+const asset = await client.assets.upload("file", pdf, {
+  filename: `${note.slug.current}.pdf`,
+  contentType: "application/pdf",
+});
+const file = { _type: "file", asset: { _type: "reference", _ref: asset._id } };
+
+const published = await client.getDocument(PUBLISHED_ID);
+if (published && !flags.replace) {
+  // Already live: swap in the new PDF; drop the old on-page text fields.
+  await client
+    .patch(PUBLISHED_ID)
+    .set({ file, ...(pages ? { pages } : {}) })
+    .unset(["content", "readingMinutes"])
+    .commit();
+  console.log(`Published note updated with its PDF: ${PUBLISHED_ID}`);
+  process.exit(0);
+}
+
+const doc = { ...note, file, ...(pages ? { pages } : {}) };
+const result = flags.replace ? await client.createOrReplace(doc) : await client.createIfNotExists(doc);
+console.log(`Draft ready: ${result._id} — "${note.title}" · ${subject.title}`);
+console.log("Open Studio → Notes → English to review and publish.");

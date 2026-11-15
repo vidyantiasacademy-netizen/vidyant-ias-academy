@@ -229,7 +229,7 @@ export function articleSchema(input: {
   };
 }
 
-/** A free study note: an Article that is also a learning resource. */
+/** A note: a PDF, described as an Article that is also a learning resource. */
 export function studyNoteSchema(input: {
   title: string;
   summary: string;

@@ -259,7 +259,7 @@ export async function getCurrentAffair(
   );
 }
 
-/** Shared projection for a note card; the detail query adds the body. */
+/** Shared projection for a note card; the detail query adds SEO. */
 const STUDY_NOTE_FIELDS = `
   _id,
   title,
@@ -268,20 +268,21 @@ const STUDY_NOTE_FIELDS = `
   "paper": subject->paper,
   "stages": coalesce(stages, []),
   summary,
-  "hasContent": count(content) > 0,
   "pdfUrl": file.asset->url,
   "pdfSize": file.asset->size,
   pages,
-  readingMinutes,
   revisedAt
 `;
 
+/** Notes are PDFs: one without its file attached is not listed or served. */
+const HAS_PDF = "defined(file.asset)";
+
 const studyNotesQuery = defineQuery(`
-  *[_type == "studyNote" && defined(slug.current) && !(_id in path("drafts.**")) && ${IN_LOCALE}]
+  *[_type == "studyNote" && defined(slug.current) && ${HAS_PDF} && !(_id in path("drafts.**")) && ${IN_LOCALE}]
     | order(subject->title asc, order asc, revisedAt desc) {${STUDY_NOTE_FIELDS}}
 `);
 
-/** Every published free note, grouped by subject then editorial order. */
+/** Every published note with a PDF, grouped by subject then editorial order. */
 export async function getStudyNotes(locale: Locale = DEFAULT_LOCALE): Promise<StudyNoteListItem[]> {
   return (
     (await sanityFetch<StudyNoteListItem[]>(
@@ -293,9 +294,8 @@ export async function getStudyNotes(locale: Locale = DEFAULT_LOCALE): Promise<St
 }
 
 const studyNoteQuery = defineQuery(`
-  *[_type == "studyNote" && !(_id in path("drafts.**")) && ${BY_SLUG_IN_LOCALE}[0] {
+  *[_type == "studyNote" && ${HAS_PDF} && !(_id in path("drafts.**")) && ${BY_SLUG_IN_LOCALE}[0] {
     ${STUDY_NOTE_FIELDS},
-    content,
     "seo": ${SEO}
   }
 `);

@@ -1,7 +1,6 @@
 import { ArrowLeft, Download, FileText } from "lucide-react";
 import { notFound } from "next/navigation";
 
-import { RichText } from "@/components/content/RichText";
 import { PageHero } from "@/components/layout/PageHero";
 import { Section } from "@/components/layout/Section";
 import { NoteCard, formatBytes, noteMeta, pdfDownloadHref } from "@/components/notes/NoteCard";
@@ -13,7 +12,7 @@ import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { ROUTES } from "@/lib/constants/site";
 import { getStudyNote, getStudyNotes } from "@/lib/sanity/queries";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { jsonLd, studyNoteSchema } from "@/lib/seo/structured-data";
+import { absoluteUrl, jsonLd, studyNoteSchema } from "@/lib/seo/structured-data";
 
 export async function generateStaticParams() {
   const slugs = new Set((await getStudyNotes()).map((note) => note.slug));
@@ -34,7 +33,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/notes/[slu
   }
 
   return pageMetadata({
-    title: note.seo?.title ?? `${note.title} — Free UPSC Notes`,
+    title: note.seo?.title ?? `${note.title} — UPSC Notes PDF`,
     description: note.seo?.description ?? note.summary,
     path: `${ROUTES.notes}/${note.slug}`,
     noIndex: note.seo?.noIndex ?? false,
@@ -46,6 +45,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/notes/[slu
 const downloadButton =
   "inline-flex min-h-12 items-center gap-2 bg-indigo px-5 text-body font-bold text-white transition-colors hover:bg-indigo-900";
 
+/** A note is a PDF; this page is where its link lands: what it covers, then the download. */
 export default async function NotePage({ params }: PageProps<"/[lang]/notes/[slug]">) {
   const { slug } = await params;
   const locale = await getLocale();
@@ -53,10 +53,9 @@ export default async function NotePage({ params }: PageProps<"/[lang]/notes/[slu
 
   if (!note) notFound();
 
-  const download = pdfDownloadHref(note);
   const size = formatBytes(note.pdfSize);
   const payload = { location: "note-page", note: note.slug, subject: note.subject ?? "" };
-  // Keep the student in the subject: the next notes they would read.
+  // Keep the student in the subject: the next notes they would download.
   const related = all.filter((n) => n.slug !== note.slug && n.subject === note.subject).slice(0, 3);
 
   return (
@@ -73,18 +72,18 @@ export default async function NotePage({ params }: PageProps<"/[lang]/notes/[slu
               subject: note.subject,
               stages: note.stages,
               revisedAt: note.revisedAt,
-              pdfUrl: note.pdfUrl,
+              pdfUrl: absoluteUrl(pdfDownloadHref(note), locale),
             }),
           ),
         }}
       />
       <PageHero
-        eyebrow={note.subject ?? "Free Notes"}
+        eyebrow={note.subject ?? "Notes"}
         title={note.title}
         description={note.summary}
         breadcrumbs={[
           { label: "Home", href: ROUTES.home },
-          { label: "Free Notes", href: ROUTES.notes },
+          { label: "Notes", href: ROUTES.notes },
           { label: note.title },
         ]}
       >
@@ -100,45 +99,32 @@ export default async function NotePage({ params }: PageProps<"/[lang]/notes/[slu
       </PageHero>
 
       <Section containerSize="narrow">
-        <div className="flex flex-col gap-4 border-b border-line pb-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-small text-ink-muted">{noteMeta(note)}</p>
-          {download ? (
-            <TrackedAnchor
-              href={download}
-              event={ANALYTICS_EVENTS.noteDownload}
-              payload={payload}
-              className={downloadButton}
-            >
-              <Download aria-hidden className="size-5" />
-              Download PDF{size ? ` · ${size}` : ""}
-            </TrackedAnchor>
-          ) : null}
-        </div>
-
-        {note.hasContent && note.content ? (
-          <RichText value={note.content} className="mt-8" />
-        ) : download ? (
-          // PDF-only note: the download is the content.
-          <div className="mt-8 flex flex-col items-start gap-4 border border-line-strong bg-paper p-6 sm:flex-row sm:items-center">
-            <FileText aria-hidden className="size-10 shrink-0 text-kesar-600" />
-            <div className="flex-1">
-              <p className="text-body font-bold text-indigo">This note is a PDF.</p>
-              <p className="mt-1 text-small text-ink-secondary">
-                {note.pages ? `${note.pages} pages` : "Download it"}
-                {size ? `, ${size}` : ""}. Free to keep, print and share.
-              </p>
-            </div>
+        <div className="flex flex-col items-start gap-5 border border-line-strong bg-paper p-6 sm:flex-row sm:items-center">
+          <FileText aria-hidden className="size-10 shrink-0 text-kesar-600" />
+          <div className="flex-1">
+            <p className="text-body font-bold text-indigo">{note.title}</p>
+            <p className="mt-1 text-small text-ink-secondary">{noteMeta(note)}</p>
           </div>
-        ) : null}
+          <TrackedAnchor
+            href={pdfDownloadHref(note)}
+            event={ANALYTICS_EVENTS.noteDownload}
+            payload={payload}
+            className={downloadButton}
+          >
+            <Download aria-hidden className="size-5" />
+            Download PDF{size ? ` · ${size}` : ""}
+          </TrackedAnchor>
+        </div>
+        <p className="mt-3 text-small text-ink-muted">Free to keep, print and share.</p>
 
         <TrackedLink
           href={ROUTES.notes}
           event={ANALYTICS_EVENTS.noteOpen}
           payload={{ ...payload, action: "back-to-library" }}
-          className="mt-12 inline-flex min-h-11 items-center gap-2 text-small font-bold text-indigo"
+          className="mt-10 inline-flex min-h-11 items-center gap-2 text-small font-bold text-indigo"
         >
           <ArrowLeft aria-hidden className="size-4" />
-          All free notes
+          All notes
         </TrackedLink>
       </Section>
 

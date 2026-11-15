@@ -27,7 +27,7 @@ export async function GET() {
     ...courses.map((course) => `- [${course.title}](${url(`${ROUTES.courses}/${course.slug}`)}): ${course.shortDescription}`),
     "",
     "## Free study material",
-    `- [Free UPSC notes](${url(ROUTES.notes)}): subject-wise notes to read online or download as PDF.`,
+    `- [UPSC notes](${url(ROUTES.notes)}): subject-wise notes, as PDFs to download.`,
     ...notes.slice(0, 50).map((note) => `  - [${note.title}](${url(`${ROUTES.notes}/${note.slug}`)}): ${note.summary}`),
     `- [Free Prelims mock test](${url(ROUTES.mockTest)}): a timed paper with score, rank and answer key.`,
     `- [Current affairs](${url(ROUTES.currentAffairs)}): developments explained with their UPSC syllabus link.`,
