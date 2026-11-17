@@ -67,7 +67,7 @@ export function FacultyCard({ member, compact = false, className }: FacultyCardP
         <Link
           href={`/faculty/${member.slug}`}
           className={cn(
-            "group mt-6 inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-indigo-900 hover:underline underline-offset-4",
+            "group mt-6 inline-flex min-h-11 items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-indigo-900 hover:underline underline-offset-4",
             compact && "max-sm:mt-4",
           )}
         >

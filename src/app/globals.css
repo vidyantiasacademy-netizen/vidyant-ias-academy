@@ -267,6 +267,13 @@
     --notice-strip-height: 0px;
   }
 
+  /* Tailwind v4 resets buttons to the arrow cursor; every enabled button
+     on this site is clickable, so give them the hand back in one place. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
   :root:has([data-notice-strip]) {
     --notice-strip-height: 2.25rem;
   }

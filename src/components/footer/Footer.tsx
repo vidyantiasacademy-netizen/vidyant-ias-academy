@@ -108,7 +108,7 @@ export async function Footer() {
                   href={`tel:${CONTACT.phoneHref}`}
                   event={ANALYTICS_EVENTS.phoneClick}
                   payload={{ location: "footer" }}
-                  className="transition-colors hover:text-kesar"
+                  className="-my-3 inline-flex min-h-11 items-center transition-colors hover:text-kesar"
                 >
                   {CONTACT.phoneDisplay}
                 </TrackedAnchor>
@@ -117,7 +117,7 @@ export async function Footer() {
                 <Mail aria-hidden className="mt-0.5 size-4 shrink-0 text-kesar" />
                 <a
                   href={`mailto:${CONTACT.email}`}
-                  className="transition-colors hover:text-kesar"
+                  className="-my-3 inline-flex min-h-11 items-center transition-colors hover:text-kesar"
                 >
                   {CONTACT.email}
                 </a>

@@ -151,6 +151,8 @@ export const questionSchema = z
     correctOptionIds: z.array(z.string().min(1).max(8)).max(8),
     modelAnswer: z.string().max(20_000).nullable(),
     explanation: z.string().max(10_000).nullable(),
+    keyApproach: z.string().max(10_000).nullable(),
+    currentAffairsLinkage: z.string().max(10_000).nullable(),
     marks: z.number().min(0).max(100),
     status: z.enum(["draft", "published", "archived"]),
   })

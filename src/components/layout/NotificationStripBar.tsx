@@ -38,7 +38,7 @@ function NoticeLine({ notice }: { notice: StripNotice }) {
           href={notice.href}
           event={ANALYTICS_EVENTS.noticeClick}
           payload={{ location: "notification-strip", notice: notice.id }}
-          className="shrink-0 whitespace-nowrap font-bold text-kesar underline decoration-kesar/60 underline-offset-4 transition-colors hover:text-white hover:decoration-white"
+          className="inline-flex h-(--notice-strip-height) shrink-0 items-center whitespace-nowrap font-bold text-kesar underline decoration-kesar/60 underline-offset-4 transition-colors hover:text-white hover:decoration-white"
         >
           {notice.linkLabel ?? "Details"}
         </TrackedLink>

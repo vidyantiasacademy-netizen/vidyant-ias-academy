@@ -201,6 +201,26 @@ export function ReviewList({ questions }: { questions: ReviewQuestion[] }) {
                   </p>
                 </div>
               ) : null}
+
+              {question.keyApproach ? (
+                <div className="mt-4 bg-paper p-4">
+                  <p className="text-eyebrow font-semibold uppercase text-ink-secondary">
+                    Key approach
+                  </p>
+                  <p className="mt-2 whitespace-pre-line text-body">{question.keyApproach}</p>
+                </div>
+              ) : null}
+
+              {question.currentAffairsLinkage ? (
+                <div className="mt-4 bg-paper p-4">
+                  <p className="text-eyebrow font-semibold uppercase text-ink-secondary">
+                    Current affairs linkage
+                  </p>
+                  <p className="mt-2 whitespace-pre-line text-body">
+                    {question.currentAffairsLinkage}
+                  </p>
+                </div>
+              ) : null}
             </Card>
           </li>
         );

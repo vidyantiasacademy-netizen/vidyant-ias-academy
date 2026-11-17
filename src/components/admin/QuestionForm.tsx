@@ -71,6 +71,10 @@ export function QuestionForm({
   const [pyqExam, setPyqExam] = useState(question?.pyq?.exam ?? "UPSC CSE Prelims");
   const [pyqYear, setPyqYear] = useState(String(question?.pyq?.year ?? ""));
   const [explanation, setExplanation] = useState(question?.explanation ?? "");
+  const [keyApproach, setKeyApproach] = useState(question?.keyApproach ?? "");
+  const [currentAffairsLinkage, setCurrentAffairsLinkage] = useState(
+    question?.currentAffairsLinkage ?? "",
+  );
   const [draft, setDraft] = useState(question?.status === "draft");
 
   function updateOption(index: number, patch: Partial<OptionDraft>) {
@@ -105,6 +109,8 @@ export function QuestionForm({
     setOptions(blankOptions());
     setTopic("");
     setExplanation("");
+    setKeyApproach("");
+    setCurrentAffairsLinkage("");
     setPyqYear("");
     setErrors({});
   }
@@ -128,6 +134,8 @@ export function QuestionForm({
       correctOptionIds: lettered.filter((option) => option.correct).map((option) => option.id),
       modelAnswer: null,
       explanation: explanation.trim() || null,
+      keyApproach: keyApproach.trim() || null,
+      currentAffairsLinkage: currentAffairsLinkage.trim() || null,
       marks: Number(marks),
       status: draft ? "draft" : "published",
     };
@@ -291,6 +299,34 @@ export function QuestionForm({
             rows={4}
             value={explanation}
             onChange={(event) => setExplanation(event.target.value)}
+          />
+        </Field>
+
+        <Field
+          id="keyApproach"
+          label="Key approach"
+          hint="How to work it out — the elimination or clue a student should spot. Shown with the explanation."
+          error={errors.keyApproach?.[0]}
+        >
+          <Textarea
+            id="keyApproach"
+            rows={3}
+            value={keyApproach}
+            onChange={(event) => setKeyApproach(event.target.value)}
+          />
+        </Field>
+
+        <Field
+          id="currentAffairsLinkage"
+          label="Current affairs linkage"
+          hint="The news or recent development this question ties to, if any. Shown with the explanation."
+          error={errors.currentAffairsLinkage?.[0]}
+        >
+          <Textarea
+            id="currentAffairsLinkage"
+            rows={3}
+            value={currentAffairsLinkage}
+            onChange={(event) => setCurrentAffairsLinkage(event.target.value)}
           />
         </Field>
       </Card>

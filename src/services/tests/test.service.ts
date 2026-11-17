@@ -1123,6 +1123,8 @@ export interface ReviewQuestion extends QuestionForAttempt {
   imageUrl: string | null;
   correctOptionIds: string[];
   explanation: string | null;
+  keyApproach: string | null;
+  currentAffairsLinkage: string | null;
   selectedOptionIds: string[];
   marksAwarded: number | null;
   isCorrect: boolean | null;
@@ -1221,6 +1223,8 @@ export async function getReview(attemptId: string): Promise<ReviewQuestion[]> {
         marks: question.marks,
         correctOptionIds: question.correctOptionIds,
         explanation: question.explanation,
+        keyApproach: question.keyApproach ?? null,
+        currentAffairsLinkage: question.currentAffairsLinkage ?? null,
         selectedOptionIds: answer?.selectedOptionIds ?? [],
         marksAwarded: answer?.marksAwarded ?? null,
         isCorrect: answer?.isCorrect ?? null,

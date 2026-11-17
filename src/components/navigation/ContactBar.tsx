@@ -49,7 +49,6 @@ export function ContactBar() {
                 rel="noopener noreferrer"
                 event={ANALYTICS_EVENTS.whatsappClick}
                 payload={{ location: "contact-bar" }}
-                aria-label={dict.common.whatsappChat}
                 className={linkClass}
               >
                 <SocialIcon name="whatsapp" className="size-4.5 shrink-0" />
