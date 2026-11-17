@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Clock, MonitorPlay } from "lucide-react";
 import Image from "next/image";
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 
@@ -26,7 +26,14 @@ const isShortDuration = (duration: string) => duration.length <= 12;
  * carries the name, how it is taught, and the two ways forward — read the
  * details, or enrol. Phones get the same cards as a swipeable row.
  */
-export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
+export function ProgramsCatalogue({
+  courses,
+  onDark = false,
+}: {
+  courses: Course[];
+  /** On a navy band: the selected tab turns kesar, the rest outline in white. */
+  onDark?: boolean;
+}) {
   const tabs: Tab[] = [
     "all",
     ...CATEGORY_ORDER.filter((category) => courses.some((course) => course.category === category)),
@@ -60,7 +67,10 @@ export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
           role="tablist"
           aria-label="Filter programs by stage"
           onKeyDown={onKeyDown}
-          className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0"
+          className={cn(
+            "-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:w-fit sm:flex-wrap sm:rounded-full sm:p-1.5",
+            onDark ? "sm:bg-white/[0.06] sm:ring-1 sm:ring-white/12" : "sm:bg-paper sm:ring-1 sm:ring-line",
+          )}
         >
           {tabs.map((tab, index) => {
             const selected = tab === active;
@@ -78,10 +88,15 @@ export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
                 tabIndex={selected ? 0 : -1}
                 onClick={() => setActive(tab)}
                 className={cn(
-                  "h-11 shrink-0 border-2 px-4 text-small font-bold whitespace-nowrap transition-colors duration-150",
-                  selected
-                    ? "border-indigo bg-indigo text-white"
-                    : "border-line-strong bg-white text-indigo hover:border-indigo",
+                  "h-11 shrink-0 rounded-full px-5 text-small font-bold whitespace-nowrap transition-colors duration-150",
+                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
+                  onDark
+                    ? selected
+                      ? "bg-kesar text-indigo-900 shadow-soft"
+                      : "text-white/85 ring-1 ring-white/25 hover:text-kesar hover:ring-kesar sm:ring-0"
+                    : selected
+                      ? "bg-indigo text-white shadow-soft"
+                      : "text-indigo ring-1 ring-line-strong hover:bg-white sm:ring-0",
                 )}
               >
                 {tab === "all" ? "All programs" : COURSE_CATEGORY_LABELS[tab]}
@@ -100,8 +115,8 @@ export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
       >
         <ul
           className={cn(
-            "mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none]",
-            "-mx-5 px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4",
+            "mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [scrollbar-width:none]",
+            "-mx-5 px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4",
           )}
         >
           {shown.map((course, index) => (
@@ -120,13 +135,11 @@ export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
 
 function ProgramCard({ course, priority }: { course: Course; priority: boolean }) {
   const href = `/courses/${course.slug}`;
-  const meta = [
-    course.mode.join(" · "),
-    isShortDuration(course.duration) ? course.duration : null,
-  ].filter(Boolean);
+  const mode = course.mode.join(" · ");
+  const duration = isShortDuration(course.duration) ? course.duration : null;
 
   return (
-    <article className="group/card flex h-full flex-col border border-line-strong bg-white transition-colors duration-150 hover:border-indigo">
+    <article className="group/card flex h-full flex-col overflow-hidden rounded-[1.25rem] bg-white p-3 text-ink shadow-soft transition-shadow duration-200 hover:shadow-soft-hover">
       {/* The poster repeats the title, so it is a duplicate link kept out of the tab order. */}
       <TrackedLink
         href={href}
@@ -134,7 +147,7 @@ function ProgramCard({ course, priority }: { course: Course; priority: boolean }
         payload={{ course: course.id, location: "programs-poster" }}
         tabIndex={-1}
         aria-hidden
-        className="relative block aspect-3/2 overflow-hidden border-b border-line bg-paper"
+        className="relative block aspect-3/2 overflow-hidden rounded-[0.875rem] bg-paper"
       >
         <Image
           src={course.image.src}
@@ -144,41 +157,62 @@ function ProgramCard({ course, priority }: { course: Course; priority: boolean }
           sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, 72vw"
           placeholder={course.image.lqip ? "blur" : "empty"}
           blurDataURL={course.image.lqip}
-          className="object-cover transition-transform duration-300 ease-[var(--ease-brand)] group-hover/card:scale-[1.02]"
+          className="object-cover transition-transform duration-300 ease-[var(--ease-brand)] group-hover/card:scale-[1.03]"
         />
       </TrackedLink>
 
-      <div className="flex flex-1 flex-col p-4">
-        <p className="text-eyebrow font-bold uppercase text-kesar-600">
+      <div className="flex flex-1 flex-col px-2 pt-4 pb-1">
+        <p className="w-fit rounded-full bg-kesar-100 px-3 py-1 text-[0.8125rem] font-bold text-kesar-700">
           {COURSE_CATEGORY_LABELS[course.category]}
         </p>
-        <h3 className="mt-1.5 text-[1.1875rem] font-bold leading-snug tracking-[-0.01em] text-indigo">
+        <h3 className="mt-3 flex gap-2.5 font-display text-h4 leading-tight font-bold text-indigo">
+          <span aria-hidden className="mt-1 h-5 w-1 shrink-0 rounded-full bg-kesar" />
           <TrackedLink
             href={href}
             event={ANALYTICS_EVENTS.courseView}
             payload={{ course: course.id, location: "programs-card" }}
-            className="hover:underline underline-offset-4"
+            className="underline-offset-4 hover:underline"
           >
             {course.title}
           </TrackedLink>
         </h3>
-        {meta.length > 0 ? (
-          <p className="mt-1 text-small text-ink-secondary">{meta.join(" · ")}</p>
+
+        {mode || duration ? (
+          <ul className="mt-3 space-y-1.5 text-small text-ink-secondary">
+            {mode ? (
+              <li className="flex items-start gap-2">
+                <MonitorPlay aria-hidden className="mt-0.5 size-4 shrink-0 text-kesar-500" strokeWidth={1.75} />
+                {mode}
+              </li>
+            ) : null}
+            {duration ? (
+              <li className="flex items-start gap-2">
+                <Clock aria-hidden className="mt-0.5 size-4 shrink-0 text-kesar-500" strokeWidth={1.75} />
+                {duration}
+              </li>
+            ) : null}
+          </ul>
         ) : null}
 
-        <div className="mt-auto flex flex-col gap-1.5 pt-4">
+        <div aria-hidden className="min-h-5 flex-1" />
+        <div className="flex items-center justify-between gap-3 border-t border-line pt-4">
           <TrackedButtonLink
             href={href}
             event={ANALYTICS_EVENTS.courseCtaClick}
             payload={{ course: course.id, location: "programs-card" }}
-            variant="secondary"
             size="sm"
-            fullWidth
+            className="rounded-full px-5 hover:bg-kesar hover:text-indigo-900"
           >
-            View course details
+            View details
             <ArrowRight aria-hidden className="size-4" />
           </TrackedButtonLink>
-          <BuyCourseButton course={course} location="home-programs" variant="link" size="sm" fullWidth>
+          <BuyCourseButton
+            course={course}
+            location="home-programs"
+            variant="link"
+            size="sm"
+            className="px-0"
+          >
             Enrol now
           </BuyCourseButton>
         </div>

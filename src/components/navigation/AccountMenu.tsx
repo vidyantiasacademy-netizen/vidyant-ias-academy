@@ -83,9 +83,12 @@ function initial(name: string): string {
 export function AccountMenu({
   account,
   className,
+  onDark = false,
 }: {
   account: Account | null;
   className?: string;
+  /** On the navy header bar: white trigger, kesar initial tile. */
+  onDark?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -118,7 +121,8 @@ export function AccountMenu({
         event={ANALYTICS_EVENTS.loginClick}
         payload={{ location: "header" }}
         className={cn(
-          "text-small font-bold text-ink transition-colors hover:text-indigo",
+          "text-small font-bold transition-colors",
+          onDark ? "text-white hover:text-kesar" : "text-ink hover:text-indigo",
           className,
         )}
       >
@@ -136,9 +140,17 @@ export function AccountMenu({
         aria-expanded={open}
         aria-haspopup="menu"
         onClick={() => setOpen((value) => !value)}
-        className="flex h-10 items-center gap-2 pr-2 text-small font-bold text-indigo transition-colors hover:bg-paper"
+        className={cn(
+          "flex h-10 items-center gap-2 pr-2 text-small font-bold transition-colors",
+          onDark ? "text-white hover:text-kesar" : "text-indigo hover:bg-paper",
+        )}
       >
-        <span className="flex size-10 items-center justify-center bg-indigo text-small font-bold text-white">
+        <span
+          className={cn(
+            "flex size-10 items-center justify-center text-small font-bold",
+            onDark ? "bg-kesar text-indigo-900" : "bg-indigo text-white",
+          )}
+        >
           {initial(account.displayName)}
         </span>
         <span className="max-w-28 truncate">{shortName(account.displayName)}</span>

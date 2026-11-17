@@ -68,20 +68,26 @@ export function ProgrammeCallbackForm({ courses }: { courses: Course[] }) {
   }, [stage, courses, getFieldState, setValue]);
 
   return (
-    <div className="flex h-full flex-col overflow-hidden border-2 border-indigo bg-white text-ink">
-      <div
-        aria-hidden
-        className="h-1.5 bg-kesar"
-      />
-      <div className="flex flex-1 flex-col justify-center p-5 lg:p-6">
-        <p className="flex items-center gap-2.5 text-eyebrow font-bold uppercase text-kesar-600">
-          <span aria-hidden className="size-2 shrink-0 bg-current" />
-          Free call with a counsellor
-        </p>
+    <div className="flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-line/70 bg-white text-ink shadow-soft">
+      <div className="flex flex-1 flex-col justify-center p-6 lg:p-7">
+        <div className="flex items-center gap-3.5">
+          <span
+            aria-hidden
+            className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-kesar text-indigo-900"
+          >
+            <PhoneCall className="size-6" />
+          </span>
+          <div>
+            <p className="font-display text-h4 leading-tight font-bold text-indigo">
+              Free call with a counsellor
+            </p>
+            <p className="text-small text-ink-secondary">Three fields. We do the rest.</p>
+          </div>
+        </div>
 
         {lead.isSuccess ? (
           <div role="status" className="mt-5">
-            <span className="flex size-11 items-center justify-center bg-success-50 text-success">
+            <span className="flex size-11 items-center justify-center rounded-xl bg-success-50 text-success">
               <Check aria-hidden className="size-5.5" />
             </span>
             <p className="mt-4 text-h4 font-bold text-indigo">
@@ -113,7 +119,7 @@ export function ProgrammeCallbackForm({ courses }: { courses: Course[] }) {
           >
             <Honeypot registration={register("honeypot")} />
 
-            <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2.5">
+            <div className="mt-5 grid grid-cols-2 gap-x-3 gap-y-3">
               <Field
                 id="advice-name"
                 label="Your name"
@@ -122,6 +128,7 @@ export function ProgrammeCallbackForm({ courses }: { courses: Course[] }) {
               >
                 <Input
                   id="advice-name"
+                  className="rounded-xl"
                   autoComplete="name"
                   aria-invalid={Boolean(errors.name)}
                   {...register("name")}
@@ -136,6 +143,7 @@ export function ProgrammeCallbackForm({ courses }: { courses: Course[] }) {
               >
                 <Input
                   id="advice-phone"
+                  className="rounded-xl"
                   type="tel"
                   inputMode="tel"
                   autoComplete="tel"
@@ -153,6 +161,7 @@ export function ProgrammeCallbackForm({ courses }: { courses: Course[] }) {
               >
                 <Select
                   id="advice-course"
+                  className="rounded-xl"
                   defaultValue=""
                   aria-invalid={Boolean(errors.course)}
                   {...register("course")}
@@ -171,8 +180,9 @@ export function ProgrammeCallbackForm({ courses }: { courses: Course[] }) {
 
               <Button
                 type="submit"
+                variant="kesar"
                 fullWidth
-                className="col-span-2 mt-1 whitespace-nowrap"
+                className="col-span-2 mt-1 rounded-xl whitespace-nowrap shadow-soft hover:bg-indigo hover:text-white"
                 disabled={lead.isSubmitting}
               >
                 {lead.isSubmitting ? (
@@ -181,6 +191,7 @@ export function ProgrammeCallbackForm({ courses }: { courses: Course[] }) {
                   <>
                     <PhoneCall aria-hidden className="size-4.5" />
                     Call me back
+                    <ArrowRight aria-hidden className="size-4.5" />
                   </>
                 )}
               </Button>

@@ -116,17 +116,17 @@ export function Header({ notice }: { notice?: ReactNode }) {
       <ContactBar />
       <header
         ref={headerRef}
-        // Swiss bar: solid white, a rule underneath. No blur, no shadow — once the
-        // page scrolls under it the hairline firms to a 2px indigo rule.
+        // Navy bar (the palette's navy), no blur, no shadow — once the page
+        // scrolls under it a 2px kesar rule appears underneath.
         className={cn(
-          "sticky top-(--notice-strip-height) z-50 border-b-2 bg-white transition-colors duration-150",
-          scrolled ? "border-indigo" : "border-line",
+          "focus-invert sticky top-(--notice-strip-height) z-50 border-b-2 bg-indigo transition-colors duration-150",
+          scrolled ? "border-kesar" : "border-indigo",
         )}
       >
         <Container size="wide">
           <div className="flex h-16 items-center justify-between gap-4 lg:h-18 lg:gap-8">
             <span className="flex items-center">
-              <Logo size="md" priority />
+              <Logo size="md" tone="light" priority />
             </span>
 
             <nav aria-label={dict.nav.primary} className="hidden xl:block">
@@ -143,15 +143,15 @@ export function Header({ notice }: { notice?: ReactNode }) {
                         aria-current={active ? "location" : undefined}
                         className={cn(
                           "relative whitespace-nowrap text-small font-bold tracking-[-0.005em] transition-colors",
-                          active ? "text-indigo" : "text-ink hover:text-indigo",
+                          active ? "text-white hover:text-kesar" : "text-white/80 hover:text-kesar",
                         )}
                       >
                         {dict.nav[item.key]}
-                        {/* Active: a solid 4px indigo block under the label. */}
+                        {/* Active: a solid 4px kesar block under the label. */}
                         <span
                           aria-hidden
                           className={cn(
-                            "absolute -bottom-2 left-0 h-1 w-full bg-indigo transition-opacity duration-150",
+                            "absolute -bottom-2 left-0 h-1 w-full bg-kesar transition-opacity duration-150",
                             active ? "opacity-100" : "opacity-0",
                           )}
                         />
@@ -164,21 +164,21 @@ export function Header({ notice }: { notice?: ReactNode }) {
 
             <div className="hidden shrink-0 items-center gap-4 xl:flex">
               {/* Icon-only below 2xl: the bar has no room for the label until then. */}
-              <LanguageSwitcher labelClassName="sr-only 2xl:not-sr-only" />
+              <LanguageSwitcher onDark labelClassName="sr-only 2xl:not-sr-only" />
               <Link
                 href={ROUTES.search}
                 aria-label={dict.common.search}
-                className="flex size-10 items-center justify-center text-ink transition-colors hover:bg-indigo hover:text-white"
+                className="flex size-10 items-center justify-center text-white transition-colors hover:text-kesar"
               >
                 <Search aria-hidden className="size-4.5" />
               </Link>
-              <AccountMenu account={account} />
+              <AccountMenu account={account} onDark />
               {/* Counselling is the softer ask, so it yields to Enroll Now until
                   2xl — below that the bar overflows the viewport with both. */}
               <TrackedButtonLink
                 href={CTA.counselling.href}
-                variant="secondary"
-                className="hidden whitespace-nowrap 2xl:inline-flex"
+                variant="outlineLight"
+                className="hidden whitespace-nowrap hover:border-kesar hover:bg-transparent hover:text-kesar 2xl:inline-flex"
                 event={ANALYTICS_EVENTS.counsellingClick}
                 payload={{ location: "header" }}
               >
@@ -186,8 +186,8 @@ export function Header({ notice }: { notice?: ReactNode }) {
               </TrackedButtonLink>
               <TrackedButtonLink
                 href={CTA.enrol.href}
-                variant="primary"
-                className="whitespace-nowrap"
+                variant="kesar"
+                className="whitespace-nowrap hover:bg-kesar-500 hover:text-indigo-900"
                 event={ANALYTICS_EVENTS.enrolClick}
                 payload={{ location: "header" }}
               >
@@ -199,7 +199,7 @@ export function Header({ notice }: { notice?: ReactNode }) {
               <Link
                 href={ROUTES.search}
                 aria-label={dict.common.search}
-                className="flex size-11 items-center justify-center text-indigo transition-colors hover:bg-indigo hover:text-white"
+                className="flex size-11 items-center justify-center text-white transition-colors hover:text-kesar"
               >
                 <Search aria-hidden className="size-5" />
               </Link>
@@ -209,7 +209,7 @@ export function Header({ notice }: { notice?: ReactNode }) {
                 aria-controls="mobile-menu"
                 aria-label={menuOpen ? dict.nav.closeMenu : dict.nav.openMenu}
                 onClick={() => setMenuOpen((open) => !open)}
-                className="size-11 px-0"
+                className="size-11 px-0 text-white hover:bg-transparent hover:text-kesar"
               >
                 {menuOpen ? (
                   <X aria-hidden className="size-5" />
@@ -225,7 +225,7 @@ export function Header({ notice }: { notice?: ReactNode }) {
           <div
             id="mobile-menu"
             style={{ top: drawerTop }}
-            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-white lg:top-18 xl:hidden"
+            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-white [--focus-ring:var(--color-indigo)] lg:top-18 xl:hidden"
           >
             <Container className="py-6">
               <nav aria-label={dict.nav.mobile}>

@@ -32,7 +32,7 @@ export function CallbackSection() {
       </div>
 
       <Container className="relative z-10 -mt-16">
-        <div className="border border-line-strong border-t-4 border-t-kesar bg-white p-5">
+        <div className="rounded-2xl border border-line-strong border-t-4 border-t-kesar bg-white p-5">
           <h2 id="callback-heading" className="text-h2 leading-tight font-bold text-indigo">
             Get a clear plan for your attempt.
           </h2>

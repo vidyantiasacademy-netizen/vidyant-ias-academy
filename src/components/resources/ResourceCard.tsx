@@ -33,7 +33,7 @@ export function ResourceCard({
       className={cn("flex h-full flex-col scroll-mt-28", className)}
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="flex size-10 shrink-0 items-center justify-center border border-line bg-white text-kesar-600">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-kesar-100 text-kesar-600">
           <FileText aria-hidden className="size-5" />
         </span>
         <span className="flex gap-1.5">

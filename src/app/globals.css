@@ -11,7 +11,7 @@
 /* ============================================================
    vidyantIAS design system — colour and type
    ------------------------------------------------------------
-   THEME: "Ink Indigo & Kesar" — the palette of the VidyantIAS
+   THEME: "Navy & Orange" (tokens still named indigo/kesar) — the palette of the VidyantIAS
    logo system (the V cut from a disc, its saffron blade breaking out). Deep indigo is the ink and the
    authority; saffron appears once, and it always stands for the
    student. Built for the audience this institute actually serves:
@@ -25,14 +25,16 @@
    rationed to a hairline reads as beige on a cheap panel — that
    is the one mistake this palette exists to avoid.
 
-   Four brand colours, plus two accents for a younger feel:
+   PALETTE (2026-11-17): the client's Adobe Color swatch file
+   "VidyantIAS Color Palette" — five colours. Token names are kept
+   (indigo/kesar/chilli/paper) so components did not change:
 
-     Ink Indigo #1D2470   authority, ink, bands, headings
-     Kesar      #F39A1E   the student — the call to action, once
+     Navy       #041840   `indigo` — authority, ink, bands, headings
+     Deep Navy  #020E26   `indigo-950`, `ink` — deepest surfaces, body ink
+     Cream      #F2EFE9   `paper` — the alternating section surface
+     Orange     #F29057   `kesar` — the student, the call to action
+     Coral      #F2845C   `chilli` — small marks and labels, never a fill
      White      #FFFFFF   breathing room
-     Black      #111111   photocopies, stamps, body ink
-
-     Chilli     #DD4027   hot accent — "new" badges, stamps, pen marks
      (Cameo #E0B3B6 was retired by the Swiss pass — its tokens alias paper.)
 
    The accents come from Sanzo Wada's "A Dictionary of Color
@@ -75,28 +77,26 @@
        one composition per hero/band, built by `components/ui/Geometry`.
 
    Contrast (WCAG 2.1) of the pairings this system allows:
-     ink (#111111)       on white    18.9:1
-     indigo              on white    13.7:1
-     indigo              on paper    12.3:1
-     indigo-700          on white     9.6:1
-     ink-muted           on white     9.7:1
-     ink-secondary       on white     9.0:1   <- AAA body text
-     ink-secondary       on paper     8.1:1
-     kesar-600           on white     5.9:1   <- text-grade kesar
-     kesar-700           on kesar-100 7.2:1
-     white               on indigo   13.7:1
-     kesar               on indigo    6.1:1
-     indigo-900          on kesar     7.3:1   <- kesar button label
-     indigo              on kesar-100 12.2:1
-     chilli-600          on white     6.0:1   <- text-grade chilli
-     chilli-700          on chilli-100 7.6:1
-     indigo              on cameo     7.3:1
-     indigo              on cameo-100 12.1:1
-     ink-secondary       on cameo-100  8.1:1
+     ink (#020E26)       on white    19.2:1
+     indigo              on white    17.4:1
+     indigo              on paper    15.1:1
+     indigo-700          on white    12.5:1
+     ink-secondary       on white     9.6:1   <- AAA body text
+     ink-secondary       on paper     8.3:1
+     ink-secondary       on paper-200 7.3:1
+     kesar-500           on paper     3.2:1   <- large display text only
+     kesar-600           on white     5.7:1   <- text-grade kesar
+     kesar-700           on kesar-100 7.4:1
+     white               on indigo   17.4:1
+     kesar               on indigo    7.4:1
+     indigo-900          on kesar     7.9:1   <- kesar button label
+     indigo              on kesar-100 14.8:1
+     chilli-600          on white     5.7:1   <- text-grade chilli
+     chilli-700          on chilli-100 7.1:1
 
-   Base Kesar is only 2.2:1 on white, so it is reserved for fills,
-   rules and decoration on white, and for text only on indigo.
-   On white, text and meaningful icons use `kesar-600`.
+   Base kesar is only 2.4:1 on white (coral 2.6:1), so both are
+   reserved for fills, rules and decoration on white, and for text
+   only on indigo. On white, text and meaningful icons use `-600`.
    ============================================================ */
 
 @theme {
@@ -107,24 +107,27 @@
   --breakpoint-3xl: 120rem;   /* 1920px */
   --breakpoint-4xl: 150rem;   /* 2400px — 2K / 1440p at 100% */
 
-  /* ---- Ink Indigo ----------------------------------------- */
-  --color-indigo: #1d2470;
+  /* ---- Navy (token name: indigo) ------------------------ */
+  --color-indigo: #041840;
   /* A step lighter — hover on indigo, raised panels on a band. */
-  --color-indigo-700: #2e3a9b;
+  --color-indigo-700: #14306e;
   /* Steps darker — band gradients, deepest surfaces, footer. */
-  --color-indigo-900: #141a50;
-  --color-indigo-950: #0d1138;
+  --color-indigo-900: #031230;
+  --color-indigo-950: #020e26;
   /* Tint for badges and icon chips on light surfaces. */
-  --color-indigo-100: #e4e7f5;
+  --color-indigo-100: #e4e8f1;
 
-  /* ---- Kesar --------------------------------------------- */
-  --color-kesar: #f39a1e;
+  /* ---- Orange (token name: kesar) ----------------------- */
+  --color-kesar: #f29057;
+  /* Display-grade kesar: >= 3:1 on white and paper — large text
+     (24px+ bold) only, e.g. the hero's italic phrase. */
+  --color-kesar-500: #d9622a;
   /* Text-grade kesar: >= 4.5:1 on white and on paper. */
-  --color-kesar-600: #8a5a00;
+  --color-kesar-600: #a3501a;
   /* Text-grade kesar for use on the kesar-100 wash. */
-  --color-kesar-700: #6f4800;
+  --color-kesar-700: #7a3a10;
   /* The wash that sits behind highlights, stats and badges. */
-  --color-kesar-100: #fdf1dd;
+  --color-kesar-100: #fceadb;
 
   /* ---- Logo (src/lib/brand/mark.ts) ---------------------- */
   /* The mark and logotype keep the logo artwork's navy and saffron;
@@ -134,12 +137,12 @@
 
   /* ---- Chilli (Wada 164 "Red Orange") -------------------- */
   /* 4.3:1 on white — decoration, dots and stamp rings only. */
-  --color-chilli: #dd4027;
+  --color-chilli: #f2845c;
   /* Text-grade chilli: >= 4.5:1 on white and on cameo-100. */
-  --color-chilli-600: #b8321c;
+  --color-chilli-600: #b04428;
   /* Text-grade chilli for use on the chilli-100 wash. */
-  --color-chilli-700: #8f2414;
-  --color-chilli-100: #fdece8;
+  --color-chilli-700: #8a3018;
+  --color-chilli-100: #fde8df;
 
   /* ---- Cameo (Wada 116 "Cameo Pink") --------------------- */
   /* Retired by the Swiss/Bauhaus pass: aliases of the paper family so
@@ -151,22 +154,21 @@
   /* ---- Semantic surfaces --------------------------------- */
   --color-background: #ffffff;
   --color-surface: #ffffff;
-  /* `paper` is the alternating section surface — a pale indigo
-     wash that is visibly not white, so the band rhythm survives a
-     dim panel. It matches the card field used across the logo
-     deck. */
-  --color-paper: #f1f3fa;
-  --color-paper-200: #e2e7f3;
+  /* `paper` is the alternating section surface — the palette's
+     cream, visibly not white, so the band rhythm survives a dim
+     panel. */
+  --color-paper: #f2efe9;
+  --color-paper-200: #e6e1d7;
   --color-surface-muted: var(--color-paper);
 
   /* ---- Text ---------------------------------------------- */
-  --color-ink: #111111;
-  --color-ink-muted: #3c4264;
-  --color-ink-secondary: #414769;
+  --color-ink: #020e26;
+  --color-ink-muted: #3a4560;
+  --color-ink-secondary: #3a4560;
 
   /* ---- Lines --------------------------------------------- */
-  --color-line: #dde2f2;
-  --color-line-strong: #c2cbe4;
+  --color-line: #e2ddd2;
+  --color-line-strong: #c9c1b1;
 
   /* ---- Functional feedback (not brand colours) ----------- */
   --color-danger: #b42318;
@@ -177,6 +179,8 @@
   /* Type */
   /* Devanagari falls through to Noto on the Hindi site — Inter has no Hindi glyphs. */
   --font-sans: var(--font-inter), var(--font-devanagari), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Homepage hero headline only. */
+  --font-display: var(--font-source-serif), Georgia, "Times New Roman", serif;
 
   --text-hero: 2.25rem;           /* 36px mobile */
   --text-hero--line-height: 1.02;
@@ -225,18 +229,18 @@
   --text-eyebrow--line-height: 1.4;
   --text-eyebrow--letter-spacing: 0.12em;
 
-  /* Radii — Swiss: every edge is square. Tailwind's own steps are zeroed
-     too, so `rounded-lg` anywhere renders a hard corner. Circles
-     (`rounded-full`) stay: the circle is one of the three Bauhaus forms. */
-  --radius-xs: 0px;
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
-  --radius-2xl: 0px;
-  --radius-3xl: 0px;
-  --radius-4xl: 0px;
-  --radius: 0px;
+  /* Radii — soft corners (2026-11-17, from the client's section mockup):
+     cards 1rem (`rounded-2xl`), icon tiles 0.75rem (`rounded-xl`),
+     buttons and inputs 0.375rem. Circles stay `rounded-full`. */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+  --radius: 0.375rem;
 
   /* Elevation — none. Swiss surfaces are flat; structure comes from rules,
      the grid and blocks of colour. Tailwind's steps are flattened too. */
@@ -250,6 +254,10 @@
   --shadow-card: none;
   --shadow-card-hover: none;
   --shadow-panel: none;
+  /* The one exception (2026-11-17 homepage pass): a soft, navy-tinted lift
+     for the rounded homepage cards — resources, FAQ, contact. */
+  --shadow-soft: 0 1px 2px rgb(4 24 64 / 0.04), 0 12px 32px -14px rgb(4 24 64 / 0.18);
+  --shadow-soft-hover: 0 2px 4px rgb(4 24 64 / 0.05), 0 20px 40px -16px rgb(4 24 64 / 0.26);
 
   /* Motion */
   --ease-brand: cubic-bezier(0.22, 0.61, 0.36, 1);

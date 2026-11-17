@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { Container } from "@/components/ui/Container";
 import { cn } from "@/lib/utils/cn";
@@ -10,6 +10,8 @@ interface SectionProps extends ComponentProps<"section"> {
   /** Turn off the built-in container when a section needs full-bleed children. */
   bleed?: boolean;
   spacing?: "default" | "tight" | "none";
+  /** Decorative background layer (e.g. `<SectionArt />`), behind the content. */
+  art?: ReactNode;
 }
 
 const tones = {
@@ -29,6 +31,7 @@ export function Section({
   containerSize = "default",
   bleed = false,
   spacing = "default",
+  art,
   className,
   children,
   ...props
@@ -39,15 +42,17 @@ export function Section({
       className={cn(
         "scroll-mt-[calc(4rem+var(--notice-strip-height))] lg:scroll-mt-[calc(4.5rem+var(--notice-strip-height))]",
         tones[tone],
+        art ? "relative isolate overflow-hidden" : undefined,
         spacings[spacing],
         className,
       )}
       {...props}
     >
+      {art}
       {bleed ? (
         children
       ) : (
-        <Container size={containerSize} className={tone === "indigo" ? "relative" : undefined}>
+        <Container size={containerSize} className={tone === "indigo" || art ? "relative" : undefined}>
           {children}
         </Container>
       )}

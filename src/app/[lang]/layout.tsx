@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Devanagari } from "next/font/google";
+import { Inter, Noto_Sans_Devanagari, Source_Serif_4 } from "next/font/google";
 
 import { LOCALE_META, LOCALES } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/server";
@@ -13,6 +13,18 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+});
+
+/**
+ * Display serif — the homepage hero headline only (`font-display`). Loaded
+ * with its italic for the kesar "Right Direction." phrase.
+ */
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["700"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-source-serif",
 });
 
 
@@ -67,7 +79,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#1d2470",
+  themeColor: "#041840",
   colorScheme: "light",
   width: "device-width",
   initialScale: 1,
@@ -90,7 +102,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   return (
     <html
       lang={LOCALE_META[locale].htmlLang}
-      className={`${inter.variable} ${devanagari.variable} h-full`}
+      className={`${inter.variable} ${devanagari.variable} ${sourceSerif.variable} h-full`}
     >
       <body className="flex min-h-full flex-col bg-white antialiased">
         <I18nProvider locale={locale} dict={dict}>

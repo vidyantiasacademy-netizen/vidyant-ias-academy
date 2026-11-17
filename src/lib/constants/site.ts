@@ -118,7 +118,6 @@ export const PRIMARY_NAV = [
   { key: "programs", label: "Programs", id: "programs", href: "/#programs", onPhone: true },
   { key: "resources", label: "Resources", id: "resources", href: "/#resources", onPhone: false },
   { key: "whatsNew", label: "What's New", id: "noticeboard", href: "/#noticeboard", onPhone: false },
-  { key: "ourSystem", label: "Our System", id: "learning-system", href: "/#learning-system", onPhone: false },
   { key: "faq", label: "FAQ", id: "faq", href: "/#faq", onPhone: false },
   { key: "contact", label: "Contact", id: "contact", href: "/#contact", onPhone: false },
 ] as const;

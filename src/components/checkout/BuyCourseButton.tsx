@@ -138,7 +138,7 @@ export function BuyCourseButton({
       currency: order.data.currency,
       name: BRAND.name,
       description: course.title,
-      theme: { color: "#1d2470" },
+      theme: { color: "#041840" },
       handler: async (response: RazorpaySuccess) => {
         const confirmed = await confirmCourseCheckoutAction({
           razorpayOrderId: response.razorpay_order_id,

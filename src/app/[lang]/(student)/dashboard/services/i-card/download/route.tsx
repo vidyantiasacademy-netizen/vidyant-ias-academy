@@ -26,9 +26,9 @@ const WIDTH = 1012;
 const HEIGHT = 638;
 
 // The brand palette, duplicated as hex because Satori resolves no CSS variables.
-const INK_INDIGO = "#1d2470";
-const INDIGO_DEEP = "#141a50";
-const KESAR = "#f39a1e";
+const INK_INDIGO = "#041840";
+const INDIGO_DEEP = "#031230";
+const KESAR = "#f29057";
 const WHITE_80 = "rgba(255,255,255,0.8)";
 const WHITE_25 = "rgba(255,255,255,0.25)";
 

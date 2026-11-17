@@ -34,7 +34,7 @@ export function Card({
   return (
     <Tag
       className={cn(
-        "border",
+        "overflow-hidden rounded-2xl border",
         tones[tone],
         paddings[padding],
         interactive &&

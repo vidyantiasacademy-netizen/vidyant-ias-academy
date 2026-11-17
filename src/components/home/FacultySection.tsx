@@ -16,7 +16,11 @@ export async function FacultySection() {
     <Section tone="paper" id="faculty" containerSize="wide">
       <SectionHeader
         eyebrow="Faculty"
-        title="Learn from people who understand the examination."
+        title={
+          <>
+            Learn from people who <em>understand the examination.</em>
+          </>
+        }
         description="Teaching at vidyantIAS is handled by subject faculty who stay close to how the paper is set — and who also read and evaluate the answers you write."
         action={
           <ButtonLink href={ROUTES.faculty} variant="secondary">
