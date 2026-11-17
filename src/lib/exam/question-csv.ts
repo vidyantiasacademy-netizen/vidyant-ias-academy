@@ -38,6 +38,8 @@ export const CSV_COLUMNS = [
   "topic",
   "difficulty",
   "explanation",
+  "key_approach",
+  "current_affairs_linkage",
   "pyq_exam",
   "pyq_year",
 ] as const;
@@ -156,6 +158,8 @@ const FIELD_COLUMN: Record<string, string> = {
   topic: "topic",
   difficulty: "difficulty",
   explanation: "explanation",
+  keyApproach: "key_approach",
+  currentAffairsLinkage: "current_affairs_linkage",
   pyq: "pyq_exam / pyq_year",
 };
 
@@ -297,6 +301,8 @@ function rowToQuestion(
     correctOptionIds,
     modelAnswer: null,
     explanation: get("explanation") || null,
+    keyApproach: get("key_approach") || null,
+    currentAffairsLinkage: get("current_affairs_linkage") || null,
     marks,
   };
 
@@ -349,6 +355,8 @@ export function questionCsvTemplate(): string {
  * A worked example of every kind of row the importer accepts: single answer,
  * statement-style with line breaks in the cell, more than one answer, five
  * options with marks and subject left to the paper's defaults, and Hindi.
+ * `key_approach` and `current_affairs_linkage` are optional; some rows leave
+ * them blank to show that.
  * It imports cleanly as-is, so it doubles as a check that the importer works.
  *
  * No `pyq_exam` / `pyq_year` row: tagging a made-up question as a past UPSC
@@ -368,6 +376,8 @@ export function questionCsvSample(): string {
       topic: "Fundamental Rights",
       difficulty: "easy",
       explanation: "Article 17 abolishes untouchability and forbids its practice in any form.",
+      key_approach:
+        "Recall what each Article covers: 14 is equality before law, 21 is life and liberty, 32 is the right to constitutional remedies. Only 17 deals with untouchability.",
     },
     {
       statement:
@@ -382,6 +392,9 @@ export function questionCsvSample(): string {
       topic: "Union and its Territory",
       difficulty: "moderate",
       explanation: "Goa is a state. Ladakh and Puducherry are Union Territories.",
+      key_approach: "Goa is a full state, so eliminate every option that includes 2.",
+      current_affairs_linkage:
+        "Ladakh became a separate Union Territory when the Jammu and Kashmir Reorganisation Act, 2019 came into force.",
     },
     {
       statement: "Which of the following rivers flow into the Arabian Sea? Mark all that apply.",
@@ -397,6 +410,8 @@ export function questionCsvSample(): string {
       difficulty: "moderate",
       explanation:
         "The Narmada and the Tapi flow west into the Arabian Sea; the Godavari and the Krishna flow east into the Bay of Bengal.",
+      key_approach:
+        "Most peninsular rivers flow east. The Narmada and the Tapi are the exceptions: they flow west through rift valleys.",
     },
     {
       statement: "The Tropic of Cancer does NOT pass through which of the following states?",
@@ -421,6 +436,7 @@ export function questionCsvSample(): string {
       topic: "Biodiversity",
       difficulty: "easy",
       explanation: "गंगा नदी डॉल्फ़िन को 2009 में भारत का राष्ट्रीय जलीय जीव घोषित किया गया।",
+      current_affairs_linkage: "गंगा डॉल्फ़िन के संरक्षण के लिए 2020 में 'प्रोजेक्ट डॉल्फ़िन' की घोषणा की गई।",
     },
   ]);
 }

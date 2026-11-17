@@ -28,7 +28,7 @@ export const buttonStyles = cva(
       size: {
         // Heights are thumb-sized: this site is used one-handed on a
         // phone far more often than with a mouse.
-        sm: "h-10 px-4 text-small",
+        sm: "h-11 px-4 text-small",
         md: "h-12 px-5 text-small sm:text-body",
         lg: "h-14 px-6 text-body",
       },

@@ -58,6 +58,8 @@ export interface MockReviewQuestion {
   correctOptionIds: string[];
   selectedOptionIds: string[];
   explanation: string | null;
+  keyApproach: string | null;
+  currentAffairsLinkage: string | null;
   marks: number;
 }
 

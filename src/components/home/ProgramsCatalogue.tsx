@@ -78,7 +78,7 @@ export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
                 tabIndex={selected ? 0 : -1}
                 onClick={() => setActive(tab)}
                 className={cn(
-                  "h-10 shrink-0 border-2 px-4 text-small font-bold whitespace-nowrap transition-colors duration-150",
+                  "h-11 shrink-0 border-2 px-4 text-small font-bold whitespace-nowrap transition-colors duration-150",
                   selected
                     ? "border-indigo bg-indigo text-white"
                     : "border-line-strong bg-white text-indigo hover:border-indigo",
@@ -91,24 +91,29 @@ export function ProgramsCatalogue({ courses }: { courses: Course[] }) {
         </div>
       ) : null}
 
-      <ul
+      {/* The tabpanel role sits on a wrapper: on the <ul> itself it would
+          replace the list role and orphan every <li>. */}
+      <div
         id={`${baseId}-panel`}
         role="tabpanel"
         aria-labelledby={`${baseId}-tab-${active}`}
-        className={cn(
-          "mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none]",
-          "-mx-5 px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4",
-        )}
       >
-        {shown.map((course, index) => (
-          <li
-            key={course.id}
-            className="w-[72%] shrink-0 snap-start sm:w-auto"
-          >
-            <ProgramCard course={course} priority={index < 3} />
-          </li>
-        ))}
-      </ul>
+        <ul
+          className={cn(
+            "mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none]",
+            "-mx-5 px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4",
+          )}
+        >
+          {shown.map((course, index) => (
+            <li
+              key={course.id}
+              className="w-[72%] shrink-0 snap-start sm:w-auto"
+            >
+              <ProgramCard course={course} priority={index < 3} />
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

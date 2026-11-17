@@ -247,6 +247,20 @@ export default async function MockResultPage({
                         {question.explanation}
                       </p>
                     ) : null}
+
+                    {question.keyApproach ? (
+                      <div className="mt-4 bg-paper p-4 text-small text-ink">
+                        <p className="font-semibold">Key approach</p>
+                        <p className="mt-1 whitespace-pre-line">{question.keyApproach}</p>
+                      </div>
+                    ) : null}
+
+                    {question.currentAffairsLinkage ? (
+                      <div className="mt-4 bg-paper p-4 text-small text-ink">
+                        <p className="font-semibold">Current affairs linkage</p>
+                        <p className="mt-1 whitespace-pre-line">{question.currentAffairsLinkage}</p>
+                      </div>
+                    ) : null}
                   </Card>
                 </li>
               );

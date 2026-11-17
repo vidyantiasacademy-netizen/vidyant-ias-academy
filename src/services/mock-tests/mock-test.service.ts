@@ -625,6 +625,8 @@ async function reviewFor(attempt: MockAttempt, test: Test): Promise<MockReviewQu
     correctOptionIds: question.correctOptionIds,
     selectedOptionIds: attempt.answers[question.id] ?? [],
     explanation: question.explanation,
+    keyApproach: question.keyApproach ?? null,
+    currentAffairsLinkage: question.currentAffairsLinkage ?? null,
     marks: question.marks,
   }));
 }

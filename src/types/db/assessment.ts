@@ -118,6 +118,10 @@ export interface QuestionDoc {
   /** Model answer for descriptive questions. */
   modelAnswer: string | null;
   explanation: string | null;
+  /** How to work the question out — elimination, the clue in the options. Absent on questions saved before it existed. */
+  keyApproach?: string | null;
+  /** The news or recent development the question ties to. Absent on questions saved before it existed. */
+  currentAffairsLinkage?: string | null;
   marks: number;
   status: PublishStatus;
 }
