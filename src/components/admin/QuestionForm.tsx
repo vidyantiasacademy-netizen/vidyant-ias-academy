@@ -206,7 +206,7 @@ export function QuestionForm({
           id="statement"
           label="Question"
           required
-          hint="Statement-style questions: put each statement on its own line."
+          hint="Statement-style questions: put each statement on its own line. Match-the-list questions: separate the columns with | (e.g. List 1 | List 2), one row per line."
           error={errors.statement?.[0]}
         >
           <Textarea

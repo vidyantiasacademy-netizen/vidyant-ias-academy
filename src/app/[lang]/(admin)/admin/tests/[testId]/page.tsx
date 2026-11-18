@@ -10,6 +10,7 @@ import {
 } from "@/components/admin/PaperActions";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
+import { QuestionStatement } from "@/components/exam/QuestionStatement";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { publishBlocker } from "@/lib/exam/authoring";
@@ -184,9 +185,7 @@ export default async function TestPage({
                         </span>
 
                         <div className="min-w-0 flex-1">
-                          <p className="whitespace-pre-line text-body">
-                            {question.statement}
-                          </p>
+                          <QuestionStatement statement={question.statement} />
 
                           <ul className="mt-3 space-y-1.5">
                             {question.options.map((option) => {
