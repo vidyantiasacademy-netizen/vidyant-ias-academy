@@ -2,7 +2,13 @@
 
 import { Download, FileUp, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState, useTransition, type ChangeEvent } from "react";
+import {
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+  type ChangeEvent,
+} from "react";
 
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { QuestionStatement } from "@/components/exam/QuestionStatement";
@@ -47,7 +53,12 @@ export function QuestionImport({
   testId: string;
   defaults: { subject: string; marks: number };
   /** The paper's targets, and what its published questions already add up to. */
-  paper: { questionCount: number; totalMarks: number; liveCount: number; liveMarks: number };
+  paper: {
+    questionCount: number;
+    totalMarks: number;
+    liveCount: number;
+    liveMarks: number;
+  };
   /** Statements already on the paper, so a re-uploaded file is caught before it doubles up. */
   existingStatements: string[];
 }) {
@@ -63,9 +74,15 @@ export function QuestionImport({
   const rows = useMemo(() => result?.rows ?? [], [result]);
   const bad = rows.filter((row) => row.errors.length > 0);
   const good = rows.filter((row) => row.question);
-  const ready = result !== null && result.fileErrors.length === 0 && bad.length === 0 && good.length > 0;
+  const ready =
+    result !== null &&
+    result.fileErrors.length === 0 &&
+    bad.length === 0 &&
+    good.length > 0;
 
-  const fileMarks = round(good.reduce((sum, row) => sum + (row.question?.marks ?? 0), 0));
+  const fileMarks = round(
+    good.reduce((sum, row) => sum + (row.question?.marks ?? 0), 0),
+  );
 
   // Warnings, not errors: the same statement can legitimately appear twice
   // (a PYQ reused with different options), but far more often it is the same
@@ -98,7 +115,12 @@ export function QuestionImport({
     setFileName(file.name);
 
     if (file.size > MAX_IMPORT_BYTES) {
-      setResult({ fileErrors: ["The file is larger than 2 MB. Split it into smaller files."], rows: [] });
+      setResult({
+        fileErrors: [
+          "The file is larger than 2 MB. Split it into smaller files.",
+        ],
+        rows: [],
+      });
       return;
     }
 
@@ -143,7 +165,10 @@ export function QuestionImport({
       }
 
       const { count } = response.data;
-      showToast("success", `${count} question${count === 1 ? "" : "s"} imported${publish ? "" : " as drafts"}.`);
+      showToast(
+        "success",
+        `${count} question${count === 1 ? "" : "s"} imported${publish ? "" : " as drafts"}.`,
+      );
       router.push(`/admin/tests/${testId}`);
       router.refresh();
     });
@@ -157,23 +182,27 @@ export function QuestionImport({
       <Card padding="md" className="space-y-4">
         <ol className="list-decimal space-y-2 pl-5 text-body text-ink-secondary">
           <li>
-            Download the blank template, or the sample to see a filled-in example of every kind
-            of row. Fill in one question per row in Excel or Google Sheets. For
-            statement-style questions, put each statement on its own line inside the cell
-            (Alt+Enter in Excel). For match-the-list questions, put each row on its own line
-            and separate the columns with <code>|</code> (e.g. <code>List 1 | List 2</code>); they
-            show side by side as a table.
+            Download the blank template, or the sample to see a filled-in
+            example of every kind of row. Fill in one question per row in Excel
+            or Google Sheets. For statement-style questions, put each statement
+            on its own line inside the cell (Alt+Enter in Excel). For
+            match-the-list questions, put each row on its own line and separate
+            the columns with <code>|</code> (e.g. <code>List 1 | List 2</code>);
+            they show side by side as a table.
           </li>
           <li>
-            In <code>correct</code>, give the answer letter (<code>B</code>), or letters for more
-            than one (<code>A,C</code>). Blank <code>marks</code> and <code>subject</code> take the
-            paper&apos;s defaults ({defaults.marks} marks{defaults.subject ? `, ${defaults.subject}` : ""}). For a
-            previous-year question, fill both <code>pyq_exam</code> (e.g. UPSC CSE Prelims) and{" "}
-            <code>pyq_year</code>.
+            In <code>correct</code>, give the answer letter (<code>B</code>), or
+            letters for more than one (<code>A,C</code>). Blank{" "}
+            <code>marks</code> and <code>subject</code> take the paper&apos;s
+            defaults ({defaults.marks} marks
+            {defaults.subject ? `, ${defaults.subject}` : ""}). For a
+            previous-year question, fill both <code>pyq_exam</code> (e.g. UPSC
+            CSE Prelims) and <code>pyq_year</code>.
           </li>
           <li>
-            Save as <strong>CSV UTF-8</strong> and choose the file below. Up to {MAX_IMPORT_ROWS}{" "}
-            questions per file. Images are added afterwards, from each question&apos;s edit page.
+            Save as <strong>CSV UTF-8</strong> and choose the file below. Up to{" "}
+            {MAX_IMPORT_ROWS} questions per file. Images are added afterwards,
+            from each question&apos;s edit page.
           </li>
         </ol>
 
@@ -181,7 +210,9 @@ export function QuestionImport({
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => download(questionCsvTemplate(), "questions-template.csv")}
+            onClick={() =>
+              download(questionCsvTemplate(), "questions-template.csv")
+            }
           >
             <Download aria-hidden className="size-4" />
             Blank template
@@ -189,7 +220,9 @@ export function QuestionImport({
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => download(questionCsvSample(), "questions-sample.csv")}
+            onClick={() =>
+              download(questionCsvSample(), "questions-sample.csv")
+            }
           >
             <Download aria-hidden className="size-4" />
             Sample CSV
@@ -212,13 +245,19 @@ export function QuestionImport({
             />
           </label>
 
-          {fileName ? <span className="self-center text-small text-ink-secondary">{fileName}</span> : null}
+          {fileName ? (
+            <span className="self-center text-small text-ink-secondary">
+              {fileName}
+            </span>
+          ) : null}
         </div>
       </Card>
 
       {result && result.fileErrors.length > 0 ? (
         <Card padding="md" role="alert" className="border-danger bg-danger-50">
-          <p className="font-semibold text-danger">This file cannot be imported</p>
+          <p className="font-semibold text-danger">
+            This file cannot be imported
+          </p>
           <ul className="mt-2 list-disc space-y-1 pl-5 text-small text-danger">
             {result.fileErrors.map((error) => (
               <li key={error}>{error}</li>
@@ -233,20 +272,30 @@ export function QuestionImport({
             <div>
               <p className="text-small text-ink-secondary">In this file</p>
               <p className="text-h3 font-bold">
-                {good.length} <span className="text-body font-normal">ready</span>
+                {good.length}{" "}
+                <span className="text-body font-normal">ready</span>
                 {bad.length > 0 ? (
-                  <span className="text-body font-normal text-danger"> · {bad.length} with problems</span>
+                  <span className="text-body font-normal text-danger">
+                    {" "}
+                    · {bad.length} with problems
+                  </span>
                 ) : null}
               </p>
               <p className="text-small text-ink-secondary">{fileMarks} marks</p>
             </div>
             <div>
               <p className="text-small text-ink-secondary">Paper target</p>
-              <p className="text-h3 font-bold">{paper.questionCount} questions</p>
-              <p className="text-small text-ink-secondary">{paper.totalMarks} marks</p>
+              <p className="text-h3 font-bold">
+                {paper.questionCount} questions
+              </p>
+              <p className="text-small text-ink-secondary">
+                {paper.totalMarks} marks
+              </p>
             </div>
             <div>
-              <p className="text-small text-ink-secondary">Published after import</p>
+              <p className="text-small text-ink-secondary">
+                Published after import
+              </p>
               <p
                 className={cn(
                   "text-h3 font-bold",
@@ -271,13 +320,15 @@ export function QuestionImport({
           {bad.length > 0 ? (
             <Card padding="md" role="alert" className="border-danger">
               <p className="font-semibold text-danger">
-                Fix {bad.length === 1 ? "this row" : `these ${bad.length} rows`} in the spreadsheet,
-                then choose the file again
+                Fix {bad.length === 1 ? "this row" : `these ${bad.length} rows`}{" "}
+                in the spreadsheet, then choose the file again
               </p>
               <ul className="mt-3 space-y-2 text-small">
                 {bad.map((row) => (
                   <li key={row.row} className="flex gap-3">
-                    <span className="w-16 shrink-0 font-semibold">Row {row.row}</span>
+                    <span className="w-16 shrink-0 font-semibold">
+                      Row {row.row}
+                    </span>
                     <span className="text-danger">{row.errors.join(" ")}</span>
                   </li>
                 ))}
@@ -312,28 +363,44 @@ export function QuestionImport({
                     <Card padding="sm">
                       <p className="text-small font-semibold text-ink-secondary">
                         Question {index + 1}
-                        <span className="font-normal"> · spreadsheet row {row}</span>
                       </p>
-                      <p className="mt-1 whitespace-pre-line text-body">{question!.statement}</p>
+                      <QuestionStatement
+                        statement={question!.statement}
+                        className="mt-1 text-body"
+                      />
                       <ul className="mt-2 space-y-1 text-small">
                         {question!.options.map((option) => {
-                          const correct = question!.correctOptionIds.includes(option.id);
+                          const correct = question!.correctOptionIds.includes(
+                            option.id,
+                          );
                           return (
                             <li
                               key={option.id}
-                              className={correct ? "font-medium text-success" : "text-ink-secondary"}
+                              className={
+                                correct
+                                  ? "font-medium text-success"
+                                  : "text-ink-secondary"
+                              }
                             >
-                              <span className="uppercase">({option.id})</span> {option.text}
-                              {correct ? <span className="sr-only"> — correct</span> : null}
+                              <span className="uppercase">({option.id})</span>{" "}
+                              {option.text}
+                              {correct ? (
+                                <span className="sr-only"> — correct</span>
+                              ) : null}
                             </li>
                           );
                         })}
                       </ul>
                       <p className="mt-2 text-small text-ink-secondary">
                         {question!.marks} marks · {question!.subject}
-                        {question!.topic ? ` · ${question!.topic}` : ""} · {question!.difficulty}
-                        {question!.pyq ? ` · ${question!.pyq.exam} ${question!.pyq.year}` : ""}
-                        {question!.kind === "mcq-multiple" ? " · more than one correct" : ""}
+                        {question!.topic ? ` · ${question!.topic}` : ""} ·{" "}
+                        {question!.difficulty}
+                        {question!.pyq
+                          ? ` · ${question!.pyq.exam} ${question!.pyq.year}`
+                          : ""}
+                        {question!.kind === "mcq-multiple"
+                          ? " · more than one correct"
+                          : ""}
                       </p>
                     </Card>
                   </li>
@@ -344,7 +411,10 @@ export function QuestionImport({
         </>
       ) : null}
 
-      <Card padding="md" className="flex flex-wrap items-center justify-between gap-4">
+      <Card
+        padding="md"
+        className="flex flex-wrap items-center justify-between gap-4"
+      >
         <label className="flex items-start gap-3 text-body">
           <input
             type="checkbox"
@@ -355,8 +425,8 @@ export function QuestionImport({
           <span>
             Publish the questions straight away
             <span className="block text-small text-ink-secondary">
-              Left unticked, they are imported as drafts to check one by one. Drafts do not count
-              towards the paper&apos;s total.
+              Left unticked, they are imported as drafts to check one by one.
+              Drafts do not count towards the paper&apos;s total.
             </span>
           </span>
         </label>
