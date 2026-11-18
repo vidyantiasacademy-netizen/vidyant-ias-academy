@@ -307,11 +307,14 @@ export function QuestionImport({
                 Preview
               </h2>
               <ol className="mt-4 space-y-3">
-                {good.map(({ row, question }) => (
+                {good.map(({ row, question }, index) => (
                   <li key={row}>
                     <Card padding="sm">
-                      <p className="text-small font-semibold text-ink-secondary">Row {row}</p>
-                      <QuestionStatement statement={question!.statement} className="mt-1 text-body" />
+                      <p className="text-small font-semibold text-ink-secondary">
+                        Question {index + 1}
+                        <span className="font-normal"> · spreadsheet row {row}</span>
+                      </p>
+                      <p className="mt-1 whitespace-pre-line text-body">{question!.statement}</p>
                       <ul className="mt-2 space-y-1 text-small">
                         {question!.options.map((option) => {
                           const correct = question!.correctOptionIds.includes(option.id);
