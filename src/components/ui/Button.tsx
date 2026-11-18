@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils/cn";
 
 export const buttonStyles = cva(
   [
-    "inline-flex items-center justify-center gap-2 font-bold tracking-[-0.005em]",
+    "inline-flex cursor-pointer items-center justify-center gap-2 rounded-[0.375rem] font-bold tracking-[-0.005em]",
     "transition-[background-color,border-color,color] duration-150 ease-[var(--ease-brand)]",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
     "disabled:pointer-events-none disabled:opacity-55",

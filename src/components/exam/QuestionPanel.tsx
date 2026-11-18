@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 
+import { QuestionStatement } from "@/components/exam/QuestionStatement";
 import type { ExamQuestion } from "@/lib/exam/types";
 import { cn } from "@/lib/utils/cn";
 
@@ -81,10 +82,7 @@ export function QuestionPanel({
           </p>
         </div>
 
-        {/* `whitespace-pre-line` keeps the statement's own line breaks: a
-            four-statement "Which of the above are correct" question is
-            unreadable as one paragraph. */}
-        <p className="mt-4 whitespace-pre-line text-body-lg">{question.statement}</p>
+        <QuestionStatement statement={question.statement} className="mt-4 text-body-lg" />
 
         {question.imageUrl ? (
           <Image

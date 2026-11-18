@@ -353,7 +353,8 @@ export function questionCsvTemplate(): string {
 
 /**
  * A worked example of every kind of row the importer accepts: single answer,
- * statement-style with line breaks in the cell, more than one answer, five
+ * statement-style with line breaks in the cell, a match-the-list table with
+ * columns separated by |, more than one answer, five
  * options with marks and subject left to the paper's defaults, and Hindi.
  * `key_approach` and `current_affairs_linkage` are optional; some rows leave
  * them blank to show that.
@@ -395,6 +396,22 @@ export function questionCsvSample(): string {
       key_approach: "Goa is a full state, so eliminate every option that includes 2.",
       current_affairs_linkage:
         "Ladakh became a separate Union Territory when the Jammu and Kashmir Reorganisation Act, 2019 came into force.",
+    },
+    {
+      statement:
+        "Consider the following pairs:\nDam | River\n1. Bhakra Nangal | Sutlej\n2. Hirakud | Mahanadi\n3. Tehri | Bhagirathi\nIn how many rows are the details correctly matched?",
+      option_a: "Only one",
+      option_b: "Only two",
+      option_c: "All three",
+      option_d: "None",
+      correct: "C",
+      marks: "2",
+      subject: "Geography",
+      topic: "Drainage",
+      difficulty: "easy",
+      explanation: "All three pairs are correct.",
+      key_approach:
+        "Columns are separated with | and each row is on its own line, so the lists show side by side as a table.",
     },
     {
       statement: "Which of the following rivers flow into the Arabian Sea? Mark all that apply.",

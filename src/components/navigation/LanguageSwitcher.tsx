@@ -21,8 +21,11 @@ export function LanguageSwitcher({
   className,
   labelClassName,
   onNavigate,
+  onDark = false,
 }: {
   className?: string;
+  /** On the navy header bar: white text, a translucent hover. */
+  onDark?: boolean;
   /** e.g. `sr-only xl:not-sr-only` to collapse to the icon on a tight bar. */
   labelClassName?: string;
   onNavigate?: () => void;
@@ -41,7 +44,10 @@ export function LanguageSwitcher({
             lang={LOCALE_META[target].htmlLang}
             onClick={onNavigate}
             title={format(dict.language.switchTo, { language: LOCALE_META[target].nativeLabel })}
-            className="inline-flex h-10 items-center gap-1.5 px-2.5 text-small font-bold text-ink transition-colors hover:bg-indigo hover:text-white"
+            className={cn(
+              "inline-flex h-10 items-center gap-1.5 px-2.5 text-small font-bold transition-colors",
+              onDark ? "text-white hover:text-kesar" : "text-ink hover:bg-indigo hover:text-white",
+            )}
           >
             <Languages aria-hidden className="size-4" />
             <span className={labelClassName}>{LOCALE_META[target].nativeLabel}</span>

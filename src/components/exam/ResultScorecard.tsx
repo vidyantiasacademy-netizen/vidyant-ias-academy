@@ -1,3 +1,4 @@
+import { QuestionStatement } from "@/components/exam/QuestionStatement";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/utils/cn";
 import type { ReviewQuestion } from "@/services/tests/test.service";
@@ -152,7 +153,7 @@ export function ReviewList({ questions }: { questions: ReviewQuestion[] }) {
                 </p>
               </div>
 
-              <p className="mt-3 whitespace-pre-line text-body">{question.statement}</p>
+              <QuestionStatement statement={question.statement} className="mt-3 text-body" />
 
               <ul className="mt-4 space-y-2">
                 {question.options.map((option, optionIndex) => {

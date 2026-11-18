@@ -136,11 +136,11 @@ export function ExploreCards({ headingId = "explore-heading" }: { headingId?: st
             <li key={href} className={phoneOnly ? "md:hidden" : undefined}>
               <Link
                 href={href}
-                className="group flex h-full min-h-24 flex-col items-center gap-2 border border-line-strong bg-white px-1.5 py-3 text-center transition-colors hover:border-indigo hover:bg-paper md:flex-row md:items-start md:gap-4 md:p-5 md:text-left"
+                className="group flex h-full min-h-24 flex-col items-center gap-2 rounded-2xl border border-line-strong bg-white px-1.5 py-3 text-center transition-colors hover:border-indigo hover:bg-paper md:flex-row md:items-start md:gap-4 md:p-5 md:text-left"
               >
                 <span
                   aria-hidden
-                  className={cn("flex size-10 shrink-0 items-center justify-center md:size-11", TONES[tone])}
+                  className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl md:size-11", TONES[tone])}
                 >
                   <Icon className="size-5" strokeWidth={1.75} />
                 </span>

@@ -41,14 +41,13 @@ export function SectionHeader({
   const centered = align === "center";
   const split = !centered && layout === "split";
 
-  // Swiss header: a hard rule across the full measure, then an asymmetric
-  // split — the eyebrow hangs in the left 3 of 12 columns, the heading takes
-  // the rest, flush left. Centred headers keep the rule but stack.
+  // Editorial header: an asymmetric split — the eyebrow hangs in the left 3
+  // of 12 columns, the serif heading takes the rest, flush left. Wrap the
+  // words to stress in <em>: they set in italic kesar, like the hero's
+  // "Right Direction.". Centred headers stack.
   return (
     <div
       className={cn(
-        "border-t-2 pt-5 lg:pt-6",
-        tone === "light" ? "border-white" : "border-indigo",
         centered
           ? "flex flex-col items-center gap-4 text-center"
           : split
@@ -76,8 +75,9 @@ export function SectionHeader({
         <div className={cn("max-w-3xl", centered && "mx-auto")}>
           <Heading
             className={cn(
-              "text-h2 font-bold lg:text-h2-lg",
-              tone === "light" && "text-white",
+              "font-display text-h2 font-bold tracking-[-0.01em] lg:text-h2-lg lg:tracking-[-0.015em]",
+              "[&_em]:italic",
+              tone === "light" ? "text-white [&_em]:text-kesar" : "text-indigo [&_em]:text-kesar-500",
             )}
           >
             {title}

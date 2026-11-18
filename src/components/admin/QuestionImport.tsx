@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState, useTransition, type ChangeEvent } from "react";
 
 import { Button, ButtonLink } from "@/components/ui/Button";
+import { QuestionStatement } from "@/components/exam/QuestionStatement";
 import { Card } from "@/components/ui/Card";
 import { useToast } from "@/components/ui/Toast";
 import { importQuestionsAction } from "@/lib/exam/authoring-actions";
@@ -159,7 +160,9 @@ export function QuestionImport({
             Download the blank template, or the sample to see a filled-in example of every kind
             of row. Fill in one question per row in Excel or Google Sheets. For
             statement-style questions, put each statement on its own line inside the cell
-            (Alt+Enter in Excel).
+            (Alt+Enter in Excel). For match-the-list questions, put each row on its own line
+            and separate the columns with <code>|</code> (e.g. <code>List 1 | List 2</code>); they
+            show side by side as a table.
           </li>
           <li>
             In <code>correct</code>, give the answer letter (<code>B</code>), or letters for more

@@ -1,4 +1,5 @@
 import { ArrowRight, BellRing, ListChecks, Newspaper } from "lucide-react";
+import { SectionArt } from "@/components/ui/SectionArt";
 import type { ReactNode } from "react";
 
 import Link from "@/i18n/Link";
@@ -46,7 +47,7 @@ function Board({
 }) {
   return (
     <div className={cn("reveal relative h-full", `reveal-delay-${index}`)}>
-      <section className="flex h-full flex-col border border-line-strong bg-white">
+      <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-line-strong bg-white">
         <header className="flex items-center gap-2.5 border-b border-line px-5 py-4 sm:px-6">
           <span className="text-indigo">{icon}</span>
           <h3 className="text-h4 font-bold leading-tight text-indigo">{title}</h3>
@@ -135,10 +136,15 @@ export async function NoticeboardSection() {
   const quizzes = latestQuizzes(3);
 
   return (
-    <Section id="noticeboard" containerSize="wide" className="overflow-hidden">
+    <Section id="noticeboard" tone="indigo" containerSize="wide" className="overflow-hidden" art={<SectionArt variant="noticeboard" />}>
       <SectionHeader
+        tone="light"
         eyebrow="Noticeboard"
-        title="What's new, this week."
+        title={
+          <>
+            What&apos;s new, <em>this week.</em>
+          </>
+        }
         description="Notices, faculty articles and free practice — in one place."
       />
 

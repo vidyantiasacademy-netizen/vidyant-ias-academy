@@ -31,13 +31,13 @@ const HEIGHT = 800;
 
 /** Site palette (`app/globals.css`). */
 const C = {
-  indigo: "#1d2470",
-  indigo700: "#2e3a9b",
-  indigo900: "#141a50",
-  kesar: "#f39a1e",
-  kesar100: "#fdf1dd",
+  indigo: "#041840",
+  indigo700: "#14306e",
+  indigo900: "#031230",
+  kesar: "#f29057",
+  kesar100: "#fceadb",
   cream: LOGO_HEX.cream,
-  ink: "#3c4264",
+  ink: "#3a4560",
 };
 
 const DELIVERY = {

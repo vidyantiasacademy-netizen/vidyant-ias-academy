@@ -7,6 +7,7 @@ import { Section } from "@/components/layout/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { CTASection } from "@/components/ui/CTASection";
+import { QuestionStatement } from "@/components/exam/QuestionStatement";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TrackedButtonLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
@@ -205,7 +206,7 @@ export default async function MockResultPage({
                         {!answered ? "Not answered" : correct ? "Correct" : "Wrong"}
                       </p>
                     </div>
-                    <p className="mt-3 whitespace-pre-line text-body">{question.statement}</p>
+                    <QuestionStatement statement={question.statement} className="mt-3 text-body" />
 
                     <ul className="mt-4 space-y-2">
                       {question.options.map((option, optionIndex) => {

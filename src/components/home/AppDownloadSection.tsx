@@ -1,12 +1,27 @@
-import { Bell, BookOpen, ChartLine, Check, House, UserRound } from "lucide-react";
+import {
+  ArrowRight,
+  Bell,
+  BellRing,
+  BookOpen,
+  ChartColumnIncreasing,
+  ChartLine,
+  Check,
+  ClipboardList,
+  House,
+  Layers,
+  MonitorPlay,
+  Smartphone,
+  UserRound,
+} from "lucide-react";
 
 import { Section } from "@/components/layout/Section";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { BrandMark } from "@/components/ui/BrandMark";
+import { ButtonLink, buttonStyles } from "@/components/ui/Button";
+import { SectionArt } from "@/components/ui/SectionArt";
 import { PhoneMockup } from "@/components/ui/PhoneMockup";
 import { TrackedAnchor } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
-import { APP, BRAND, whatsappUrl } from "@/lib/constants/site";
+import { APP, BRAND, ROUTES, whatsappUrl } from "@/lib/constants/site";
 import { cn } from "@/lib/utils/cn";
 
 const WEEK = [
@@ -65,39 +80,50 @@ function PlayGlyph() {
 }
 
 /**
- * Google Play badge. Until `APP.available`, it renders as a non-interactive
- * "Coming soon" badge — never a link to a listing that does not exist.
+ * Primary app action. Until `APP.available` it never links to a listing that
+ * does not exist: it asks to be told on WhatsApp the day the app launches.
  * Android only: there is no App Store app.
  */
-function StoreBadge() {
-  const href = APP.available ? APP.android : null;
-  const className =
-    "inline-flex h-14 items-center gap-3 border-2 border-ink bg-ink px-4 text-white";
-  const body = (
-    <>
-      <PlayGlyph />
-      <span className="flex flex-col leading-none">
-        <span className="text-[0.8125rem] text-white/75">{href ? "Get it on" : "Coming soon on"}</span>
-        <span className="mt-1 text-body font-semibold">Google Play</span>
-      </span>
-    </>
+function StoreButton() {
+  const className = cn(
+    buttonStyles({ variant: "kesar", size: "lg" }),
+    "h-15 rounded-xl px-6 shadow-soft hover:bg-indigo hover:text-white",
   );
 
-  return href ? (
+  return APP.available && APP.android ? (
     <TrackedAnchor
-      href={href}
+      href={APP.android}
       target="_blank"
       rel="noreferrer"
       event={ANALYTICS_EVENTS.appDownloadClick}
       payload={{ platform: "android", location: "home-app" }}
-      className={cn(className, "transition-colors hover:border-indigo hover:bg-indigo")}
+      className={className}
     >
-      {body}
+      <PlayGlyph />
+      Download on Google Play
     </TrackedAnchor>
   ) : (
-    <span className={cn(className, "opacity-90")}>{body}</span>
+    <TrackedAnchor
+      href={whatsappUrl(`Hi ${BRAND.name}, please let me know when the student app is available.`)}
+      target="_blank"
+      rel="noreferrer"
+      event={ANALYTICS_EVENTS.whatsappClick}
+      payload={{ location: "home-app" }}
+      className={className}
+    >
+      <BellRing aria-hidden className="size-5" />
+      Notify me at launch
+    </TrackedAnchor>
   );
 }
+
+const FEATURES = [
+  { icon: MonitorPlay, label: "Live Classes" },
+  { icon: Layers, label: "Study Material" },
+  { icon: ClipboardList, label: "Mock Tests" },
+  { icon: ChartColumnIncreasing, label: "Progress Tracking" },
+  { icon: Smartphone, label: "Learn On\u2011the\u2011Go" },
+];
 
 /** Weekly-goal ring: kesar arc on a pale track. */
 function GoalRing({ percent }: { percent: number }) {
@@ -115,6 +141,7 @@ function GoalRing({ percent }: { percent: number }) {
           stroke="var(--color-kesar)"
           strokeWidth="7"
           strokeDasharray={`${(c * percent) / 100} ${c}`}
+          strokeLinecap="round"
         />
       </svg>
       <span className="absolute inset-0 flex items-center justify-center text-body font-bold text-indigo">
@@ -132,41 +159,55 @@ function GoalRing({ percent }: { percent: number }) {
  */
 export function AppDownloadSection() {
   return (
-    <Section tone="paper" id="app" containerSize="wide">
-      <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12">
-        <div className="border-t-2 border-indigo pt-5">
-          <Eyebrow>Plan · Practice · Progress</Eyebrow>
-          <h2 className="mt-4 text-h2 font-bold lg:text-h2-lg">
-            A smarter study experience,{" "}
-            <span className="text-ink-secondary">on web and mobile.</span>
+    <Section
+      tone="white"
+      id="app"
+      containerSize="wide"
+      className="bg-[linear-gradient(105deg,#fff_0%,var(--color-paper)_48%,var(--color-kesar-100)_100%)]"
+      art={<SectionArt variant="soft-right" />}
+    >
+      <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10">
+        <div>
+          <p className="inline-flex items-center gap-2.5 rounded-xl bg-kesar-100 px-4 py-2 text-body font-bold text-indigo">
+            <Smartphone aria-hidden className="size-5" strokeWidth={1.75} />
+            {BRAND.name} App
+          </p>
+          <h2 className="mt-5 font-display text-h2 font-bold tracking-[-0.015em] text-indigo lg:text-h2-lg xl:text-[3.5rem] xl:leading-[1.08]">
+            Your UPSC preparation companion,{" "}
+            <em className="text-kesar-500">{APP.available ? "now on app." : "coming to app."}</em>
           </h2>
-          <p className="mt-5 hidden max-w-[52ch] text-body text-ink-secondary sm:text-body-lg md:block">
-            Track your progress, follow today&apos;s plan, attend live classes, revise notes and
-            practise tests — all in one place. Enrolled students use the student portal on the web
-            today; the {BRAND.name} Android app is on its way.
+          <p className="mt-5 hidden max-w-[50ch] text-body text-ink-secondary sm:text-body-lg md:block">
+            Plan your preparation, attend live classes, access study material, practise tests and
+            track your progress — anytime, anywhere.
+            {APP.available
+              ? null
+              : " Enrolled students use the student portal on the web today; the Android app is on its way."}
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3 md:mt-7">
-            <StoreBadge />
+          <div className="mt-6 flex flex-wrap gap-3 md:mt-8 sm:gap-4">
+            <StoreButton />
+            <ButtonLink
+              href={ROUTES.login}
+              variant="secondary"
+              size="lg"
+              className="h-15 rounded-xl bg-transparent px-6"
+            >
+              Open Student Portal
+              <ArrowRight aria-hidden className="size-5" />
+            </ButtonLink>
           </div>
 
-          {APP.available ? null : (
-            <p className="mt-5 text-small text-ink-secondary">
-              Want to know the day it launches?{" "}
-              <TrackedAnchor
-                href={whatsappUrl(
-                  `Hi ${BRAND.name}, please let me know when the student app is available.`,
-                )}
-                target="_blank"
-                rel="noreferrer"
-                event={ANALYTICS_EVENTS.whatsappClick}
-                payload={{ location: "home-app" }}
-                className="font-semibold text-indigo underline decoration-kesar decoration-2 underline-offset-4 hover:text-kesar-600"
+          <ul className="mt-8 hidden grid-cols-5 rounded-2xl border border-white/80 bg-white/70 py-4 shadow-soft backdrop-blur-sm sm:grid lg:mt-10">
+            {FEATURES.map(({ icon: Icon, label }) => (
+              <li
+                key={label}
+                className="flex flex-col items-center gap-2 border-l border-line px-2 text-center first:border-l-0"
               >
-                Ask us on WhatsApp
-              </TrackedAnchor>
-            </p>
-          )}
+                <Icon aria-hidden className="size-7 text-kesar-500" strokeWidth={1.75} />
+                <span className="text-small leading-tight font-bold text-indigo">{label}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* Labelled UI illustration, not a screenshot of a shipped product. */}
@@ -190,7 +231,7 @@ export function AppDownloadSection() {
                       <li
                         key={day}
                         className={cn(
-                          "flex flex-col items-center py-1.5 leading-none",
+                          "flex flex-col items-center rounded-lg py-1.5 leading-none",
                           today ? "bg-indigo text-white" : "bg-paper text-ink-secondary",
                         )}
                       >
@@ -212,7 +253,7 @@ export function AppDownloadSection() {
                         <span
                           aria-hidden
                           className={cn(
-                            "flex size-5 shrink-0 items-center justify-center border-2",
+                            "flex size-5 shrink-0 items-center justify-center rounded-[0.3rem] border-2",
                             done ? "border-indigo bg-indigo text-white" : "border-line-strong",
                           )}
                         >
@@ -245,7 +286,7 @@ export function AppDownloadSection() {
                       key={label}
                       className={cn(
                         "flex flex-col items-center gap-1 text-[0.8125rem] leading-none font-medium",
-                        active ? "text-indigo" : "text-ink-muted",
+                        active ? "text-kesar-500" : "text-ink-muted",
                       )}
                     >
                       <Icon className="size-5" strokeWidth={active ? 2.25 : 1.75} />
@@ -257,7 +298,7 @@ export function AppDownloadSection() {
             </div>
 
             {/* Progress card, overlapping the phone's edge from sm. */}
-            <div className="relative z-10 hidden w-full max-w-[17.5rem] border-2 border-indigo bg-white p-5 sm:-ml-8 sm:block sm:w-64">
+            <div className="relative z-10 hidden w-full max-w-[17.5rem] rounded-[1.25rem] border border-white bg-white/95 p-5 shadow-soft-hover sm:-ml-8 sm:block sm:w-64 sm:self-start sm:mt-16">
               <p className="text-body font-bold text-indigo">Your progress</p>
               <div className="mt-3 flex items-center justify-between gap-3">
                 <div>
@@ -276,10 +317,10 @@ export function AppDownloadSection() {
                   <li key={name}>
                     <div className="flex items-baseline justify-between text-[0.8125rem]">
                       <span className="text-ink-secondary">{name}</span>
-                      <span className="font-semibold text-indigo">{value}%</span>
+                      <span className="font-bold text-indigo">{value}%</span>
                     </div>
-                    <div aria-hidden className="mt-1 h-1.5 overflow-hidden bg-paper-200">
-                      <span className="block h-full bg-indigo" style={{ width: `${value}%` }} />
+                    <div aria-hidden className="mt-1 h-1.5 overflow-hidden rounded-full bg-paper-200">
+                      <span className="block h-full rounded-full bg-kesar" style={{ width: `${value}%` }} />
                     </div>
                   </li>
                 ))}

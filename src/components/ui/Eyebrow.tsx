@@ -16,7 +16,7 @@ const tones = {
   light: { text: "text-white/85", key: "bg-kesar" },
 } as const;
 
-/** Small uppercase label that opens a section, keyed by a solid square. */
+/** Small uppercase label that opens a section, keyed by a short vertical bar. */
 export function Eyebrow({ tone = "kesar", className, children, ...props }: EyebrowProps) {
   return (
     <p
@@ -27,7 +27,7 @@ export function Eyebrow({ tone = "kesar", className, children, ...props }: Eyebr
       )}
       {...props}
     >
-      <span aria-hidden className={cn("size-2 shrink-0", tones[tone].key)} />
+      <span aria-hidden className={cn("h-4 w-1 shrink-0 rounded-full", tones[tone].key)} />
       {children}
     </p>
   );

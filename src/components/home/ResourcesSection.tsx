@@ -1,8 +1,8 @@
 import { Section } from "@/components/layout/Section";
-import { ResourceCard } from "@/components/resources/ResourceCard";
+import { SectionArt } from "@/components/ui/SectionArt";
+import { HomeResourceCard } from "@/components/resources/HomeResourceCard";
 import { ButtonLink } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { railItem, railList } from "@/components/ui/rail";
 import { cn } from "@/lib/utils/cn";
 import { ROUTES } from "@/lib/constants/site";
 import type { Resource } from "@/types";
@@ -19,13 +19,20 @@ export function ResourcesSection({ resources }: { resources: Resource[] }) {
   const shown = premium.length > 0 ? [...premium, ...free].slice(0, 6) : resources;
 
   return (
-    <Section tone="paper" id="resources" containerSize="wide">
+    <Section tone="white" id="resources" containerSize="wide" art={<SectionArt variant="soft-left" />}>
       <SectionHeader
+        layout="stack"
         eyebrow={premium.length > 0 ? "Study Material" : "Free Resources"}
         title={
-          premium.length > 0
-            ? "Notes and compilations, ready to study."
-            : "Start learning before you enrol."
+          premium.length > 0 ? (
+            <>
+              Notes and compilations, <em>ready to study.</em>
+            </>
+          ) : (
+            <>
+              Start learning <em>before you enrol.</em>
+            </>
+          )
         }
         description={
           premium.length > 0
@@ -39,13 +46,26 @@ export function ResourcesSection({ resources }: { resources: Resource[] }) {
         }
       />
 
-      <ul className={cn(railList[3], "mt-7 lg:mt-9")}>
-        {shown.map((resource) => (
-          <li key={resource.id} className={railItem}>
-            <ResourceCard resource={resource} />
+      {/* Rows of three on a 6-column grid; a short last row widens its cards
+          to fill the line (5 → 3 + 2, 4 → 3 + 1). */}
+      <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:mt-10 lg:grid-cols-6 lg:gap-6">
+        {shown.map((resource, index) => (
+          <li key={resource.id} className={cn("flex", spanFor(index, shown.length))}>
+            <HomeResourceCard resource={resource} className="w-full" />
           </li>
         ))}
       </ul>
     </Section>
   );
+}
+
+const LG_SPAN: Record<number, string> = {
+  1: "lg:col-span-6",
+  2: "lg:col-span-3",
+  3: "lg:col-span-2",
+};
+
+function spanFor(index: number, total: number) {
+  const lastRowStart = total - (total % 3 || 3);
+  return LG_SPAN[index >= lastRowStart ? total - lastRowStart : 3];
 }
