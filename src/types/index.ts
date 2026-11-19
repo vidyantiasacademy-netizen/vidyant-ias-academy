@@ -119,8 +119,10 @@ export interface Resource {
   description: string;
   type: ResourceType;
   tracks: ResourceTrack[];
-  /** Download/read target. Empty string means "gated behind lead capture". */
+  /** PDF download URL. Empty string means no printable copy. */
   href: string;
+  /** The resource's page on the site (`/resources/<slug>`), or null when it has no content to read. */
+  readHref: string | null;
   requiresLead: boolean;
   /** Price in rupees for paid study material; null means the resource is free. */
   price: number | null;

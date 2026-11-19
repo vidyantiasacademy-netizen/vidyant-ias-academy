@@ -79,7 +79,7 @@ export function buildSearchIndex({ courses, faculty, resources, faqs, posts, aff
         type: "Resource",
         title: resource.title,
         description: resource.description,
-        href: `${ROUTES.resources}#${resource.slug}`,
+        href: resource.readHref ?? `${ROUTES.resources}#${resource.slug}`,
         extra: resource.tracks,
       }),
     ),

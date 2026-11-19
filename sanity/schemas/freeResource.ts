@@ -3,8 +3,13 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { isUniquePerLanguage, languageField } from "./i18n";
 
 /**
- * Study material: free downloads (syllabus PDFs, booklists, PYQ compilations)
+ * Study material: free reading (syllabus, booklists, roadmaps, PYQ strategy)
  * and, when `price` is set, paid material sold on the site.
+ *
+ * A free resource is read on the site: the editor writes it in `content` and
+ * `/resources/<slug>` renders it as a page, the link a student shares. A PDF
+ * is optional — when attached, the page offers it as a printable copy. A
+ * resource with neither content nor PDF goes through the request form.
  *
  * Deliberately on Sanity's CDN rather than Firebase Storage. These files are
  * meant to be shared, and serving them from the CMS keeps them out of the
@@ -73,13 +78,26 @@ export const freeResource = defineType({
       title: "Ask for contact details first",
       initialValue: false,
     }),
-    defineField({ name: "description", type: "text", rows: 3 }),
+    defineField({
+      name: "description",
+      type: "text",
+      rows: 3,
+      description: "One or two lines on the card and under the page title.",
+    }),
+    defineField({
+      name: "content",
+      type: "blockContent",
+      title: "Page content",
+      description:
+        "What the student reads on /resources/<slug>: headings, lists, quotes and links. Public once published. Hidden for priced resources — their material is never shown on the site.",
+      hidden: ({ document }) => typeof document?.price === "number" && document.price > 0,
+    }),
     defineField({
       name: "file",
       type: "file",
-      title: "PDF",
+      title: "PDF (optional)",
       description:
-        "Leave empty to route the resource through the request form instead of a direct download.",
+        "A printable copy, offered as a download on the resource page. Leave empty if the page content is enough. With neither content nor PDF, the resource goes through the request form.",
       options: { accept: "application/pdf" },
     }),
     defineField({
@@ -96,6 +114,7 @@ export const freeResource = defineType({
       description: "Shown on the card so a student knows what they are downloading.",
     }),
     defineField({ name: "order", type: "number", title: "Sort order" }),
+    defineField({ name: "seo", type: "seo" }),
   ],
   preview: { select: { title: "title", subtitle: "description" } },
 });

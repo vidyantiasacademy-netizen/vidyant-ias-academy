@@ -98,7 +98,7 @@ sanity/
 │   ├── faculty.ts          name, slug, designation, photo, subjects, experience, bio, achievements, order
 │   ├── course.ts           marketing copy only — fees and access live in Firestore
 │   ├── demoClass.ts        free/public recordings and live sessions
-│   ├── freeResource.ts     downloadable PDFs
+│   ├── freeResource.ts     free resources read at /resources/<slug> (rich text + optional PDF)
 │   ├── pyqPaper.ts         UPSC previous-year papers (PDF) — student app + portal /dashboard/pyq
 │   ├── faq.ts              question, answer, category, order
 │   ├── announcement.ts     site banner, windowed by startsAt/endsAt

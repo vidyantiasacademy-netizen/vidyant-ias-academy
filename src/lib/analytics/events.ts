@@ -26,6 +26,7 @@ export const ANALYTICS_EVENTS = {
   checkoutStart: "checkout_start",
   checkoutSuccess: "checkout_success",
   resourceBuyClick: "resource_buy_click",
+  resourceOpen: "resource_open",
   exitOfferShown: "exit_offer_shown",
   mockTestClick: "mock_test_click",
   mockTestRegister: "mock_test_register",

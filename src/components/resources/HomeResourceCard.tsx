@@ -1,4 +1,4 @@
-import { ArrowRight, Download, ShoppingBag } from "lucide-react";
+import { ArrowRight, BookOpen, Download, ShoppingBag } from "lucide-react";
 
 import { ResourceIllustration, sceneFor } from "@/components/resources/ResourceIllustration";
 import { Badge } from "@/components/ui/Badge";
@@ -20,7 +20,7 @@ const PILL =
 
 /**
  * Homepage resource tile: the same facts and actions as `ResourceCard`
- * (Free/Premium and type badges, description, page count; Download, Buy now
+ * (Free/Premium and type badges, description, page count; Read now, Download, Buy now
  * or Request) in the illustrated layout — kesar-keyed title, navy pill
  * action, a small desk illustration in the corner.
  */
@@ -82,6 +82,16 @@ export function HomeResourceCard({ resource, className }: { resource: Resource; 
             {RUPEES.format(resource.price!)}
           </span>
         </div>
+      ) : resource.readHref ? (
+        <TrackedLink
+          href={resource.readHref}
+          event={ANALYTICS_EVENTS.resourceOpen}
+          payload={{ resource: resource.id }}
+          className={PILL}
+        >
+          <BookOpen aria-hidden className="size-4" />
+          Read now
+        </TrackedLink>
       ) : available ? (
         <TrackedAnchor
           href={resource.href}

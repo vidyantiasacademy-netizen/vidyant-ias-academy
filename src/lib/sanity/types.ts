@@ -134,11 +134,19 @@ export interface FreeResource {
   resourceType: "pdf" | "guide" | "video" | "article" | "pyq" | "current-affairs";
   tracks: ("beginner" | "prelims" | "mains" | "optional" | "current-affairs")[];
   requiresLead: boolean;
-  /** Sanity-hosted file, or null when the resource is gated behind a form. */
+  /** Sanity-hosted file, or null when there is no printable copy. */
   fileUrl: string | null;
+  /** True when the resource has a page to read at `/resources/<slug>` (free with content). */
+  hasContent: boolean;
   pages: number | null;
   /** Rupees. Null or 0 means free. */
   price: number | null;
+  _updatedAt: string;
+}
+
+export interface FreeResourceDetail extends FreeResource {
+  content: PortableTextBlocks;
+  seo: Seo | null;
 }
 
 /** A UPSC previous-year paper. Not translated — see `sanity/schemas/pyqPaper.ts`. */

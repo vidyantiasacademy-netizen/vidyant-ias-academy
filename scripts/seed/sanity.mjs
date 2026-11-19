@@ -46,7 +46,8 @@ export function seedClient({ dryRun }) {
 
 /**
  * Seed body → Portable Text. A string is a paragraph; `{ h2 }`, `{ h3 }` are
- * headings; `{ bullets: [] }`, `{ numbers: [] }` are lists.
+ * headings; `{ quote }` is a blockquote; `{ bullets: [] }`, `{ numbers: [] }`
+ * are lists.
  */
 export function blocks(body) {
   const items = typeof body === "string" ? body.split(/\n{2,}/) : body;
@@ -68,6 +69,7 @@ export function blocks(body) {
     if (typeof item === "string") block(item);
     else if (item.h2) block(item.h2, { style: "h2" });
     else if (item.h3) block(item.h3, { style: "h3" });
+    else if (item.quote) block(item.quote, { style: "blockquote" });
     else if (item.bullets) item.bullets.forEach((text) => block(text, { listItem: "bullet", level: 1 }));
     else if (item.numbers) item.numbers.forEach((text) => block(text, { listItem: "number", level: 1 }));
   }

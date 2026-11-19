@@ -17,6 +17,7 @@
  * ids, `createIfNotExists` by default, so Studio edits survive a re-run.
  */
 import { SEED_FAQS, SEED_RESOURCES } from "./seed/migrated.mjs";
+import { RESOURCE_CONTENT } from "./seed/resource-content.mjs";
 import {
   SEED_ANNOUNCEMENTS,
   SEED_AUTHOR,
@@ -85,6 +86,7 @@ const documents = [
     tracks: resource.tracks,
     requiresLead: resource.requiresLead,
     order: resource.order,
+    ...(RESOURCE_CONTENT[resource.id] ? { content: blocks(RESOURCE_CONTENT[resource.id]) } : {}),
   })),
 
   ...SEED_POSTS.map((post, index) => ({

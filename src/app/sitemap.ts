@@ -5,7 +5,7 @@ import { LOCALES, LOCALE_META, localizeHref } from "@/i18n/config";
 import { ROUTES, SITE_URL } from "@/lib/constants/site";
 import { getSiteCurrentAffairs, getSitePosts } from "@/lib/content/site";
 import { getCourseCatalogue } from "@/lib/courses/catalogue";
-import { getStudyNotes } from "@/lib/sanity/queries";
+import { getFreeResourceSlugs, getStudyNotes } from "@/lib/sanity/queries";
 import { getFacultyRoster } from "@/lib/faculty/roster";
 
 type Entry = MetadataRoute.Sitemap[number];
@@ -31,12 +31,13 @@ function localized(path: string, entry: Omit<Entry, "url" | "alternates">): Entr
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-  const [faculty, courses, posts, affairs, notes] = await Promise.all([
+  const [faculty, courses, posts, affairs, notes, resourceSlugs] = await Promise.all([
     getFacultyRoster(),
     getCourseCatalogue(),
     getSitePosts(),
     getSiteCurrentAffairs(undefined, 200),
     getStudyNotes(),
+    getFreeResourceSlugs(),
   ]);
 
   const staticRoutes: Array<{
@@ -102,6 +103,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date(post.publishedAt),
         changeFrequency: "yearly",
         priority: 0.5,
+      }),
+    ),
+    ...resourceSlugs.flatMap((slug) =>
+      localized(`${ROUTES.resources}/${slug}`, {
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.6,
       }),
     ),
     // Translations share a slug, so one entry per slug covers every language.

@@ -15,6 +15,7 @@ import type {
   Faq,
   FacultyMember,
   FreeResource,
+  FreeResourceDetail,
   PyqPaper,
   StudyNote,
   StudyNoteListItem,
@@ -130,6 +131,7 @@ export const SANITY_TAG = {
   blogPost: (slug: string) => `sanity:blog:${slug}`,
   currentAffair: (slug: string) => `sanity:currentAffair:${slug}`,
   studyNote: (slug: string) => `sanity:studyNote:${slug}`,
+  freeResource: (slug: string) => `sanity:freeResource:${slug}`,
 } as const;
 
 const latestBlogsQuery = defineQuery(`
@@ -409,8 +411,10 @@ export async function getDemoClasses(locale: Locale = DEFAULT_LOCALE): Promise<D
   return (await sanityFetch<DemoClass[]>(demoClassesQuery, localeParams(locale), { tags: [SANITY_TAGS.demoClasses] })) ?? [];
 }
 
-const freeResourcesQuery = defineQuery(`
-  *[_type == "freeResource" && !(_id in path("drafts.**")) && ${IN_LOCALE}] | order(order asc, title asc) {
+/** A priced resource is sold, never read on the site — its content stays unserved. */
+const IS_PAID = `coalesce(price, 0) > 0`;
+
+const FREE_RESOURCE_FIELDS = `
     _id,
     title,
     "slug": slug.current,
@@ -420,13 +424,50 @@ const freeResourcesQuery = defineQuery(`
     "tracks": coalesce(tracks, []),
     "requiresLead": coalesce(requiresLead, false),
     "fileUrl": file.asset->url,
+    "hasContent": !(${IS_PAID}) && count(content) > 0,
     pages,
-    price
+    price,
+    _updatedAt`;
+
+const freeResourcesQuery = defineQuery(`
+  *[_type == "freeResource" && !(_id in path("drafts.**")) && ${IN_LOCALE}] | order(order asc, title asc) {
+    ${FREE_RESOURCE_FIELDS}
   }
 `);
 
 export async function getFreeResources(locale: Locale = DEFAULT_LOCALE): Promise<FreeResource[]> {
   return (await sanityFetch<FreeResource[]>(freeResourcesQuery, localeParams(locale), { tags: [SANITY_TAGS.freeResources] })) ?? [];
+}
+
+/** One free resource to read on `/resources/<slug>`. Paid or empty ones have no page. */
+const freeResourceQuery = defineQuery(`
+  *[_type == "freeResource" && !(${IS_PAID}) && count(content) > 0
+    && !(_id in path("drafts.**")) && ${BY_SLUG_IN_LOCALE}[0] {
+    ${FREE_RESOURCE_FIELDS},
+    content,
+    "seo": ${SEO}
+  }
+`);
+
+export async function getFreeResource(
+  slug: string,
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<FreeResourceDetail | null> {
+  return sanityFetch<FreeResourceDetail>(
+    freeResourceQuery,
+    { slug, ...localeParams(locale) },
+    { tags: [SANITY_TAG.freeResource(slug)] },
+  );
+}
+
+/** Slugs of every readable resource, all languages, for `generateStaticParams` and the sitemap. */
+const freeResourceSlugsQuery = defineQuery(`
+  array::unique(*[_type == "freeResource" && defined(slug.current) && !(${IS_PAID}) && count(content) > 0
+    && !(_id in path("drafts.**"))].slug.current)
+`);
+
+export async function getFreeResourceSlugs(): Promise<string[]> {
+  return (await sanityFetch<string[]>(freeResourceSlugsQuery, {}, { tags: [SANITY_TAGS.freeResources] })) ?? [];
 }
 
 /**

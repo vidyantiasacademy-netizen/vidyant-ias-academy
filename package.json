@@ -17,6 +17,7 @@
     "seed:courses:firestore": "node scripts/seed-courses-firestore.mjs",
     "seed:courses:sanity": "sanity exec scripts/seed-courses-sanity.mjs --with-user-token",
     "seed:content:sanity": "sanity exec scripts/seed-content-sanity.mjs --with-user-token",
+    "seed:resources:sanity": "sanity exec scripts/seed-resource-content-sanity.mjs --with-user-token --",
     "seed:notes:sanity": "sanity exec scripts/seed-notes-sanity.mjs --with-user-token --",
     "seed:pyq:sanity": "sanity exec scripts/seed-pyq-sanity.mjs --with-user-token --",
     "seed:answer-writing": "node scripts/seed-answer-writing-sample.mjs",

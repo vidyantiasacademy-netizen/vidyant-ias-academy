@@ -48,7 +48,9 @@ function tagsFor({ _type, slug }: WebhookPayload): string[] {
     case "demoClass":
       return [SANITY_TAGS.demoClasses];
     case "freeResource":
-      return [SANITY_TAGS.freeResources];
+      return slug
+        ? [SANITY_TAGS.freeResources, SANITY_TAG.freeResource(slug)]
+        : [SANITY_TAGS.freeResources];
     case "pyqPaper":
       return [SANITY_TAGS.pyqPapers];
     case "studyNote":

@@ -8,6 +8,7 @@ import {
   getFreeResources,
   getLatestBlogs,
 } from "@/lib/sanity/queries";
+import { ROUTES } from "@/lib/constants/site";
 import { plainText } from "@/lib/sanity/text";
 import type { Announcement, BlogPost, CurrentAffair, Faq, Resource } from "@/types";
 
@@ -59,6 +60,8 @@ export async function getSiteResources(locale: Locale = DEFAULT_LOCALE): Promise
     // A paid resource never exposes its file: the Sanity CDN URL is public, so
     // handing it out would give the material away.
     href: resource.price ? "" : (resource.fileUrl ?? ""),
+    // Free resources with written content are read on their own page.
+    readHref: resource.hasContent ? `${ROUTES.resources}/${resource.slug}` : null,
     requiresLead: resource.requiresLead,
     price: resource.price && resource.price > 0 ? resource.price : null,
     pages: resource.pages,

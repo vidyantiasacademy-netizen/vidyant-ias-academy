@@ -1,4 +1,4 @@
-import { ArrowRight, Download, FileText, ShoppingBag } from "lucide-react";
+import { ArrowRight, BookOpen, Download, FileText, ShoppingBag } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -68,6 +68,16 @@ export function ResourceCard({
             Buy now
           </TrackedAnchor>
         </div>
+      ) : resource.readHref ? (
+        <TrackedLink
+          href={resource.readHref}
+          event={ANALYTICS_EVENTS.resourceOpen}
+          payload={{ resource: resource.id }}
+          className="group mt-6 inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-indigo-900 hover:underline underline-offset-4"
+        >
+          <BookOpen aria-hidden className="size-4" />
+          Read now
+        </TrackedLink>
       ) : available ? (
         <TrackedAnchor
           href={resource.href}
