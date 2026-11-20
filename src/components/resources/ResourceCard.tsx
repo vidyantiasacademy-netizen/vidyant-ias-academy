@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Download, FileText, ShoppingBag } from "lucide-react";
+import { ArrowRight, BookOpen, FileText, ShoppingBag } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -22,7 +22,6 @@ export function ResourceCard({
   resource: Resource;
   className?: string;
 }) {
-  const available = Boolean(resource.href);
   const paid = resource.price !== null;
 
   return (
@@ -38,7 +37,10 @@ export function ResourceCard({
         </span>
         <span className="flex gap-1.5">
           {paid ? <Badge tone="chilli">Premium</Badge> : <Badge tone="success">Free</Badge>}
-          <Badge tone="neutral">{RESOURCE_TYPE_LABELS[resource.type]}</Badge>
+          {/* Resources are read on the site, not downloaded — no "PDF" label. */}
+          {resource.type !== "pdf" ? (
+            <Badge tone="neutral">{RESOURCE_TYPE_LABELS[resource.type]}</Badge>
+          ) : null}
         </span>
       </div>
       <h3 className="mt-5 text-h4 font-bold">{resource.title}</h3>
@@ -78,16 +80,6 @@ export function ResourceCard({
           <BookOpen aria-hidden className="size-4" />
           Read now
         </TrackedLink>
-      ) : available ? (
-        <TrackedAnchor
-          href={resource.href}
-          event={ANALYTICS_EVENTS.resourceDownload}
-          payload={{ resource: resource.id }}
-          className="group mt-6 inline-flex items-center gap-2 text-small font-semibold text-indigo transition-colors hover:text-indigo-900 hover:underline underline-offset-4"
-        >
-          <Download aria-hidden className="size-4" />
-          Download
-        </TrackedAnchor>
       ) : (
         <TrackedLink
           href={`${ROUTES.resources}#${resource.slug}`}

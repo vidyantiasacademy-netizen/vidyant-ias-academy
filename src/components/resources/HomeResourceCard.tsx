@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Download, ShoppingBag } from "lucide-react";
+import { ArrowRight, BookOpen, ShoppingBag } from "lucide-react";
 
 import { ResourceIllustration, sceneFor } from "@/components/resources/ResourceIllustration";
 import { Badge } from "@/components/ui/Badge";
@@ -20,12 +20,11 @@ const PILL =
 
 /**
  * Homepage resource tile: the same facts and actions as `ResourceCard`
- * (Free/Premium and type badges, description, page count; Read now, Download, Buy now
+ * (Free/Premium and type badges, description, page count; Read now, Buy now
  * or Request) in the illustrated layout — kesar-keyed title, navy pill
  * action, a small desk illustration in the corner.
  */
 export function HomeResourceCard({ resource, className }: { resource: Resource; className?: string }) {
-  const available = Boolean(resource.href);
   const paid = resource.price !== null;
 
   return (
@@ -45,7 +44,10 @@ export function HomeResourceCard({ resource, className }: { resource: Resource; 
 
       <span className="flex flex-wrap gap-1.5">
         {paid ? <Badge tone="chilli">Premium</Badge> : <Badge tone="success">Free</Badge>}
-        <Badge tone="neutral">{RESOURCE_TYPE_LABELS[resource.type]}</Badge>
+        {/* Resources are read on the site, not downloaded — no "PDF" label. */}
+        {resource.type !== "pdf" ? (
+          <Badge tone="neutral">{RESOURCE_TYPE_LABELS[resource.type]}</Badge>
+        ) : null}
       </span>
 
       <h3 className="mt-4 flex gap-3 font-display text-h4 leading-tight font-bold text-indigo">
@@ -92,16 +94,6 @@ export function HomeResourceCard({ resource, className }: { resource: Resource; 
           <BookOpen aria-hidden className="size-4" />
           Read now
         </TrackedLink>
-      ) : available ? (
-        <TrackedAnchor
-          href={resource.href}
-          event={ANALYTICS_EVENTS.resourceDownload}
-          payload={{ resource: resource.id }}
-          className={PILL}
-        >
-          <Download aria-hidden className="size-4" />
-          Download
-        </TrackedAnchor>
       ) : (
         <TrackedLink
           href={`${ROUTES.resources}#${resource.slug}`}

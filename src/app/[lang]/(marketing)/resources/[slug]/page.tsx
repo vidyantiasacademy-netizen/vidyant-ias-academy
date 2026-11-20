@@ -1,4 +1,4 @@
-import { ArrowLeft, Download, FileText } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { RichText } from "@/components/content/RichText";
@@ -7,7 +7,7 @@ import { Section } from "@/components/layout/Section";
 import { ResourceCard } from "@/components/resources/ResourceCard";
 import { Badge } from "@/components/ui/Badge";
 import { CTASection } from "@/components/ui/CTASection";
-import { TrackedAnchor, TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { RESOURCE_TYPE_LABELS } from "@/data/resources";
 import { getLocale } from "@/i18n/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
@@ -54,12 +54,9 @@ const TRACK_LABELS: Record<string, string> = {
 
 const UPDATED = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "long", year: "numeric" });
 
-const downloadButton =
-  "inline-flex min-h-12 items-center gap-2 bg-indigo px-5 text-body font-bold text-white transition-colors hover:bg-indigo-900";
-
 /**
- * A free resource, read on the page. The written content comes first; a PDF,
- * when the editor attached one, is offered after it as a printable copy.
+ * A free resource, read on the page. View-only: no file is offered for
+ * download, even if one is attached in the Studio.
  */
 export default async function ResourcePage({ params }: PageProps<"/[lang]/resources/[slug]">) {
   const { slug } = await params;
@@ -108,9 +105,12 @@ export default async function ResourcePage({ params }: PageProps<"/[lang]/resour
           <li>
             <Badge tone="success">Free</Badge>
           </li>
-          <li>
-            <Badge tone="neutral">{RESOURCE_TYPE_LABELS[resource.resourceType]}</Badge>
-          </li>
+          {/* Read on the page, not downloaded — no "PDF" label. */}
+          {resource.resourceType !== "pdf" ? (
+            <li>
+              <Badge tone="neutral">{RESOURCE_TYPE_LABELS[resource.resourceType]}</Badge>
+            </li>
+          ) : null}
           {resource.tracks.map((track) => (
             <li key={track}>
               <Badge tone="kesar">{TRACK_LABELS[track] ?? track}</Badge>
@@ -125,27 +125,6 @@ export default async function ResourcePage({ params }: PageProps<"/[lang]/resour
         </p>
         <RichText value={resource.content} className="mt-8" />
 
-        {resource.fileUrl ? (
-          <div className="mt-12 flex flex-col items-start gap-5 border border-line-strong bg-paper p-6 sm:flex-row sm:items-center">
-            <FileText aria-hidden className="size-10 shrink-0 text-kesar-600" />
-            <div className="flex-1">
-              <p className="text-body font-bold text-indigo">Prefer a printable copy?</p>
-              <p className="mt-1 text-small text-ink-secondary">
-                The same material as a PDF{resource.pages ? `, ${resource.pages} pages` : ""}. Free to keep,
-                print and share.
-              </p>
-            </div>
-            <TrackedAnchor
-              href={resource.fileUrl}
-              event={ANALYTICS_EVENTS.resourceDownload}
-              payload={payload}
-              className={downloadButton}
-            >
-              <Download aria-hidden className="size-5" />
-              Download PDF
-            </TrackedAnchor>
-          </div>
-        ) : null}
 
         <TrackedLink
           href={ROUTES.resources}

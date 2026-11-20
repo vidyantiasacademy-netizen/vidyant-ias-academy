@@ -56,10 +56,10 @@ export async function getSiteResources(locale: Locale = DEFAULT_LOCALE): Promise
     description: resource.description ?? "",
     type: resource.resourceType,
     tracks: resource.tracks,
-    // No file yet → `ResourceCard` routes the visitor to the request form.
-    // A paid resource never exposes its file: the Sanity CDN URL is public, so
-    // handing it out would give the material away.
-    href: resource.price ? "" : (resource.fileUrl ?? ""),
+    // Resources are read on the site, never downloaded: no file URL is handed
+    // out (the Sanity CDN URL is public). Without written content the card
+    // routes the visitor to the request form.
+    href: "",
     // Free resources with written content are read on their own page.
     readHref: resource.hasContent ? `${ROUTES.resources}/${resource.slug}` : null,
     requiresLead: resource.requiresLead,

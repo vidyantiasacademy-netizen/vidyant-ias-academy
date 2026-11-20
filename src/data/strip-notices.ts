@@ -60,7 +60,7 @@ const STANDING_STRIP_NOTICES: StripNotice[] = [
     tone: "info",
     text: "UPSC syllabus map, booklist and PYQ guide — free",
     href: ROUTES.resources,
-    linkLabel: "Download",
+    linkLabel: "Read now",
   },
 ];
 

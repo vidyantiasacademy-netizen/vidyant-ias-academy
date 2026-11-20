@@ -106,7 +106,7 @@ export function CallbackForm({
       className={cn(
         "scroll-mt-28",
         panel
-          ? "focus-invert relative isolate overflow-hidden rounded-[1.5rem] bg-indigo p-6 text-white shadow-soft sm:p-8"
+          ? "focus-invert relative isolate overflow-hidden rounded-[1.5rem] bg-indigo bg-linear-to-br from-indigo-950 via-indigo to-indigo-700 p-6 text-white shadow-soft sm:p-8"
           : "rounded-2xl border border-line border-t-4 border-t-indigo bg-white p-6 sm:p-8",
         className,
       )}

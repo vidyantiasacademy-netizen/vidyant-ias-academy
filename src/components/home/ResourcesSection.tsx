@@ -36,7 +36,7 @@ export function ResourcesSection({ resources }: { resources: Resource[] }) {
         }
         description={
           premium.length > 0
-            ? "Premium material written by our faculty, alongside free downloads you can read before deciding. Buy only what you need — no course enrolment required."
+            ? "Premium material written by our faculty, alongside free guides you can read before deciding. Buy only what you need — no course enrolment required."
             : "Useful preparation material, free and without conditions. Read the syllabus, follow the roadmap, and decide for yourself whether our approach suits you."
         }
         action={

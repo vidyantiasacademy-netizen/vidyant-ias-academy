@@ -44,7 +44,7 @@ function FacultyTeaserCard({ member }: { member: Faculty }) {
         {member.specialisations.length > 0 ? member.specialisations.join(" • ") : member.subject}
       </span>
       {member.bio ? (
-        <span className="mt-3 line-clamp-4 text-small text-ink-secondary sm:line-clamp-3">
+        <span className="mt-3 hidden text-small text-ink-secondary sm:line-clamp-3">
           {member.bio}
         </span>
       ) : null}
