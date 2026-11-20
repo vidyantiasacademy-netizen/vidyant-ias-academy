@@ -3,49 +3,57 @@
  * is rendered on `/resources/<slug>` and exercises every style the Studio
  * offers (h2, h3, quote, bullet and numbered lists).
  *
- * Starting copy for testing the resource pages — editors are expected to
- * review and replace it in the Studio. It states only the examination's
- * published structure and general preparation advice: no institute results,
- * student numbers or dates (see the no-unverified-claims rule).
+ * The starter kit, PYQ strategy and study planner are vidyantIAS's own copy
+ * (pasted into the Studio on 2026-11-20, structured here). The booklist and
+ * syllabus are starting copy for editors to review. None of it states
+ * institute results, student numbers or dates (no-unverified-claims rule).
  *
  * Format: see `blocks()` in `./sanity.mjs`.
  */
 export const RESOURCE_CONTENT = {
   "upsc-starter-kit": [
-    "If you are starting UPSC preparation, the hardest part is not the volume of material — it is knowing what to do first. This kit lays out the examination, the order in which to build your foundation, and the habits worth forming in your first months.",
-    { h2: "How the examination is structured" },
-    "The Civil Services Examination runs in three stages, each a filter for the next.",
-    {
-      numbers: [
-        "Preliminary Examination — two objective papers. General Studies Paper I decides whether you qualify; Paper II (CSAT) only has to be passed.",
-        "Main Examination — nine descriptive papers: two qualifying language papers, and seven papers (Essay, four General Studies papers and two papers of your optional subject) that count towards your rank.",
-        "Personality Test — an interview with a board, added to your Mains marks for the final merit list.",
-      ],
-    },
-    { h2: "What to read first" },
-    "Begin with the NCERT textbooks for History, Geography, Polity and Economics. They are short, accurate, and written for someone meeting the subject for the first time — which is exactly where you are.",
-    { h3: "A sensible order" },
+    "Starting your UPSC journey? Here’s what you need to know before you begin.",
+    "Preparing for the UPSC Civil Services Examination can feel overwhelming, especially when you are unsure where to start. With countless resources, strategies and opinions available, beginners often struggle to identify what truly matters.",
+    { quote: "The key is simple: start with clarity, not confusion." },
+    { h2: "1. Understand the Examination" },
+    "The UPSC Civil Services Examination has three stages:",
     {
       bullets: [
-        "Polity and Geography first: they connect to almost every other subject.",
-        "Then Modern History and Economy, alongside a daily newspaper.",
-        "Environment, Science and Technology, and Ancient and Medieval History once the basics are steady.",
-        "Pick your optional subject after you have read a little of each candidate subject, not before.",
+        "**Prelims:** Tests conceptual understanding, factual accuracy and decision-making.",
+        "**Mains:** Evaluates analytical thinking, subject knowledge and written expression.",
+        "**Personality Test:** Assesses judgment, awareness and suitability for public service.",
       ],
     },
-    { quote: "Read less, revise more. A book read three times beats three books read once." },
-    { h2: "Habits for the first months" },
+    "Each stage demands a different set of skills, making it essential to understand the examination before beginning preparation.",
+    { h2: "2. Focus on Concepts, Not Just Facts" },
+    "UPSC increasingly tests the application of knowledge rather than isolated memorisation.",
+    "For example, understanding federalism means more than knowing its definition. It involves recognising how Centre–State relations function in practice.",
+    "Build conceptual clarity first. Facts become easier to remember when you understand their context.",
+    { h2: "3. Connect Current Affairs With Static Subjects" },
+    "Current affairs should not be studied as disconnected news events.",
+    "A Supreme Court judgment may relate to constitutional provisions, while a climate summit may connect with environmental conventions and international relations.",
+    "Focus on understanding **why** an issue matters, not merely what happened.",
+    { h2: "4. Develop the Right Preparation Habits" },
+    "Effective preparation depends on a few essential practices:",
     {
       bullets: [
-        "Read the newspaper daily, but limit it to an hour — note issues, not facts.",
-        "Keep the syllabus printed beside you and tick off topics as you cover them.",
-        "Start answering previous-year questions early, even badly. It shows you what the examination actually asks.",
-        "Fix a weekly revision slot from the first week, not after the first month.",
+        "Study consistently rather than irregularly for long hours.",
+        "Revise concepts to strengthen retention.",
+        "Develop analytical and critical thinking.",
+        "Focus on understanding rather than collecting excessive information.",
+        "Evaluate your progress without comparing yourself with others.",
       ],
     },
-    "When you are ready to turn this into a dated plan for your own attempt, the Study Planner resource walks you through it.",
+    { h2: "5. Avoid Common Beginner Mistakes" },
+    "Many aspirants lose valuable time by following multiple strategies, changing resources frequently or focusing excessively on study hours.",
+    { quote: "The quality of preparation matters more than the quantity of material covered." },
+    "Choose a clear approach, remain consistent and make improvements based on your learning needs.",
+    { h2: "Final Takeaway" },
+    "UPSC preparation is a journey of developing knowledge, discipline and perspective. You do not need to master everything from the beginning.",
+    "Start by understanding the examination, strengthening your fundamentals and developing the ability to think critically.",
+    "**A strong foundation today creates better preparation tomorrow.**",
+    "*Vidyant IAS — Right knowledge. Right direction. Every step.*",
   ],
-
   "upsc-booklist": [
     "Most aspirants do not fail for want of books — they fail because they read too many. This list gives one standard source per area, the order to read them in, and what you can leave out.",
     { h2: "Foundation: NCERT textbooks" },
@@ -118,83 +126,104 @@ export const RESOURCE_CONTENT = {
   ],
 
   "pyq-strategy": [
-    "Previous-year questions are the most honest guide to the examination you will sit. They show which topics recur, how deep the questions go, and what the examiner treats as basic knowledge.",
-    { h2: "Why start with PYQs" },
+    "Previous-Year Questions (PYQs) are an essential part of UPSC preparation. They help aspirants understand the nature of questions, important areas of the syllabus and the level of conceptual clarity required for the examination.",
+    { h2: "1. Start with Previous-Year Questions" },
+    "Before beginning a subject, go through its previous-year questions to understand the areas UPSC has focused on.",
     {
       bullets: [
-        "They tell you what not to study as clearly as what to study.",
-        "They show the level of detail expected — usually less than coaching material suggests.",
-        "They train you to read options and question wording carefully.",
+        "**Prelims:** last 10–15 years.",
+        "**Mains:** last 10 years.",
       ],
     },
-    { h2: "A method that works" },
-    { h3: "For Prelims" },
-    {
-      numbers: [
-        "Collect the last ten years of General Studies Paper I and sort the questions by subject.",
-        "Before reading a topic, attempt its past questions cold. Note what you could not answer.",
-        "Read the topic with those gaps in mind, then attempt the questions again.",
-        "For every option — right or wrong — ask what you would need to know to eliminate it.",
-      ],
-    },
-    { h3: "For Mains" },
-    {
-      numbers: [
-        "Map each past question to a line of the syllabus.",
-        "Write answers within the word limit and time, even for questions you find difficult.",
-        "Compare your structure with the directive in the question: discuss, examine, critically analyse.",
-        "Revisit the same question a month later and write it again.",
-      ],
-    },
-    { quote: "A topic is finished when you can answer its past questions — not when you have finished the chapter." },
-    { h2: "Common mistakes" },
+    { h2: "2. Analyse Questions Subject-Wise" },
+    "Arrange PYQs according to the syllabus. Pay attention to frequently tested concepts, recurring themes and changes in the way questions are framed.",
+    { h2: "3. Focus on Understanding" },
     {
       bullets: [
-        "Treating PYQs as a final-month revision tool instead of a starting point.",
-        "Memorising answers instead of understanding why an option is wrong.",
-        "Looking only at the last two or three years.",
+        "**For Prelims:** examine each statement carefully. Understand why an option is correct or incorrect and practise elimination techniques.",
+        "**For Mains:** identify the demand of the question, directive words and key points that need to be addressed.",
       ],
     },
-    "Our previous-year paper library has the question papers themselves, if you want to start right away.",
+    { h2: "4. Connect with Current Affairs" },
+    "While studying current affairs, revisit related PYQs. This helps in understanding how static subjects are connected with contemporary developments.",
+    { h2: "5. Practise and Revise" },
+    "Solve PYQs after completing each subject. Review incorrect answers, revise weak areas and practise full-length papers within the prescribed time.",
+    { h2: "6. Avoid Selective Preparation" },
+    "PYQs help identify important areas, but they do not cover the entire syllabus. Do not limit preparation to previously asked topics.",
+    { h2: "A Final Note" },
+    "PYQs should be studied alongside standard books and the UPSC syllabus, not left until the final months of preparation.",
+    { quote: "Regular analysis and revision will make PYQs far more useful than simply solving a large number of questions." },
+    "*Vidyant IAS — Right knowledge. Right direction. Every step.*",
   ],
-
   "study-planner": [
-    "A plan you can keep for a full cycle beats an ambitious one you abandon in a month. This planner helps you build a weekly routine with revision built in from the start.",
-    { h2: "Build your week" },
+    "Clearing UPSC is not about studying the maximum number of hours. It is about mastering the syllabus, understanding UPSC’s question patterns, revising consistently and improving through tests.",
+    "No study plan can guarantee selection, but a disciplined, examination-oriented approach can significantly improve an aspirant’s chances.",
+    { h2: "1. The 12-Month Preparation Roadmap" },
+    {
+      bullets: [
+        "**Month 1:** NCERTs (Classes 6–12), syllabus analysis and PYQs.",
+        "**Month 2:** Polity and Modern Indian History.",
+        "**Month 3:** Geography and Indian Economy.",
+        "**Month 4:** Environment, Ecology and Biodiversity.",
+        "**Month 5:** Ancient & Medieval History, Art & Culture.",
+        "**Month 6:** Science & Technology and Indian Society.",
+        "**Month 7:** Governance, Social Justice and International Relations.",
+        "**Month 8:** Ethics, Internal Security and Disaster Management.",
+        "**Month 9:** GS consolidation, Essay and Mains answer writing.",
+        "**Month 10:** First comprehensive revision and sectional tests.",
+        "**Month 11:** Prelims-focused revision, PYQs and mock tests.",
+        "**Month 12:** Intensive Prelims practice, CSAT and final revision.",
+      ],
+    },
+    "**Throughout the year:** Optional Subject, Current Affairs, CSAT, PYQs and regular revision. Begin Mains answer writing once foundational concepts are clear. Align the final Prelims phase with the actual examination date.",
+    { h2: "2. Daily Study Schedule" },
+    {
+      bullets: [
+        "**General Studies:** 3 hours",
+        "**Optional Subject:** 2 hours",
+        "**Current Affairs:** 1 hour",
+        "**PYQs / MCQs / Answer Writing:** 1 hour",
+        "**Revision:** 1 hour",
+      ],
+    },
+    "**Total: 8 focused hours.**",
+    { quote: "Quality of study matters more than the number of hours recorded." },
+    { h2: "3. Weekly Strategy" },
+    {
+      bullets: [
+        "**Monday–Friday:** Complete GS and Optional targets with daily revision.",
+        "**Saturday:** Practise PYQs, CSAT and sectional tests.",
+        "**Sunday:** Revise the week’s topics, analyse mistakes and clear backlogs.",
+      ],
+    },
+    { h2: "4. The Topper-Oriented Approach" },
     {
       numbers: [
-        "Fix your available hours honestly — after work, college or family time.",
-        "Assign one main subject and one secondary subject per week.",
-        "Block a daily slot for the newspaper and a weekly slot for revision.",
-        "Reserve one session for answer writing or a test.",
-        "Leave half a day free: plans without slack break at the first disruption.",
+        "**Syllabus First:** Keep the UPSC syllabus accessible and connect every topic to its relevant syllabus heading.",
+        "**PYQ-Driven Preparation:** Analyse at least 10 years of Prelims and Mains PYQs to identify recurring themes, question patterns and expected depth.",
+        "**Limited Resources, Multiple Revisions:** Follow one reliable foundational source per topic and supplement it selectively.",
+        "**Integrated Preparation:** Study each topic from both Prelims and Mains perspectives instead of preparing for them as completely separate examinations.",
+        "**Active Recall:** After completing a topic, test your understanding without referring to notes.",
+        "**Answer Writing:** Develop structured, analytical answers supported by relevant examples, constitutional provisions, data and diagrams where appropriate.",
+        "**Test Analysis:** Maintain an error notebook. Identify conceptual gaps, factual mistakes and errors in question interpretation.",
+        "**Revision Before Expansion:** Prioritise retaining completed subjects over continuously adding new material.",
       ],
     },
-    { h2: "A sample weekly layout" },
-    { h3: "Weekdays" },
+    { h2: "5. Monthly Performance Review" },
+    "At the end of each month, evaluate:",
     {
       bullets: [
-        "Morning: main subject — new reading.",
-        "Afternoon or evening: secondary subject, or optional subject.",
-        "Daily: newspaper and short notes.",
+        "Syllabus completed against planned targets.",
+        "Accuracy and performance in sectional tests.",
+        "Optional subject progress.",
+        "Quality of Mains answers.",
+        "Revision backlog and recurring mistakes.",
       ],
     },
-    { h3: "Weekend" },
-    {
-      bullets: [
-        "Saturday: revision of everything read during the week.",
-        "Sunday: a test or answer-writing session, then review of mistakes.",
-      ],
-    },
-    { quote: "Revision is not what you do when you finish the syllabus. It is part of every week." },
-    { h2: "Review every month" },
-    "At the end of each month, compare what you planned with what you actually covered. Adjust the plan to fit your real pace rather than forcing yourself to catch up — falling behind is information, not failure.",
-    {
-      bullets: [
-        "Which subjects slipped, and why?",
-        "Did revision actually happen?",
-        "Are your test scores moving, and on which topics?",
-      ],
-    },
+    "Set the following month’s targets based on these findings.",
+    { h2: "Final Advice" },
+    "The strongest aspirants do not simply complete the syllabus. They develop the ability to recall, analyse and apply what they have studied under examination conditions.",
+    { quote: "Study with the syllabus. Think through PYQs. Improve through tests. Succeed through consistency." },
+    "*Vidyant IAS — Right knowledge. Right direction. Every step.*",
   ],
 };

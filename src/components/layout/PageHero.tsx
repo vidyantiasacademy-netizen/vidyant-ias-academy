@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { GeoComposition } from "@/components/ui/Geometry";
 import { getLocale } from "@/i18n/server";
 import { breadcrumbSchema, jsonLd } from "@/lib/seo/structured-data";
 
@@ -13,12 +12,17 @@ interface PageHeroProps {
   description?: string;
   breadcrumbs?: { label: string; href?: string }[];
   children?: ReactNode;
+  /**
+   * Right-hand column content, e.g. a faculty portrait: above the headline on
+   * phones, beside it from `lg`.
+   */
+  media?: ReactNode;
 }
 
 /**
  * Shared inner-page hero, Swiss: white field, 12-column grid, headline flush
- * left in the first 8 columns, a Bauhaus composition in its own column from
- * `lg` (never behind copy). A hard indigo rule closes the band.
+ * left in the first 8 columns, optional media in the remaining 4 from `lg`.
+ * A hard indigo rule closes the band.
  *
  * The breadcrumb trail is also emitted as BreadcrumbList JSON-LD, so every
  * inner page gets breadcrumb markup without wiring it per page.
@@ -29,6 +33,7 @@ export async function PageHero({
   description,
   breadcrumbs,
   children,
+  media,
 }: PageHeroProps) {
   const locale = breadcrumbs ? await getLocale() : null;
 
@@ -57,9 +62,11 @@ export async function PageHero({
             ) : null}
             {children ? <div className="mt-6">{children}</div> : null}
           </div>
-          <div className="hidden items-end justify-end lg:col-span-4 lg:flex">
-            <GeoComposition className="size-32 xl:size-36" />
-          </div>
+          {media ? (
+            <div className="-order-1 lg:order-none lg:col-span-4 lg:flex lg:items-start lg:justify-end">
+              {media}
+            </div>
+          ) : null}
         </div>
       </Container>
     </section>

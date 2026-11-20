@@ -48,6 +48,8 @@ export function seedClient({ dryRun }) {
  * Seed body → Portable Text. A string is a paragraph; `{ h2 }`, `{ h3 }` are
  * headings; `{ quote }` is a blockquote; `{ bullets: [] }`, `{ numbers: [] }`
  * are lists.
+ *
+ * Inside any of them, `**text**` is bold and `*text*` italic.
  */
 export function blocks(body) {
   const items = typeof body === "string" ? body.split(/\n{2,}/) : body;
@@ -60,7 +62,7 @@ export function blocks(body) {
       _key: `b${index}`,
       style: "normal",
       markDefs: [],
-      children: [{ _type: "span", _key: `b${index}s`, text, marks: [] }],
+      children: spans(text, `b${index}s`),
       ...extra,
     });
   };
@@ -75,6 +77,26 @@ export function blocks(body) {
   }
 
   return out;
+}
+
+/** `**bold**` / `*italic*` → Portable Text spans with `strong` / `em` marks. */
+function spans(text, keyPrefix) {
+  const out = [];
+  const pattern = /\*\*(.+?)\*\*|\*(.+?)\*/g;
+  let last = 0;
+
+  const push = (value, marks) => {
+    if (value) out.push({ _type: "span", _key: `${keyPrefix}${out.length || ""}`, text: value, marks });
+  };
+
+  for (const match of text.matchAll(pattern)) {
+    push(text.slice(last, match.index), []);
+    push(match[1] ?? match[2], [match[1] ? "strong" : "em"]);
+    last = match.index + match[0].length;
+  }
+  push(text.slice(last), []);
+
+  return out.length > 0 ? out : [{ _type: "span", _key: keyPrefix, text, marks: [] }];
 }
 
 /** Plain text of a seed body, for reading-time estimates. */

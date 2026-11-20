@@ -1,4 +1,5 @@
 import { BookOpen, GraduationCap, Quote } from "lucide-react";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { CourseCard } from "@/components/courses/CourseCard";
@@ -61,6 +62,20 @@ export default async function FacultyProfilePage({ params }: PageProps<"/[lang]/
         eyebrow={member.subject}
         title={member.name}
         description={member.bio}
+        media={
+          member.image ? (
+            <div className="relative aspect-4/5 w-36 overflow-hidden rounded-2xl border border-line bg-paper sm:w-44 lg:w-full lg:max-w-72">
+              <Image
+                src={member.image}
+                alt={`${member.name}, ${member.subject} at vidyantIAS`}
+                fill
+                priority
+                sizes="(min-width: 1024px) 288px, (min-width: 640px) 176px, 144px"
+                className="object-cover"
+              />
+            </div>
+          ) : undefined
+        }
         breadcrumbs={[
           { label: "Home", href: ROUTES.home },
           { label: "Faculty", href: ROUTES.faculty },

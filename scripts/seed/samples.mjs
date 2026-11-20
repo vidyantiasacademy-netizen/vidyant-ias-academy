@@ -221,56 +221,11 @@ export const SEED_SUBJECTS = [
 ];
 
 /**
- * Sample faculty: teaching roles, not people. vidyantIAS has not supplied
- * verified profiles, so there are no names, credentials or experience figures
- * here, and every entry is flagged `profilePending`. Replace in the Studio.
+ * Sample faculty role cards — retired. Real, verified profiles are seeded by
+ * `scripts/seed-faculty-sanity.mjs`. Kept as an empty list so
+ * `seed:content:sanity` no longer recreates the placeholders.
  *
- * `courses` are course slugs; the seed links each profile from those course
- * documents, since the course→faculty reference lives on the course.
+ * Shape, if ever reused: `{ slug, name, designation, subjects, bio,
+ * teachingPhilosophy, courses, order }`; `courses` are course slugs.
  */
-export const SEED_FACULTY = [
-  {
-    slug: "gs-polity-governance",
-    name: "GS Faculty — Polity & Governance",
-    designation: "Polity, Governance & Constitution",
-    subjects: ["subject-polity", "subject-governance"],
-    bio: "Leads the Polity and Governance track across the Foundation and Prelims programs, linking constitutional provisions to current developments and to the way questions are actually asked in the examination.",
-    teachingPhilosophy:
-      "Concepts first, application immediately after — every class ends with questions that test whether the idea can be used.",
-    courses: ["foundation-program", "prelims-program"],
-    order: 10,
-  },
-  {
-    slug: "gs-economy",
-    name: "GS Faculty — Economy",
-    designation: "Indian Economy & Economic Survey",
-    subjects: ["subject-economy"],
-    bio: "Handles the Economy syllabus from fundamentals to the Budget and Economic Survey, with a focus on the vocabulary and data reading that Prelims and Mains both demand.",
-    teachingPhilosophy:
-      "Economics becomes simple when the student can explain a headline in their own words.",
-    courses: ["foundation-program", "prelims-program", "mains-program"],
-    order: 20,
-  },
-  {
-    slug: "mains-essay-ethics",
-    name: "Mains Faculty — Essay & Ethics",
-    designation: "Essay, Ethics and Answer Writing",
-    subjects: ["subject-essay", "subject-ethics"],
-    bio: "Runs the answer-writing and evaluation track: structure, argument, examples and the discipline of writing to the demand of the question within the time available.",
-    teachingPhilosophy:
-      "Marks improve when feedback is specific. Every evaluated answer should tell the student exactly what to change next.",
-    courses: ["mains-program"],
-    order: 30,
-  },
-  {
-    slug: "csat-quantitative",
-    name: "CSAT Faculty",
-    designation: "CSAT — Reasoning, Comprehension & Quantitative Aptitude",
-    subjects: ["subject-reasoning", "subject-quantitative-aptitude"],
-    bio: "Prepares students for Paper II with a method-led approach so that CSAT is cleared comfortably without consuming time that GS preparation needs.",
-    teachingPhilosophy:
-      "CSAT is a qualifying paper — the goal is reliability and speed, not difficulty for its own sake.",
-    courses: ["foundation-program", "prelims-program"],
-    order: 40,
-  },
-];
+export const SEED_FACULTY = [];

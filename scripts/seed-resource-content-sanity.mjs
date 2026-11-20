@@ -10,6 +10,7 @@
  *   npm run seed:resources:sanity                 # set content where missing
  *   npm run seed:resources:sanity -- --replace    # overwrite with the sample copy
  *   npm run seed:resources:sanity -- --dry-run
+ *   npm run seed:resources:sanity -- --replace --only pyq-strategy,study-planner
  */
 import { RESOURCE_CONTENT } from "./seed/resource-content.mjs";
 import { blocks, sanityFlags, seedClient } from "./seed/sanity.mjs";
@@ -17,7 +18,16 @@ import { blocks, sanityFlags, seedClient } from "./seed/sanity.mjs";
 const flags = sanityFlags();
 const client = seedClient(flags);
 
-const ids = Object.keys(RESOURCE_CONTENT);
+const onlyArg = process.argv.indexOf("--only");
+const only = onlyArg > -1 ? process.argv[onlyArg + 1]?.split(",").filter(Boolean) : null;
+const unknown = (only ?? []).filter((id) => !(id in RESOURCE_CONTENT));
+
+if (unknown.length > 0) {
+  console.error(`No seed content for: ${unknown.join(", ")}`);
+  process.exit(1);
+}
+
+const ids = only ?? Object.keys(RESOURCE_CONTENT);
 const existing = await client.fetch(
   `*[_type == "freeResource" && _id in $ids]{ _id, "hasContent": count(content) > 0 }`,
   { ids },
