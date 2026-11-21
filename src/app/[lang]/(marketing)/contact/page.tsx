@@ -22,9 +22,7 @@ export const generateMetadata = () => pageMetadata({
 });
 
 export default function ContactPage() {
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(
-    CONTACT.mapsEmbedQuery,
-  )}&output=embed`;
+  const mapSrc = CONTACT.mapsEmbedUrl;
 
   return (
     <>
@@ -137,10 +135,6 @@ export default function ContactPage() {
             className="h-[360px] w-full border-0 sm:h-[420px]"
           />
         </div>
-        <p className="mt-4 text-small text-ink-muted">
-          Centre address and map pin are updated as soon as the Google Business Profile is
-          verified.
-        </p>
       </Section>
 
       <CTASection

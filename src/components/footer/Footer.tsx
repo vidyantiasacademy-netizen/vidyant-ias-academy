@@ -130,6 +130,24 @@ export async function Footer() {
                 </li>
               ))}
             </ul>
+            <div className="mt-6 overflow-hidden border-2 border-white/20">
+              <iframe
+                title={`Map showing ${BRAND.name} in ${BRAND.city}`}
+                src={CONTACT.mapsEmbedUrl}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="block h-48 w-full border-0"
+              />
+            </div>
+            <a
+              href={CONTACT.mapsDirectionsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-flex min-h-11 items-center gap-2 text-small font-bold text-kesar transition-colors hover:text-white"
+            >
+              <MapPin aria-hidden className="size-4" />
+              Get directions
+            </a>
           </div>
         </div>
 
