@@ -21,6 +21,8 @@ export interface CurriculumModule {
 export interface Course {
   id: string;
   slug: string;
+  /** The Sanity `course` document supplying the copy; the sitemap reads its `_updatedAt`. */
+  sanitySlug: string;
   category: CourseCategory;
   title: string;
   shortDescription: string;

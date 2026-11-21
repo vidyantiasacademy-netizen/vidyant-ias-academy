@@ -13,9 +13,9 @@ export function CallbackSection() {
   return (
     <section id="callback" aria-labelledby="callback-heading" className="bg-white pb-10 md:hidden">
       <div className="relative h-52 overflow-hidden">
-        {/* Same file as the hero photo, so it is already cached. */}
+        {/* Lazy and phone-only, so it never competes with the hero image. */}
         <Image
-          src="/images/hero-study-overlook.png"
+          src="/images/hero-study-overlook.webp"
           alt=""
           fill
           sizes="100vw"

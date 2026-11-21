@@ -7,9 +7,10 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/login"],
+      // `/login` is not blocked: it is `noindex`, and a crawler has to be
+      // allowed to fetch it to see that.
+      disallow: ["/api/"],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
   };
 }

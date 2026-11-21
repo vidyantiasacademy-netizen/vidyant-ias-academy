@@ -17,6 +17,8 @@ export const generateMetadata = () => pageMetadata({
   description:
     "Written and video testimonials from vidyantIAS students, published only with consent. Until our first cohort completes, this page says so plainly.",
   path: ROUTES.testimonials,
+  // An empty state is thin content; index the page once something is published.
+  noIndex: publishedTestimonials.length === 0,
 });
 
 export default function TestimonialsPage() {

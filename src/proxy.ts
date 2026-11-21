@@ -50,7 +50,9 @@ export function proxy(request: NextRequest) {
   if (prefixed && prefixLocale === DEFAULT_LOCALE) {
     const url = request.nextUrl.clone();
     url.pathname = pathname;
-    return withLocaleCookie(NextResponse.redirect(url), DEFAULT_LOCALE);
+    // Permanent: `/en/...` never becomes a public URL, so links to it should
+    // consolidate onto the bare path.
+    return withLocaleCookie(NextResponse.redirect(url, 308), DEFAULT_LOCALE);
   }
 
   // A bare path from a reader who last chose another language: send them to

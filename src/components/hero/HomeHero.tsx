@@ -8,7 +8,7 @@ import {
   Target,
   UserRoundCheck,
 } from "lucide-react";
-import Image from "next/image";
+import { getImageProps } from "next/image";
 
 import { Container } from "@/components/ui/Container";
 import { TrackedButtonLink } from "@/components/ui/TrackedLink";
@@ -45,6 +45,19 @@ const PILLARS = [
  * the photo top → bottom so the copy stays legible on phones and the photo
  * shows under the pillars.
  */
+const HERO_IMAGE = { alt: "", fill: true, sizes: "100vw" } as const;
+
+const {
+  props: { srcSet: heroDesktopSrcSet },
+} = getImageProps({ ...HERO_IMAGE, src: "/images/hero-hills-constitution.webp" });
+
+const { props: heroMobileImg } = getImageProps({
+  ...HERO_IMAGE,
+  src: "/images/hero-hills-constitution-mobile.webp",
+  loading: "eager",
+  fetchPriority: "high",
+});
+
 export function HomeHero() {
   return (
     <section className="relative isolate overflow-hidden bg-paper lg:flex lg:min-h-[calc(100svh-9.5rem)] lg:max-h-[52rem] lg:items-center">
@@ -59,17 +72,19 @@ export function HomeHero() {
             </p>
           </div>
 
-          <h1 className="reveal mt-6 font-display text-[2.375rem] font-bold leading-[1.08] tracking-[-0.015em] text-indigo md:text-[3.25rem] xl:text-[4rem] short:text-[3rem]">
+          {/* Headline, promise and CTAs render at full opacity from the first
+              paint: a fade-in from opacity 0 delays LCP and the first tap. */}
+          <h1 className="mt-6 font-display text-[2.375rem] font-bold leading-[1.08] tracking-[-0.015em] text-indigo md:text-[3.25rem] xl:text-[4rem] short:text-[3rem]">
             Your UPSC Preparation Deserves the{" "}
             <span className="whitespace-nowrap italic text-kesar-500">Right Direction.</span>
           </h1>
 
-          <p className="reveal mt-5 max-w-[50ch] text-body text-ink-secondary md:text-body-lg">
+          <p className="mt-5 max-w-[50ch] text-body text-ink-secondary md:text-body-lg">
             Concept-driven learning. Focused practice. Personal mentorship.
             <br className="hidden sm:inline" /> A clearer path to {EXAM_CYCLE.label}.
           </p>
 
-          <div className="reveal mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
             <TrackedButtonLink
               href={CTA.courses.href}
               event={ANALYTICS_EVENTS.courseCtaClick}
@@ -110,18 +125,18 @@ export function HomeHero() {
       </Container>
 
       {/* The photograph is the LCP element on the homepage, so it loads
-          eagerly at high priority. Full-bleed behind the copy at every width. */}
-      <div className="absolute inset-0 -z-20">
-        <Image
-          src="/images/hero-hills-constitution.png"
+          eagerly at high priority. Full-bleed behind the copy at every width.
+          Art-directed: on phones the cream wash hides the top half and only a
+          narrow strip around the book shows, so phones get a 600px crop of
+          that strip (about 65 KB) instead of the full frame. */}
+      <picture className="absolute inset-0 -z-20">
+        <source media="(min-width: 768px)" srcSet={heroDesktopSrcSet} sizes="100vw" />
+        <img
+          {...heroMobileImg}
           alt=""
-          fill
-          sizes="100vw"
-          loading="eager"
-          fetchPriority="high"
-          className="object-cover object-[80%_center] md:object-[72%_center]"
+          className="object-cover object-center md:object-[72%_center]"
         />
-      </div>
+      </picture>
       {/* Phones and tablets: cream, solid behind the copy, clearing towards
           the bottom so the photo shows under the pillars. */}
       <div

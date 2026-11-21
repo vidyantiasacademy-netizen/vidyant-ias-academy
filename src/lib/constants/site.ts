@@ -38,8 +38,15 @@ export const EXAM_CYCLE = {
   admissionNote: "Admissions open",
 } as const;
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.vidyantias.com";
+/**
+ * Base for every canonical, `hreflang`, sitemap, robots and JSON-LD URL.
+ * `||` rather than `??` so an empty variable falls back too (`new URL("")`
+ * throws). `next.config.ts` fails a Vercel production build whose value is not
+ * https or still points at localhost.
+ */
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://www.vidyantias.com"
+).replace(/\/+$/, "");
 
 export const CONTACT = {
   /** As the institute gave it (2026-11-21). Joined with ", " wherever it is printed. */
@@ -70,10 +77,13 @@ export const CONTACT = {
     // schema.org says a day is closed.
     { days: "Sunday", hours: "Closed" },
   ],
-  /** TODO(institute): swap for the Google Business Profile place embed once it exists. */
-  mapsEmbedQuery: "Amit Complex, Tilak Road, Sadashiv Peth, Pune 411030",
-  mapsDirectionsUrl:
-    "https://www.google.com/maps/search/?api=1&query=Amit+Complex%2C+Tilak+Road%2C+Sadashiv+Peth%2C+Pune+411030",
+  /**
+   * Google Business Profile pin (institute, 2026-11-21:
+   * https://maps.app.goo.gl/KY8xaVfwGTBhR8er5). `cid` is the place's
+   * feature id in decimal, so the embed shows the profile card, not a bare pin.
+   */
+  mapsEmbedUrl: "https://maps.google.com/maps?cid=12891428331108697455&output=embed",
+  mapsDirectionsUrl: "https://maps.app.goo.gl/KY8xaVfwGTBhR8er5",
 } as const;
 
 /**

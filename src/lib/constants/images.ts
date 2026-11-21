@@ -22,7 +22,7 @@ export interface ImageRef {
 
 export const IMAGES: Record<string, ImageRef> = {
   mentorshipSession: {
-    src: "/images/Mentorship.png",
+    src: "/images/Mentorship.webp",
     alt: "vidyantIAS Mentorship Program 2027/2028: personalised mentorship, personalised study strategy, regular progress tracking, and doubt resolution with academic guidance",
     width: 1080,
     height: 1350,

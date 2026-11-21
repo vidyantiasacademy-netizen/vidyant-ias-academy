@@ -25,7 +25,48 @@ const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
  */
 const sanityProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 
+/**
+ * Every canonical, sitemap entry and JSON-LD `@id` is built from this URL, so a
+ * production build carrying a copied `.env` value would point Google at
+ * localhost on every page. Fail the build instead of shipping that.
+ */
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+if (
+  process.env.VERCEL_ENV === "production" &&
+  siteUrl &&
+  (!siteUrl.startsWith("https://") || /localhost|127\.0\.0\.1/.test(siteUrl))
+) {
+  throw new Error(
+    `NEXT_PUBLIC_SITE_URL must be the public https origin in production, got "${siteUrl}".`,
+  );
+}
+
+/**
+ * Baseline response headers for every route.
+ *
+ * Not yet a full Content-Security-Policy: GA4, Clarity, Firebase Auth, Google
+ * sign-in, Sanity Studio and the map and video embeds each need their own
+ * sources, and a wrong policy breaks pages silently. `frame-ancestors` is the
+ * part that is safe to ship now (it replaces X-Frame-Options in modern
+ * browsers; both are sent for older ones).
+ */
+const SECURITY_HEADERS = [
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+  },
+];
+
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  headers() {
+    return [{ source: "/:path*", headers: SECURITY_HEADERS }];
+  },
   // The free practice quizzes became PYQ tests; keep old links and indexed URLs working.
   redirects() {
     return [
@@ -55,6 +96,8 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
+    // AVIF first (typically 20–30% smaller than WebP), WebP as the fallback.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       ...(cloudName
         ? [

@@ -473,6 +473,46 @@ export async function getFreeResourceSlugs(): Promise<string[]> {
 }
 
 /**
+ * Sitemap metadata for the slugged document types whose pages the sitemap
+ * lists: when each was last edited and whether its page is `noindex`. The list
+ * queries above do not carry either, and the sitemap is the only reader, so it
+ * gets one small query instead of widening every list projection.
+ *
+ * Sanity sets `_updatedAt` on every publish, so it is the real modified date.
+ */
+const sitemapMetaQuery = defineQuery(`
+  *[_type in ["blog", "currentAffair", "studyNote", "freeResource", "faculty", "course"]
+    && defined(slug.current) && !(_id in path("drafts.**")) && ${IN_LOCALE}] {
+    _type,
+    "slug": slug.current,
+    _updatedAt,
+    "noIndex": coalesce(seo.noIndex, false)
+  }
+`);
+
+export interface SitemapMeta {
+  _type: "blog" | "currentAffair" | "studyNote" | "freeResource" | "faculty" | "course";
+  slug: string;
+  _updatedAt: string;
+  noIndex: boolean;
+}
+
+export async function getSitemapMeta(locale: Locale = DEFAULT_LOCALE): Promise<SitemapMeta[]> {
+  return (
+    (await sanityFetch<SitemapMeta[]>(sitemapMetaQuery, localeParams(locale), {
+      tags: [
+        SANITY_TAGS.blog,
+        SANITY_TAGS.currentAffairs,
+        SANITY_TAGS.studyNotes,
+        SANITY_TAGS.freeResources,
+        SANITY_TAGS.faculty,
+        SANITY_TAGS.courses,
+      ],
+    })) ?? []
+  );
+}
+
+/**
  * Every PYQ paper — about a thousand rows, small enough to send whole so the
  * portal can filter and search them without a round trip. Same projection as
  * the student app's query in `sanity/schemas/pyqPaper.ts`, minus what the web
