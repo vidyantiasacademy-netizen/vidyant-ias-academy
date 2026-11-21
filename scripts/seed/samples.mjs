@@ -5,8 +5,6 @@
  * House rules still apply (see the comments that used to sit in
  * `src/data/*`): no selection counts, student numbers, discounts or invented
  * dates. Concretely:
- *  - blog posts are evergreen method; the only figures are the examination's
- *    own marks scheme from the UPSC notice;
  *  - current-affairs analyses cover real, dated developments, each with an
  *    official source;
  *  - the announcement has no date or deadline, and points at a real route.
@@ -31,99 +29,8 @@ export const SEED_CATEGORIES = [
   { id: "category-science-technology", title: "Science & Technology", slug: "science-technology", order: 50 },
 ];
 
-export const SEED_POSTS = [
-  {
-    slug: "how-the-civil-services-examination-is-scored",
-    title: "How the Civil Services Examination is scored",
-    categories: ["category-strategy", "category-prelims"],
-    excerpt:
-      "Three stages, but only two of them decide your rank. Knowing which marks count — and which only have to clear a bar — changes how you divide your time.",
-    body: [
-      "Most aspirants can name the three stages of the examination. Fewer can say which marks actually decide the final list. That gap matters, because it is the difference between preparing for a cut-off and preparing for a rank.",
-      { h2: "Prelims: a screening test" },
-      "The Preliminary examination has two objective papers of 200 marks each. General Studies Paper I is the one that decides whether you move on. Paper II, the CSAT, is qualifying: you need 33 per cent, and beyond that it adds nothing.",
-      "Wrong answers carry a penalty of one-third of the marks for that question. And Prelims marks are not added to your final total at all. Their only job is to get you into Mains.",
-      { h2: "Mains: where the rank is built" },
-      "The Main examination has nine written papers. Two are qualifying: an Indian language paper and an English paper, 300 marks each. You must clear them, but they do not count towards merit.",
-      "The other seven count:",
-      {
-        bullets: [
-          "Essay — 250 marks",
-          "General Studies I to IV — 250 marks each",
-          "Optional subject, Paper I and Paper II — 250 marks each",
-        ],
-      },
-      "That is 1,750 marks of written work, and most of the final list is decided here.",
-      { h2: "The interview" },
-      "The Personality Test carries 275 marks. Added to Mains, the final merit list is out of 2,025.",
-      { h2: "What this means for your preparation" },
-      {
-        numbers: [
-          "Treat Prelims as a threshold to cross reliably, not a score to maximise. Accuracy beats attempting everything, because of the negative marking.",
-          "Do not neglect CSAT because it is 'only qualifying'. Failing a qualifying paper ends the attempt just as surely as failing GS.",
-          "Start writing early. Mains carries most of the merit marks, and writing well is a skill built over months, not in the gap after Prelims.",
-        ],
-      },
-      "The official notice for each year's examination is the final word on the scheme. Read it when it is published, before you build your plan around anything else.",
-    ],
-  },
-  {
-    slug: "read-the-syllabus-before-you-read-a-book",
-    title: "Read the syllabus before you read a book",
-    categories: ["category-strategy"],
-    excerpt:
-      "The syllabus is two pages long, and it is the most useful document in your preparation. Here is how to use it as a map rather than a list.",
-    body: [
-      "New aspirants usually start with a booklist. A better first step is the syllabus itself. It is short, it is official, and it tells you what the examination can ask — which also tells you what it cannot.",
-      { h2: "Read it as a set of questions" },
-      "Each line of the GS syllabus is a topic heading, but it is also a description of the questions that can come from it. When you read 'Separation of powers between various organs', imagine the Prelims statement and the Mains question that could follow. That habit turns reading into preparation.",
-      { h2: "Map it before you start" },
-      {
-        bullets: [
-          "Break each paper into its lines and give every line its own row in a notebook or spreadsheet.",
-          "Next to each line, note the source you will use — one standard source, not five.",
-          "Mark lines that overlap: Environment appears in Prelims and in GS III; Polity runs through Prelims, GS II and the Essay.",
-          "Leave a column for previous-year questions on that line. You will fill it as you go.",
-        ],
-      },
-      { h2: "Use it to decide what not to read" },
-      "Every aspirant reads too much. The syllabus is your filter: if a chapter does not connect to a line on the map, it can wait. That is not cutting corners — it is how a fixed number of months gets spent on what is examined.",
-      { h2: "Go back to it every month" },
-      "Coverage drifts. A monthly review against the map shows which lines you have revised, which you have only read once, and which you have not touched. It is the simplest progress report you will ever have, and it costs ten minutes.",
-      "Our free syllabus map on the Resources page is organised exactly this way, if you would rather start from a template.",
-    ],
-  },
-  {
-    slug: "mains-answer-writing-structure-before-speed",
-    title: "Mains answer writing: structure before speed",
-    categories: ["category-mains"],
-    excerpt:
-      "Speed is the problem everyone notices in the exam hall. Structure is the problem that causes it. Fix the second and the first gets easier.",
-    body: [
-      "Aspirants who run out of time in Mains rarely type or write slowly. They spend the first minutes of every answer deciding what the answer should look like. A fixed structure removes that decision.",
-      { h2: "Read what the question demands" },
-      "The directive word sets the shape. 'Discuss' wants several sides. 'Critically examine' wants a judgement at the end. 'Explain' wants causes and mechanism. Underline the directive and every part of the question before you write a word — a common reason for low marks is a good answer to a different question.",
-      { h2: "A structure you can repeat" },
-      {
-        numbers: [
-          "Introduction — one or two lines that define the term, give context, or state a fact that frames the issue.",
-          "Body — the demand of the question, in short paragraphs or points under clear sub-headings. Each point should earn its place.",
-          "Way forward or conclusion — balanced, specific, and connected to the question rather than a general statement about development.",
-        ],
-      },
-      { h2: "Make the body easy to evaluate" },
-      {
-        bullets: [
-          "Use sub-headings that mirror the parts of the question.",
-          "Add a simple diagram or flowchart where it says more than a paragraph would.",
-          "Quote a committee, a judgement, a report or a constitutional article where one genuinely fits — not as decoration.",
-        ],
-      },
-      { h2: "Then work on speed" },
-      "Once the structure is automatic, timed practice does the rest. Write against the clock, get the answer evaluated, and rewrite one answer each week using the feedback. Improvement in Mains comes from that loop, not from the number of answers written.",
-    ],
-  },
-];
+/** Blog posts are the academic team's articles in `./blog-posts.mjs`. */
+export const SEED_POSTS = [];
 
 export const SEED_CURRENT_AFFAIRS = [
   {
