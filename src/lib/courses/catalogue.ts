@@ -164,6 +164,12 @@ function toCourse(
       return slug && subject !== undefined ? [{ slug, subject }] : [];
     }),
     faqIds: COURSE_FAQ_IDS[record.category] ?? [],
+    card: {
+      tagline: content.card?.tagline?.trim() || null,
+      badge: content.card?.badge?.trim() || null,
+      format: content.card?.format?.trim() || null,
+      keyFact: content.card?.keyFact?.trim() || null,
+    },
     image: courseImage(record.slug, content, record.category),
     status: "published",
   };

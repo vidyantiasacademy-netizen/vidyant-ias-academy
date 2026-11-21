@@ -199,15 +199,13 @@ export const SEED_CURRENT_AFFAIRS = [
   },
 ];
 
-export const SEED_ANNOUNCEMENTS = [
-  {
-    id: "announcement-free-counselling",
-    title: "Free one-to-one counselling with the academic team",
-    body: "Not sure which program fits your stage? Book a call and leave with a plan for your attempt.",
-    tone: "info",
-    href: "/counselling",
-  },
-];
+/**
+ * Sample announcements — retired (2026-11-21). The strip's standing lines now
+ * carry the institute's real batch dates (`src/data/strip-notices.ts`); dated
+ * notices are written in the Studio. Kept as an empty list so the content
+ * seeder still runs.
+ */
+export const SEED_ANNOUNCEMENTS = [];
 
 /** UPSC subjects the sample faculty reference. `paper` drives the /faculty filters. */
 export const SEED_SUBJECTS = [

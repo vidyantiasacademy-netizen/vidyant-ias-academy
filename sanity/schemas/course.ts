@@ -23,6 +23,7 @@ export const course = defineType({
   groups: [
     { name: "overview", title: "Overview", default: true },
     { name: "programme", title: "Programme" },
+    { name: "card", title: "Programme card" },
     { name: "seo", title: "SEO" },
   ],
   fields: [
@@ -75,6 +76,41 @@ export const course = defineType({
           type: "string",
           title: "Alt text",
           validation: (rule) => rule.required(),
+        }),
+      ],
+    }),
+    defineField({
+      name: "card",
+      type: "object",
+      title: "Programme card",
+      group: "card",
+      description:
+        "Optional lines for the homepage programme card. Anything left blank falls back to the course's own data.",
+      fields: [
+        defineField({
+          name: "tagline",
+          type: "string",
+          description: "One short line under the title, e.g. “Stay Updated. Stay Ahead.”",
+          validation: (rule) => rule.max(70),
+        }),
+        defineField({
+          name: "badge",
+          type: "string",
+          description: "A short badge beside the title, e.g. “2027”. Leave blank for none.",
+          validation: (rule) => rule.max(12),
+        }),
+        defineField({
+          name: "format",
+          type: "string",
+          description:
+            "Replaces the delivery-mode pill, e.g. “GS Sectional + Full Length Tests”. Separate parts with “|”.",
+          validation: (rule) => rule.max(48),
+        }),
+        defineField({
+          name: "keyFact",
+          type: "string",
+          description: "The outlined pill, e.g. “Dec – Apr 2027”, “40 Tests”. Blank shows the module count.",
+          validation: (rule) => rule.max(24),
         }),
       ],
     }),

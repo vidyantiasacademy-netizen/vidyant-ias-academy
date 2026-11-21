@@ -76,11 +76,13 @@ export const CONTACT = {
     "https://www.google.com/maps/search/?api=1&query=Amit+Complex%2C+Tilak+Road%2C+Sadashiv+Peth%2C+Pune+411030",
 } as const;
 
+/**
+ * Official profiles (institute, 2026-11-21). LinkedIn returns here once the
+ * institute has a page — the icon set still supports it.
+ */
 export const SOCIAL_LINKS = [
-  // TODO(institute): replace with official handles.
-  { label: "Instagram", href: "https://instagram.com/", icon: "instagram" },
-  { label: "YouTube", href: "https://youtube.com/", icon: "youtube" },
-  { label: "LinkedIn", href: "https://linkedin.com/", icon: "linkedin" },
+  { label: "Instagram", href: "https://www.instagram.com/vidyant_ias_academy/", icon: "instagram" },
+  { label: "YouTube", href: "https://www.youtube.com/@vidyantiasacademy", icon: "youtube" },
 ] as const;
 
 export const ROUTES = {
@@ -193,16 +195,16 @@ export const APP: {
 
 /**
  * YouTube channel used by the homepage video block.
- * TODO(institute): replace the channel URL and add real video ids. An empty
- * `featuredVideoIds` renders a channel invitation instead of an empty embed.
+ * TODO(institute): add real video ids. An empty `featuredVideoIds` renders a
+ * channel invitation instead of an empty embed.
  */
 export const YOUTUBE: {
   channelUrl: string;
   handle: string;
   featuredVideoIds: string[];
 } = {
-  channelUrl: "https://youtube.com/",
-  handle: "@vidyantIAS",
+  channelUrl: "https://www.youtube.com/@vidyantiasacademy",
+  handle: "@vidyantiasacademy",
   featuredVideoIds: [],
 };
 
