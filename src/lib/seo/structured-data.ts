@@ -65,7 +65,7 @@ export function organizationSchema() {
     areaServed: { "@type": "City", name: CONTACT.addressLocality },
     address: {
       "@type": "PostalAddress",
-      streetAddress: CONTACT.addressLines[0],
+      streetAddress: CONTACT.streetAddress,
       addressLocality: CONTACT.addressLocality,
       addressRegion: CONTACT.addressRegion,
       postalCode: CONTACT.postalCode,

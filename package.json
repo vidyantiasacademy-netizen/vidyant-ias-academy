@@ -22,6 +22,7 @@
     "seed:notes:sanity": "sanity exec scripts/seed-notes-sanity.mjs --with-user-token --",
     "seed:pyq:sanity": "sanity exec scripts/seed-pyq-sanity.mjs --with-user-token --",
     "seed:answer-writing": "node scripts/seed-answer-writing-sample.mjs",
+    "seed:pyq-test": "node scripts/seed-pyq-test-sample.mjs",
     "answer-writing:sample-pdf": "node scripts/generate-answer-writing-sample.mjs",
     "migrate:utc-instants": "node scripts/migrate-utc-instants.mjs",
     "emulator:seed": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 node scripts/seed-emulator.mjs",

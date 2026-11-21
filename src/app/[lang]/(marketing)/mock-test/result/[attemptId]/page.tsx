@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils/cn";
 import { mockTestService } from "@/services/mock-tests/mock-test.service";
 
 export const metadata: Metadata = {
-  title: "Your mock test result",
+  title: "Your test result",
   robots: { index: false, follow: false },
 };
 
@@ -52,6 +52,7 @@ export default async function MockResultPage({
 
   const { result, paper } = view;
   const firstName = view.name.split(/\s+/)[0] ?? view.name;
+  const isPyq = paper.pyq !== null;
 
   const stats: [string, string][] = [
     ["Correct", String(result.correctCount)],
@@ -63,12 +64,14 @@ export default async function MockResultPage({
   return (
     <>
       <PageHero
-        eyebrow="Mock test result"
+        eyebrow={isPyq ? `PYQ test result · ${paper.pyq?.year}` : "Mock test result"}
         title={`Your result, ${firstName}.`}
         description={paper.title}
         breadcrumbs={[
           { label: "Home", href: ROUTES.home },
-          { label: "Free mock test", href: ROUTES.mockTest },
+          isPyq
+            ? { label: "PYQ test", href: ROUTES.pyqTest }
+            : { label: "Free mock test", href: ROUTES.mockTest },
           { label: "Result" },
         ]}
       />
@@ -290,7 +293,7 @@ function Private() {
       <div className="border border-line bg-white p-7 text-center sm:p-9">
         <h1 className="text-h3 font-bold">This result is private</h1>
         <p className="mt-3 text-body text-ink-secondary">
-          A mock test result opens only in the browser that took the test. Our counsellors also
+          A test result opens only in the browser that took the test. Our counsellors also
           have a copy — ask for it on a free counselling call.
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">

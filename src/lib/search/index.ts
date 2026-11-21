@@ -1,4 +1,3 @@
-import { QUIZ_STAGE_LABELS, latestQuizzes } from "@/data/quizzes";
 import { UPSC_GUIDES } from "@/data/upsc-guides";
 import { ROUTES } from "@/lib/constants/site";
 import { COURSE_CATEGORY_LABELS } from "@/lib/courses/labels";
@@ -13,7 +12,7 @@ export interface SearchDoc {
     | "FAQ"
     | "Article"
     | "Current Affairs"
-    | "Quiz"
+    | "Test"
     | "Guide";
   title: string;
   description: string;
@@ -83,16 +82,23 @@ export function buildSearchIndex({ courses, faculty, resources, faqs, posts, aff
         extra: resource.tracks,
       }),
     ),
-    ...latestQuizzes().map((quiz) =>
-      toDoc({
-        id: quiz.id,
-        type: "Quiz",
-        title: quiz.title,
-        description: quiz.description,
-        href: quiz.href ?? ROUTES.quizzes,
-        extra: [QUIZ_STAGE_LABELS[quiz.stage], quiz.subject],
-      }),
-    ),
+    // The papers themselves open and close in Firestore; the pages are fixed.
+    toDoc({
+      id: "pyq-test",
+      type: "Test",
+      title: "PYQ Test — UPSC previous-year papers",
+      description: "Sit an actual UPSC Prelims paper from a previous year, timed, and get your score and subject-wise analysis.",
+      href: ROUTES.pyqTest,
+      extra: ["pyq", "previous year questions", "prelims", "practice"],
+    }),
+    toDoc({
+      id: "mock-test",
+      type: "Test",
+      title: "Free UPSC Prelims mock test",
+      description: "A timed Prelims-pattern mock test with your score, rank and weakest subjects.",
+      href: ROUTES.mockTest,
+      extra: ["mock", "prelims", "test series"],
+    }),
     // Static, so read here rather than passed in like the CMS sources.
     ...UPSC_GUIDES.map((guide) =>
       toDoc({

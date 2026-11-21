@@ -68,10 +68,11 @@ const CARDS: {
     icon: NotebookPen,
   },
   {
-    title: "Practice Quizzes",
-    description: "Short questions with detailed explanations.",
-    href: ROUTES.quizzes,
+    title: "PYQ Test",
+    description: "Sit real previous-year papers, timed, and get your analysis.",
+    href: ROUTES.pyqTest,
     icon: ListChecks,
+    badge: "Free",
   },
   {
     title: "Faculty",

@@ -1,5 +1,5 @@
 import type { ExamQuestion } from "@/lib/exam/types";
-import type { MockResultDoc, TestKind } from "@/types/db";
+import type { MockResultDoc, TestKind, TestPyq } from "@/types/db";
 
 /**
  * What crosses from the mock test service into the visitor's browser.
@@ -21,7 +21,12 @@ export interface PublicPaper {
   negativeMarksPerQuestion: number;
   /** After this no new sitting may start. `null` for an always-open paper. */
   closesAt: string | null;
+  /** Set when the paper is a previous-year paper (a PYQ test), `null` for a mock. */
+  pyq: TestPyq | null;
 }
+
+/** The two lists of public papers: free mocks, and previous-year papers. */
+export type PublicSeries = "mock" | "pyq";
 
 /** The sitting before Begin: instructions only, the clock has not started. */
 export interface MockInstructions {

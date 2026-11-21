@@ -3,7 +3,8 @@
  * free resources that already exist in Sanity, so `/resources/<slug>` has
  * something to render.
  *
- * Touches only the `content` field. A resource whose content an editor has
+ * Touches only the `content` field — plus `title` and `description` from
+ * `RESOURCE_META` when `--replace` is passed. A resource whose content an editor has
  * already written is left alone unless `--replace` is passed; a resource that
  * does not exist yet is skipped (create it with `seed:content:sanity`).
  *
@@ -12,7 +13,7 @@
  *   npm run seed:resources:sanity -- --dry-run
  *   npm run seed:resources:sanity -- --replace --only pyq-strategy,study-planner
  */
-import { RESOURCE_CONTENT } from "./seed/resource-content.mjs";
+import { RESOURCE_CONTENT, RESOURCE_META } from "./seed/resource-content.mjs";
 import { blocks, sanityFlags, seedClient } from "./seed/sanity.mjs";
 
 const flags = sanityFlags();
@@ -49,7 +50,12 @@ for (const id of ids) {
 
   const content = blocks(RESOURCE_CONTENT[id]);
   console.log(`  ${flags.replace ? "set" : "set-if-missing"}  ${id}.content (${content.length} blocks)`);
-  transaction.patch(id, (patch) => (flags.replace ? patch.set({ content }) : patch.setIfMissing({ content })));
+  // Title and description only on --replace: an editor's own wording wins otherwise.
+  const meta = flags.replace ? (RESOURCE_META[id] ?? {}) : {};
+  if (meta.title) console.log(`                     ${id}.title = "${meta.title}"`);
+  transaction.patch(id, (patch) =>
+    flags.replace ? patch.set({ content, ...meta }) : patch.setIfMissing({ content }),
+  );
   queued += 1;
 }
 

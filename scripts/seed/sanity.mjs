@@ -57,12 +57,13 @@ export function blocks(body) {
 
   const block = (text, extra = {}) => {
     const index = out.length;
+    const markDefs = [];
     out.push({
       _type: "block",
       _key: `b${index}`,
       style: "normal",
-      markDefs: [],
-      children: spans(text, `b${index}s`),
+      markDefs,
+      children: spans(text, `b${index}s`, markDefs),
       ...extra,
     });
   };
@@ -79,10 +80,13 @@ export function blocks(body) {
   return out;
 }
 
-/** `**bold**` / `*italic*` → Portable Text spans with `strong` / `em` marks. */
-function spans(text, keyPrefix) {
+/**
+ * `**bold**` / `*italic*` / `[text](https://…)` → Portable Text spans with
+ * `strong` / `em` marks, or a `link` annotation recorded in `markDefs`.
+ */
+function spans(text, keyPrefix, markDefs = []) {
   const out = [];
-  const pattern = /\*\*(.+?)\*\*|\*(.+?)\*/g;
+  const pattern = /\*\*(.+?)\*\*|\*(.+?)\*|\[(.+?)\]\((https?:\/\/[^)\s]+)\)/g;
   let last = 0;
 
   const push = (value, marks) => {
@@ -91,7 +95,13 @@ function spans(text, keyPrefix) {
 
   for (const match of text.matchAll(pattern)) {
     push(text.slice(last, match.index), []);
-    push(match[1] ?? match[2], [match[1] ? "strong" : "em"]);
+    if (match[3]) {
+      const key = `${keyPrefix}l${markDefs.length}`;
+      markDefs.push({ _type: "link", _key: key, href: match[4] });
+      push(match[3], [key]);
+    } else {
+      push(match[1] ?? match[2], [match[1] ? "strong" : "em"]);
+    }
     last = match.index + match[0].length;
   }
   push(text.slice(last), []);

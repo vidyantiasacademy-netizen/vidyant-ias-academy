@@ -101,7 +101,9 @@ function Instructions({
       <div className="w-full max-w-2xl border-2 border-indigo bg-white">
         <div aria-hidden className="h-1.5 bg-kesar" />
         <div className="p-6 sm:p-9">
-          <p className="text-eyebrow font-semibold uppercase text-kesar-600">Free UPSC mock test</p>
+          <p className="text-eyebrow font-semibold uppercase text-kesar-600">
+            {paper.pyq ? `UPSC PYQ test · ${paper.pyq.year}` : "Free UPSC mock test"}
+          </p>
           <h1 className="mt-2 text-h2 font-bold text-indigo">{paper.title}</h1>
           <p className="mt-3 text-body text-ink-secondary">
             You&apos;re registered, {firstName}. Read this once, then begin when you&apos;re ready —

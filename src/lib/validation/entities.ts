@@ -122,6 +122,13 @@ export const testSchema = z.object({
   resultsVisibleFrom: utcInstant.nullable(),
   security: examSecuritySchema.nullable(),
   audience: z.enum(["enrolled", "public"]).optional(),
+  pyq: z
+    .object({
+      exam: z.string().trim().min(2).max(120),
+      year: z.number().int().min(1950).max(2100),
+    })
+    .nullable()
+    .optional(),
   status: z.enum(["draft", "published", "archived"]),
 });
 

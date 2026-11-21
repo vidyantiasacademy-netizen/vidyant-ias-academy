@@ -38,6 +38,14 @@ const testFieldsSchema = testSchema
     },
   );
 
+/**
+ * A previous-year tag only means something on a public paper: it decides which
+ * website list the paper appears on. On an enrolled paper it is dropped.
+ */
+function withPyqNormalised<Fields extends z.output<typeof testFieldsSchema>>(fields: Fields) {
+  return { ...fields, pyq: fields.audience === "public" ? (fields.pyq ?? null) : null };
+}
+
 async function lockReason(test: Test): Promise<string | null> {
   return paperLockReason(test, await testService.hasAttempts(test.id));
 }
@@ -59,7 +67,7 @@ export const createTestAction = action(
   testFieldsSchema,
   async (input) => {
     // Always a draft. Publishing is its own step, behind the checks below.
-    const test = await testService.createTest({ ...input, status: "draft" });
+    const test = await testService.createTest({ ...withPyqNormalised(input), status: "draft" });
     revalidatePaper();
     return { id: test.id };
   },
@@ -96,7 +104,7 @@ export const updateTestAction = action(
       }
     }
 
-    await testService.updateTest(testId, fields);
+    await testService.updateTest(testId, withPyqNormalised(fields));
     revalidatePaper(testId);
     return { id: testId };
   },

@@ -1,11 +1,4 @@
-import {
-  Building2,
-  ClipboardCheck,
-  GraduationCap,
-  Library,
-  MonitorPlay,
-  Route as RouteIcon,
-} from "lucide-react";
+import { Building2, ClipboardCheck, Library, MonitorPlay } from "lucide-react";
 
 import { FacultySection } from "@/components/home/FacultySection";
 import { PageHero } from "@/components/layout/PageHero";
@@ -18,62 +11,94 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { BRAND, CONTACT, ROUTES } from "@/lib/constants/site";
 import { pageMetadata, SEO_KEYWORDS } from "@/lib/seo/metadata";
 
-export const generateMetadata = () => pageMetadata({
-  title: "About Our UPSC Institute in Pune",
-  description:
-    "A UPSC institute in Pune built on one idea: learning, practice, evaluation and mentorship belong together. Our approach and how our programs work.",
-  path: ROUTES.about,
-  keywords: [...SEO_KEYWORDS.primary, "UPSC institute Pune philosophy"],
-});
+export const generateMetadata = () =>
+  pageMetadata({
+    title: "About Our UPSC Institute in Pune",
+    description:
+      "Vidyant IAS, Pune: experienced teaching, structured programmes, regular practice and personalised guidance for UPSC Civil Services preparation. Our philosophy, approach and commitment.",
+    path: ROUTES.about,
+    keywords: [...SEO_KEYWORDS.primary, "UPSC institute Pune philosophy"],
+  });
 
-const PHILOSOPHY = [
+/** The five principles behind "Right Knowledge. Right Direction. Every Step." */
+const PRINCIPLES = [
   {
     stage: "Learning",
+    title: "Understanding comes first",
     detail:
-      "Concept-first teaching against the syllabus, not against a textbook index. A topic is finished when you can use it, not when it has been covered.",
+      "We build conceptual foundations, connect subjects with current developments and encourage students to question and reason independently.",
   },
   {
     stage: "Practice",
+    title: "Knowledge must translate into performance",
     detail:
-      "Questions from the first week. Practice is what converts a lecture you understood into a mark you can score.",
+      "Regular tests, revision and answer-writing exercises develop accuracy in Prelims and clarity in Mains.",
   },
   {
     stage: "Evaluation",
+    title: "Every assessment should lead to insight",
     detail:
-      "Tests and written answers returned with specific feedback: what the question demanded, what you wrote, and the gap between them.",
+      "We examine mistakes and performance patterns, not just scores, to identify practical areas for improvement.",
   },
   {
     stage: "Mentorship",
+    title: "Guidance should recognise the individual",
     detail:
-      "One mentor who follows your preparation over months, reads your feedback trail and adjusts the plan with you.",
+      "We help aspirants set priorities suited to their preparation stage, strengths and constraints.",
   },
   {
     stage: "Improvement",
+    title: "Feedback must become action",
     detail:
-      "The cycle repeats with a sharper target each time. Progress is something we can point to, not something you have to feel.",
+      "Focused revision and timely changes turn assessment into measurable progress.",
   },
 ];
 
-const PROBLEMS = [
+/** The four essentials our work addresses. */
+const ESSENTIALS = [
   {
-    title: "Coverage without retention",
-    detail:
-      "The syllabus gets read, sometimes twice, but nothing tests whether it can be recalled under exam conditions.",
+    title: "Understanding beyond coverage",
+    detail: "Conceptual clarity, not just a syllabus that has been read.",
   },
   {
-    title: "Reading instead of writing",
-    detail:
-      "Mains rewards structured writing. Most preparation postpones writing until it is too late to improve it.",
+    title: "Applying knowledge in the exam",
+    detail: "Using what you know under real examination conditions.",
   },
   {
-    title: "Feedback that says nothing",
-    detail:
-      "A score on a test is not feedback. Without knowing why marks were lost, the next attempt repeats the mistake.",
+    title: "Assessment that corrects",
+    detail: "Using every test to find and fix mistakes.",
   },
   {
-    title: "Plans made in isolation",
+    title: "Clear, realistic priorities",
+    detail: "Knowing what to study next — and what can wait.",
+  },
+];
+
+const APPROACH = [
+  {
+    title: "Understand the starting point",
     detail:
-      "An aspirant deciding alone what to prioritise is making the hardest call in preparation with the least information.",
+      "Identify each student's preparation stage, strengths and immediate priorities.",
+  },
+  {
+    title: "Build concepts systematically",
+    detail:
+      "Teach core subjects in a syllabus-aligned sequence, with relevant current affairs connections.",
+  },
+  {
+    title: "Practise throughout preparation",
+    detail:
+      "Integrate tests, revision and answer writing into regular learning rather than leaving them until the end.",
+  },
+  {
+    title: "Use evaluation to improve",
+    detail:
+      "Provide subject-wise feedback that identifies recurring errors and guides the next steps.",
+  },
+  {
+    title: "Guide beyond the classroom",
+    detail:
+      "Support decisions on resources, time management, revision and examination strategy while encouraging independent study.",
   },
 ];
 
@@ -81,22 +106,26 @@ const INFRASTRUCTURE = [
   {
     icon: Building2,
     title: "Classrooms",
-    detail: "Teaching rooms sized so that questions can actually be asked and answered.",
+    detail:
+      "Teaching rooms sized so that questions can actually be asked and answered.",
   },
   {
     icon: Library,
     title: "Reading space",
-    detail: "A quiet study environment for aspirants who need somewhere to work consistently.",
+    detail:
+      "A quiet study environment for aspirants who need somewhere to work consistently.",
   },
   {
     icon: MonitorPlay,
     title: "Hybrid delivery",
-    detail: "Live online access and recordings where the program includes them.",
+    detail:
+      "Live online access and recordings where the program includes them.",
   },
   {
     icon: ClipboardCheck,
     title: "Test infrastructure",
-    detail: "Centre-based and online testing with evaluation and discussion built in.",
+    detail:
+      "Centre-based and online testing with evaluation and discussion built in.",
   },
 ];
 
@@ -104,101 +133,134 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        eyebrow="About vidyantIAS"
-        title="A better way to prepare for UPSC."
-        description={BRAND.description}
+        eyebrow="About Vidyant IAS"
+        title="A stronger foundation. A more purposeful preparation."
+        description="At Vidyant IAS, we believe effective Civil Services preparation begins with understanding. Based in Pune, we combine experienced teaching, structured programmes, regular practice and personalised guidance to help aspirants prepare with clarity and confidence."
         breadcrumbs={[{ label: "Home", href: ROUTES.home }, { label: "About" }]}
       />
 
-      <Section id="philosophy" containerSize="wide">
+      <Section containerSize="default">
+        <p className="text-h4 font-semibold text-indigo text-balance">
+          Our focus extends beyond syllabus completion. We help students connect
+          ideas, think critically and apply their knowledge in Prelims and
+          Mains.
+        </p>
+      </Section>
+
+      <Section id="philosophy" tone="paper" containerSize="wide">
         <SectionHeader
           eyebrow="Our Philosophy"
-          title="Learning → Practice → Evaluation → Mentorship → Improvement"
-          description="These are not five services sold separately. They are one loop, and preparation breaks wherever the loop is cut."
+          title="Right Knowledge. Right Direction. Every Step."
+          description="In an age of information overload, we focus on providing aspirants with the right knowledge, grounded in conceptual clarity and examination relevance. Through structured learning, regular practice, meaningful evaluation and personalised mentorship, we give their preparation the right direction and guide them at every stage of their UPSC journey."
         />
 
-        <ol className="mt-12 grid gap-8 sm:grid-cols-2 lg:mt-14 lg:grid-cols-5 lg:gap-x-6">
-          {PHILOSOPHY.map((item, index) => (
+        <p className="mt-10 text-eyebrow font-semibold uppercase text-kesar-600">
+          Five core principles shape this philosophy
+        </p>
+        <ol className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-x-6">
+          {PRINCIPLES.map((item, index) => (
             <li key={item.stage}>
               <div className="h-full border-t-2 border-indigo pt-5">
                 <span className="text-h3 font-bold tabular-nums text-indigo">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-3 text-h4 font-bold">{item.stage}</h3>
-                <p className="mt-2.5 text-small text-ink-secondary">{item.detail}</p>
+                <p className="mt-1 text-small font-semibold text-kesar-700">
+                  {item.title}
+                </p>
+                <p className="mt-2.5 text-small text-ink-secondary">
+                  {item.detail}
+                </p>
               </div>
             </li>
           ))}
         </ol>
       </Section>
 
-      <Section tone="paper" containerSize="wide">
+      <Section containerSize="wide">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
             <SectionHeader
+              layout="stack"
               eyebrow="Why We Exist"
-              title="Unstructured preparation is the most common reason attempts are wasted."
-              description="Aspirants rarely fail for lack of effort. They lose years to preparation that has no feedback loop — and by the time the pattern is visible, an attempt is gone."
+              title="Because hard work deserves the right direction."
+              description="UPSC preparation can become overwhelming: a vast syllabus, too many resources and limited feedback often leave even committed aspirants uncertain about what to prioritise."
             />
-            <ButtonLink href={ROUTES.counselling} variant="primary" className="mt-8">
+            <p className="mt-5 text-body text-ink-secondary">
+              Vidyant IAS exists to make that effort more effective. We provide
+              clear teaching, purposeful practice and guidance that helps
+              students recognise what needs attention.
+            </p>
+            <ButtonLink
+              href={ROUTES.counselling}
+              variant="primary"
+              className="mt-8"
+            >
               Talk to an Academic Counsellor
             </ButtonLink>
           </div>
 
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {PROBLEMS.map((problem) => (
-              <li key={problem.title}>
-                <Card className="h-full">
-                  <h3 className="text-h4 font-bold">{problem.title}</h3>
-                  <p className="mt-2.5 text-small text-ink-secondary">{problem.detail}</p>
-                </Card>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <p className="text-eyebrow font-semibold uppercase text-kesar-600">
+              Our work addresses four essentials
+            </p>
+            <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+              {ESSENTIALS.map((item) => (
+                <li key={item.title}>
+                  <Card tone="paper" className="h-full">
+                    <h3 className="text-h4 font-bold">{item.title}</h3>
+                    <p className="mt-2.5 text-small text-ink-secondary">
+                      {item.detail}
+                    </p>
+                  </Card>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </Section>
 
-      <Section containerSize="wide">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div>
-            <SectionHeader
-              eyebrow="Our Approach"
-              title="Preparation is personal. The system should be too."
-              description="Two aspirants with the same syllabus need different sequences — one works full time, one has cleared Prelims twice, one is still choosing an optional."
-            />
-            <ul className="mt-8 space-y-4">
-              <li className="flex gap-3">
-                <RouteIcon aria-hidden className="mt-0.5 size-5 shrink-0 text-kesar-600" />
-                <span className="text-body text-ink">
-                  <span className="font-semibold text-indigo">A mapped starting point.</span>{" "}
-                  Counselling establishes where you actually are before a program is
-                  recommended.
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <ClipboardCheck aria-hidden className="mt-0.5 size-5 shrink-0 text-kesar-600" />
-                <span className="text-body text-ink">
-                  <span className="font-semibold text-indigo">A tested plan.</span> Weekly
-                  targets tied to the test calendar, so the plan is checked against evidence.
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <GraduationCap aria-hidden className="mt-0.5 size-5 shrink-0 text-kesar-600" />
-                <span className="text-body text-ink">
-                  <span className="font-semibold text-indigo">Faculty who evaluate.</span> The
-                  people teaching a subject also read the answers written in it.
-                </span>
-              </li>
-            </ul>
-          </div>
+      <Section id="approach" tone="paper" containerSize="wide">
+        <SectionHeader
+          eyebrow="Our Approach"
+          title="Structured in method. Personal in guidance."
+          description="Every aspirant follows the same examination syllabus, but not the same learning journey. Our approach combines a consistent academic framework with support tailored to individual needs."
+        />
 
-          <PlaceholderVisual
-            imageKey="classroom"
-            tone="paper"
-            label="Centre photography coming soon"
-            className="aspect-4/3 w-full"
-          />
-        </div>
+        <ol className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
+          {APPROACH.map((step, index) => (
+            <li key={step.title}>
+              <Card className="h-full">
+                <span className="text-small font-bold tabular-nums text-kesar-600">
+                  Step {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-3 text-h4 font-bold">{step.title}</h3>
+                <p className="mt-2.5 text-small text-ink-secondary">
+                  {step.detail}
+                </p>
+              </Card>
+            </li>
+          ))}
+        </ol>
+      </Section>
+
+      <Section tone="indigo" containerSize="default">
+        <SectionHeader
+          tone="light"
+          layout="stack"
+          eyebrow="Our Commitment"
+          title="Teaching with integrity. Guiding with purpose."
+          description="We are committed to responsible teaching, constructive evaluation and meaningful faculty–student engagement. Students should feel comfortable asking questions, recognising mistakes and improving through consistent effort."
+        />
+        <p className="mt-6 text-body text-white/80">
+          There are no shortcuts to the Civil Services Examination. Our
+          responsibility is to provide the academic foundation and considered
+          guidance that help aspirants prepare independently and with
+          confidence.
+        </p>
+        <p className="mt-10 text-eyebrow font-semibold uppercase tracking-widest text-kesar">
+          Vidyant IAS · Right Knowledge. Right Direction. Every Step.
+        </p>
       </Section>
 
       <FacultySection />
@@ -221,8 +283,16 @@ export default function AboutPage() {
             tone="paper"
             className="aspect-4/3 w-full sm:col-span-2 lg:col-span-1 lg:row-span-2 lg:aspect-auto"
           />
-          <PlaceholderVisual imageKey="library" tone="paper" className="aspect-4/3 w-full lg:aspect-video" />
-          <PlaceholderVisual imageKey="selfStudy" tone="paper" className="aspect-4/3 w-full lg:aspect-video" />
+          <PlaceholderVisual
+            imageKey="library"
+            tone="paper"
+            className="aspect-4/3 w-full lg:aspect-video"
+          />
+          <PlaceholderVisual
+            imageKey="selfStudy"
+            tone="paper"
+            className="aspect-4/3 w-full lg:aspect-video"
+          />
         </div>
 
         <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:mt-5 lg:grid-cols-4 lg:gap-5">
@@ -238,11 +308,6 @@ export default function AboutPage() {
             </li>
           ))}
         </ul>
-
-        <p className="mt-8 text-small text-ink-muted">
-          Address and visiting hours:{" "}
-          {CONTACT.addressLines.join(", ")}.
-        </p>
       </Section>
 
       <CTASection
