@@ -146,7 +146,7 @@ export function ExploreCards({ headingId = "explore-heading" }: { headingId?: st
                       {title}
                     </span>
                     {badge ? (
-                      <span className="rounded-full bg-kesar px-2.5 py-1 text-eyebrow font-bold uppercase leading-none tracking-wider text-white">
+                      <span className="rounded-full bg-kesar px-2.5 py-1 text-eyebrow font-bold uppercase leading-none tracking-wider text-indigo-900">
                         {badge}
                       </span>
                     ) : null}

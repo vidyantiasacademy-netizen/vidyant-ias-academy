@@ -5,7 +5,7 @@ import { LOCALE_META, LOCALES } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/server";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { BRAND, SITE_URL } from "@/lib/constants/site";
-import { SEO_KEYWORDS, localizedAlternates } from "@/lib/seo/metadata";
+import { SEO_KEYWORDS } from "@/lib/seo/metadata";
 
 import "../globals.css";
 
@@ -54,8 +54,6 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getLocale();
-
   return {
     metadataBase: new URL(SITE_URL),
     title: {
@@ -68,12 +66,11 @@ export async function generateMetadata(): Promise<Metadata> {
     authors: [{ name: BRAND.name, url: SITE_URL }],
     creator: BRAND.name,
     publisher: BRAND.name,
-    alternates: localizedAlternates("/", locale),
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: { index: true, follow: true, "max-image-preview": "large" },
-    },
+    // No canonical or index/follow here: every indexable page sets its own via
+    // `pageMetadata`, and a layout-level default leaked onto the 404 page as a
+    // canonical to the homepage plus an `index, follow` that contradicted the
+    // `noindex` Next.js injects for 404s.
+    robots: { googleBot: { "max-image-preview": "large" } },
     formatDetection: { telephone: true, address: false, email: false },
   };
 }

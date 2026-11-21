@@ -259,7 +259,7 @@ function ProgramCard({ course }: { course: Course }) {
           {course.title}
         </TrackedLink>
         {course.card.badge ? (
-          <span className="ml-2 inline-block translate-y-[-0.12em] rounded-md bg-kesar px-2 py-0.5 align-middle font-sans text-[0.8125rem] leading-snug font-bold text-white tabular-nums sm:text-small">
+          <span className="ml-2 inline-block translate-y-[-0.12em] rounded-md bg-kesar px-2 py-0.5 align-middle font-sans text-[0.8125rem] leading-snug font-bold text-indigo-900 tabular-nums sm:text-small">
             {course.card.badge}
           </span>
         ) : null}

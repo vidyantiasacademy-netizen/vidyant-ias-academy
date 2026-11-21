@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import {
   DEFAULT_LOCALE,
-  LOCALES,
   LOCALE_META,
   localizeHref,
   type Locale,
@@ -55,17 +54,36 @@ export function clampDescription(text: string, max = DESCRIPTION_MAX) {
 }
 
 /**
+ * Locales whose pages carry translated content and may be indexed.
+ *
+ * The `/hi` routes currently translate only the interface (header, footer,
+ * labels); titles, descriptions and bodies are English. Indexing them would
+ * hand Google a duplicate of every English page labelled `hi-IN`, so until
+ * the content is translated they are `noindex, follow`, out of the sitemap and
+ * out of `hreflang`. Add `"hi"` here once Hindi content ships.
+ */
+export const INDEXED_LOCALES: readonly Locale[] = [DEFAULT_LOCALE];
+
+export function isIndexedLocale(locale: Locale) {
+  return INDEXED_LOCALES.includes(locale);
+}
+
+/**
  * Canonical plus `hreflang` alternates for a locale-free `path`. Each language
  * version is its own canonical, and `x-default` points at the English page.
+ * `hreflang` lists only indexed locales, and is left out entirely while there
+ * is just one.
  */
 export function localizedAlternates(path: string, locale: Locale): Metadata["alternates"] {
   const absolute = (target: Locale) =>
     new URL(localizeHref(path, target), SITE_URL).toString();
 
+  if (INDEXED_LOCALES.length < 2) return { canonical: absolute(locale) };
+
   return {
     canonical: absolute(locale),
     languages: {
-      ...Object.fromEntries(LOCALES.map((l) => [LOCALE_META[l].htmlLang, absolute(l)])),
+      ...Object.fromEntries(INDEXED_LOCALES.map((l) => [LOCALE_META[l].htmlLang, absolute(l)])),
       "x-default": absolute(DEFAULT_LOCALE),
     },
   };
@@ -96,7 +114,13 @@ export async function pageMetadata({
     description: snippet,
     keywords,
     alternates,
-    robots: noIndex ? { index: false, follow: false } : undefined,
+    // Indexable pages leave `robots` unset so they inherit the layout's
+    // `max-image-preview`; an explicit `undefined` would override it.
+    ...(noIndex
+      ? { robots: { index: false, follow: false } }
+      : isIndexedLocale(locale)
+        ? {}
+        : { robots: { index: false, follow: true } }),
     openGraph: {
       ...(type === "article"
         ? {
@@ -107,7 +131,7 @@ export async function pageMetadata({
         : { type: "website" as const }),
       siteName: BRAND.name,
       locale: LOCALE_META[locale].ogLocale,
-      alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => LOCALE_META[l].ogLocale),
+      alternateLocale: INDEXED_LOCALES.filter((l) => l !== locale).map((l) => LOCALE_META[l].ogLocale),
       title,
       description: snippet,
       url,

@@ -138,6 +138,7 @@ function toCourse(
   return {
     id: record.id,
     slug: record.slug,
+    sanitySlug: content.slug,
     category: record.category,
     title: content.title,
     shortDescription: content.summary ?? "",

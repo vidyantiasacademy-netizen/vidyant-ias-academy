@@ -17,6 +17,8 @@ export const generateMetadata = () => pageMetadata({
   description:
     "vidyantIAS publishes only verified UPSC results — the candidate, the stage cleared and the year — with the student's consent. No estimated or aggregated selection counts.",
   path: ROUTES.results,
+  // An empty state is thin content; index the page once something is published.
+  noIndex: publishedResults.length === 0,
 });
 
 export default function ResultsPage() {

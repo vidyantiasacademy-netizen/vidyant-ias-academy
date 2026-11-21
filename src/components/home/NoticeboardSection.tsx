@@ -5,6 +5,7 @@ import Link from "@/i18n/Link";
 import { Section } from "@/components/layout/Section";
 import { SectionArt } from "@/components/ui/SectionArt";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { stripNotices } from "@/data/strip-notices";
 import { getLocale } from "@/i18n/server";
 import { ROUTES } from "@/lib/constants/site";
 import { getSiteAnnouncements, getSiteCurrentAffairs, getSitePosts } from "@/lib/content/site";
@@ -107,7 +108,8 @@ export async function NoticeboardSection() {
     getSiteCurrentAffairs(locale, 1),
     getSitePosts(locale, 3),
   ]);
-  const notice = announcements[0];
+  // Same lines as the notification strip, so the two never disagree.
+  const notices = stripNotices(announcements);
   const affair = affairs[0];
   const [post, ...morePosts] = posts;
 
@@ -132,8 +134,31 @@ export async function NoticeboardSection() {
           href={ROUTES.events}
           linkLabel="View all announcements"
         >
-          {notice ? (
-            <Entry date={notice.startsAt} title={notice.title} detail={notice.body} />
+          {notices.length > 0 ? (
+            <ul className="space-y-5">
+              {notices.map((item, i) => (
+                <li key={item.id} className={cn(i > 0 && "border-t border-line pt-5")}>
+                  <h4 className="text-h4 font-bold leading-snug text-indigo">
+                    {item.href ? (
+                      <Link href={item.href} className="underline-offset-4 hover:text-kesar-600 hover:underline">
+                        {item.text}
+                      </Link>
+                    ) : (
+                      item.text
+                    )}
+                  </h4>
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      className="mt-2 inline-flex items-center gap-1 text-small font-bold text-kesar-600 underline-offset-4 hover:underline"
+                    >
+                      {item.linkLabel ?? "Details"}
+                      <ArrowRight aria-hidden className="size-4" />
+                    </Link>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
           ) : (
             <Entry
               title="All quiet right now."
