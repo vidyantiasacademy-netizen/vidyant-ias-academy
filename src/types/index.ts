@@ -45,6 +45,15 @@ export interface Course {
   /** Who teaches it. `subject` is enough for a card; the course page resolves full profiles by slug. */
   faculty: { slug: string; subject: string }[];
   faqIds: string[];
+  /** Optional homepage-card lines from Sanity; the card falls back to the fields above. */
+  card: {
+    tagline: string | null;
+    badge: string | null;
+    /** Replaces the delivery-mode pill. Parts separated by "|". */
+    format: string | null;
+    /** The outlined pill, e.g. "40 Tests". Falls back to the module count. */
+    keyFact: string | null;
+  };
   /** Card photo: the Sanity hero image, or a stock stand-in for the stage until one is uploaded. */
   image: { src: string; alt: string; lqip?: string };
   status: ContentStatus;

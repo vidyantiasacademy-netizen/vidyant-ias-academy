@@ -96,6 +96,13 @@ export interface CourseContent {
   slug: string;
   summary: string | null;
   heroImage: SanityImage | null;
+  /** Optional homepage-card lines; blanks fall back to the course data. */
+  card: {
+    tagline: string | null;
+    badge: string | null;
+    format: string | null;
+    keyFact: string | null;
+  } | null;
   highlights: string[];
   audience: string[];
   outcomes: string[];

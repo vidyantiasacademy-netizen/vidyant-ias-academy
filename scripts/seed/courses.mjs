@@ -467,7 +467,6 @@ export const SEED_COURSES = [
       "highlights": [
         "Prelims sectional tests",
         "Current affairs tests",
-        "CSAT tests",
         "Full-length mocks",
         "Detailed solutions",
         "Performance analysis"
@@ -488,7 +487,6 @@ export const SEED_COURSES = [
           "topics": [
             "Subject-wise sectional tests",
             "Current affairs tests",
-            "CSAT tests",
             "Full-length mocks"
           ]
         },
@@ -503,7 +501,7 @@ export const SEED_COURSES = [
       ],
       "durationNote": null,
       "schedule": "Published test calendar per cycle",
-      "tests": "Sectional, current affairs, CSAT and full-length Prelims tests on a published calendar, each with detailed solutions and post-test analysis.",
+      "tests": "Sectional, current affairs and full-length Prelims tests on a published calendar, each with detailed solutions and post-test analysis.",
       "mentorship": "Post-test analysis sessions; personal mentorship where the enrolled program includes it.",
       "studyMaterial": [
         "Solution booklets",

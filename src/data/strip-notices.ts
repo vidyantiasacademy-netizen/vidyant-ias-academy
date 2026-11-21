@@ -1,4 +1,4 @@
-import { CTA, EXAM_CYCLE, ROUTES } from "@/lib/constants/site";
+import { ROUTES } from "@/lib/constants/site";
 import type { Announcement } from "@/types";
 
 /**
@@ -23,44 +23,29 @@ export interface StripNotice {
 const MAX_NOTICES = 6;
 
 /**
- * The standing lines, shown when there is no dated notice to lead with.
+ * The standing lines, shown after any dated notice from the Studio.
  *
- * House rules, same as the hero banners: every line must be verifiable today.
- * No selection counts, no student numbers, no discounts, no invented dates or
- * deadlines. Each line repeats a claim the site already makes elsewhere, and
+ * The batch dates below were given by the institute (2026-11-21). House rules
+ * still apply: no selection counts, no student numbers, no discounts, and
  * every `href` is a real route.
  *
- * TODO(institute): edit as campaigns change. The strip adapts to any count,
- * and hides itself when the list is empty.
+ * TODO(institute): edit as batches start. The strip adapts to any count, and
+ * hides itself when the list is empty.
  */
 const STANDING_STRIP_NOTICES: StripNotice[] = [
   {
-    id: "admissions",
+    id: "prelims-test-series-2027",
     tone: "success",
-    text: `${EXAM_CYCLE.admissionNote} for ${EXAM_CYCLE.label} — Foundation to Mains`,
-    href: CTA.enrol.href,
-    linkLabel: "Enroll now",
+    text: "UPSC Prelims Test Series 2027 — Starting 3 January 2027",
+    href: `${ROUTES.courses}/upsc-prelims-test-series`,
+    linkLabel: "View details",
   },
   {
-    id: "demo",
-    tone: "info",
-    text: "Sit in on a live concept class, free of charge",
-    href: CTA.demo.href,
-    linkLabel: "Book a seat",
-  },
-  {
-    id: "counselling",
-    tone: "info",
-    text: "Free one-to-one counselling with the academic team",
-    href: CTA.counselling.href,
-    linkLabel: "Talk to us",
-  },
-  {
-    id: "resources",
-    tone: "info",
-    text: "UPSC syllabus map, booklist and PYQ guide — free",
-    href: ROUTES.resources,
-    linkLabel: "Read now",
+    id: "current-affairs-revision-2027",
+    tone: "success",
+    text: "Current Affairs Revision Classes for Prelims 2027 — Starting 20 December 2026",
+    href: `${ROUTES.courses}/current-affairs-prelims-2027`,
+    linkLabel: "View details",
   },
 ];
 

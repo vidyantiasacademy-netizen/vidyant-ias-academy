@@ -5,12 +5,16 @@ import {
   BarChart3,
   BookOpen,
   Calculator,
+  CalendarCheck,
+  CalendarDays,
   ClipboardCheck,
   FileCheck2,
   History,
   Layers,
   Lightbulb,
+  Link2,
   ListChecks,
+  MessageSquareText,
   MonitorPlay,
   Newspaper,
   PenLine,
@@ -18,6 +22,8 @@ import {
   Sparkles,
   Target,
   Timer,
+  TrendingUp,
+  UserRoundCheck,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -26,7 +32,6 @@ import { useId, useRef, useState, type KeyboardEvent } from "react";
 import { BuyCourseButton } from "@/components/checkout/BuyCourseButton";
 import { TrackedButtonLink, TrackedLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
-import { EXAM_CYCLE } from "@/lib/constants/site";
 import { COURSE_CATEGORY_LABELS } from "@/lib/courses/labels";
 import { STAGE_CATEGORIES, usePrepStage } from "@/lib/prep-stage";
 import { cn } from "@/lib/utils/cn";
@@ -135,8 +140,9 @@ export function ProgramsCatalogue({
             // Phones stack the cards inside the page gutter; a sideways row
             // left the first card flush with the screen edge.
             "mt-6 grid gap-4 sm:mt-7 sm:grid-cols-2 sm:gap-5 xl:gap-6",
-            // Three across only when there are three to show; two cards stay wide.
-            shown.length >= 3 && "xl:grid-cols-3",
+            // Two across up to four cards (a 2×2 reads better than 3+1);
+            // three across only once there are five or more, or exactly three.
+            (shown.length === 3 || shown.length >= 5) && "xl:grid-cols-3",
           )}
         >
           {shown.map((course) => (
@@ -169,20 +175,28 @@ const MODE_SHORT: Record<string, string> = {
 
 /** Most specific first: "CSAT tests" is about CSAT before it is about tests. */
 const HIGHLIGHT_ICONS: [RegExp, LucideIcon][] = [
+  [/coverage/, Layers],
+  [/linkage/, Link2],
+  [/monthly|revision/, CalendarCheck],
+  [/study plan|personalised|personalized/, UserRoundCheck],
+  [/progress|tracking/, TrendingUp],
+  [/doubt/, MessageSquareText],
+  [/pattern/, Target],
   [/current affairs/, Newspaper],
   [/csat/, Calculator],
   [/pyq|previous/, History],
   [/mentor|one-to-one/, Users],
   [/analysis|performance/, BarChart3],
-  [/solution|discussion|doubt/, Lightbulb],
+  [/solution|explanation|discussion/, Lightbulb],
   [/evaluat|feedback/, FileCheck2],
   [/writing|essay/, PenLine],
   [/ethics/, Scale],
   [/full-length|mock/, Timer],
   [/sectional/, ListChecks],
   [/test/, ClipboardCheck],
-  [/prelims/, Target],
-  [/gs|syllabus|revision|foundation/, BookOpen],
+  [/mains/, PenLine],
+  [/prelims/, BarChart3],
+  [/gs|syllabus|foundation|core/, BookOpen],
 ];
 
 /** Spares, so three highlights never share an icon. */
@@ -209,11 +223,18 @@ function highlightIcons(labels: string[]): LucideIcon[] {
  */
 function ProgramCard({ course }: { course: Course }) {
   const href = `/courses/${course.slug}`;
-  const modes = course.mode.map((mode) => MODE_SHORT[mode] ?? mode);
+  // Sanity's card lines win; the course data fills anything left blank.
+  const modes = course.card.format
+    ? course.card.format.split("|").map((part) => part.trim()).filter(Boolean)
+    : course.mode.map((mode) => MODE_SHORT[mode] ?? mode);
   const modules = course.curriculum.length;
+  const keyFact =
+    course.card.keyFact ?? (modules > 0 ? `${modules} ${modules === 1 ? "module" : "modules"}` : null);
+  // A date span or "every step" reads as time; a count reads as a stack.
+  const KeyFactIcon = keyFact && /\b(19|20)\d{2}\b|step|month|week/i.test(keyFact) ? CalendarDays : Layers;
   const highlights = course.features.slice(0, 3);
   const icons = highlightIcons(highlights);
-  const tagline = TAGLINES[course.category];
+  const tagline = course.card.tagline ?? TAGLINES[course.category];
 
   return (
     <article className="group/card relative flex h-full flex-col rounded-[1.25rem] bg-paper p-5 text-ink shadow-soft ring-1 ring-white/10 transition-shadow duration-200 hover:shadow-soft-hover sm:p-6">
@@ -224,7 +245,7 @@ function ProgramCard({ course }: { course: Course }) {
         </p>
         <p className="flex shrink-0 items-center gap-2 text-eyebrow font-bold tracking-[0.1em] text-indigo uppercase sm:tracking-[0.14em]">
           <span aria-hidden className="h-3.5 w-1 rounded-full bg-kesar" />
-          {EXAM_CYCLE.label}
+          UPSC CSE
         </p>
       </div>
 
@@ -237,6 +258,11 @@ function ProgramCard({ course }: { course: Course }) {
         >
           {course.title}
         </TrackedLink>
+        {course.card.badge ? (
+          <span className="ml-2 inline-block translate-y-[-0.12em] rounded-md bg-kesar px-2 py-0.5 align-middle font-sans text-[0.8125rem] leading-snug font-bold text-white tabular-nums sm:text-small">
+            {course.card.badge}
+          </span>
+        ) : null}
       </h3>
       <p className="mt-2 font-display text-body text-ink-secondary italic">{tagline}</p>
 
@@ -255,10 +281,10 @@ function ProgramCard({ course }: { course: Course }) {
             ))}
           </p>
         ) : null}
-        {modules > 0 ? (
-          <p className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-[0.8125rem] font-semibold text-indigo ring-1 ring-kesar/60">
-            <Layers aria-hidden className="size-4 shrink-0 text-kesar-500" strokeWidth={1.75} />
-            {modules} {modules === 1 ? "module" : "modules"}
+        {keyFact ? (
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-[0.8125rem] font-semibold whitespace-nowrap text-indigo ring-1 ring-kesar/60">
+            <KeyFactIcon aria-hidden className="size-4 shrink-0 text-kesar-500" strokeWidth={1.75} />
+            {keyFact}
           </p>
         ) : null}
       </div>
