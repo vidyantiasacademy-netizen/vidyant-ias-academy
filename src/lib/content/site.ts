@@ -69,8 +69,11 @@ export async function getSiteResources(locale: Locale = DEFAULT_LOCALE): Promise
   }));
 }
 
-export async function getSitePosts(locale: Locale = DEFAULT_LOCALE): Promise<BlogPost[]> {
-  const posts = await getLatestBlogs(50, locale);
+export async function getSitePosts(
+  locale: Locale = DEFAULT_LOCALE,
+  limit = 50,
+): Promise<BlogPost[]> {
+  const posts = await getLatestBlogs(limit, locale);
 
   return posts.map((post) => ({
     id: post._id,

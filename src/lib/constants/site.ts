@@ -133,6 +133,21 @@ export const PRIMARY_NAV = [
   { key: "contact", label: "Contact", id: "contact", href: "/#contact", onPhone: false },
 ] as const;
 
+/**
+ * Desktop header bar: the homepage sections plus two page links, About and
+ * Blog. Section items carry an `id` (scroll-tracked marker); page items do
+ * not and are marked by pathname instead. The phone drawer keeps sections and
+ * pages in separate lists (`PRIMARY_NAV`, `MOBILE_NAV`).
+ */
+export const DESKTOP_NAV: ReadonlyArray<
+  (typeof PRIMARY_NAV)[number] | { key: "about" | "blog"; label: string; href: string }
+> = [
+  { key: "about", label: "About", href: ROUTES.about },
+  ...PRIMARY_NAV.filter((item) => item.key !== "faq" && item.key !== "contact"),
+  { key: "blog", label: "Blog", href: ROUTES.blog },
+  ...PRIMARY_NAV.filter((item) => item.key === "faq" || item.key === "contact"),
+];
+
 /** Mobile drawer: page links, listed under the homepage sections. */
 export const MOBILE_NAV = [
   { key: "about", label: "About", href: ROUTES.about },
@@ -144,6 +159,7 @@ export const MOBILE_NAV = [
   { key: "pyqTest", label: "Free PYQ Test", href: ROUTES.pyqTest },
   { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
   { key: "notes", label: "Notes", href: ROUTES.notes },
+  { key: "blog", label: "Blog", href: ROUTES.blog },
   { key: "resources", label: "Resources", href: ROUTES.resources },
   { key: "upscGuide", label: "UPSC Exam Guide", href: ROUTES.upscGuide },
   { key: "parents", label: "For Parents", href: ROUTES.parents },
