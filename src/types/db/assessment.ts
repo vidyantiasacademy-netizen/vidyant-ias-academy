@@ -40,6 +40,12 @@ export interface ExamSecurityPolicy {
  */
 export type TestAudience = "enrolled" | "public";
 
+/** Which previous-year paper a public PYQ test reproduces. */
+export interface TestPyq {
+  exam: string;
+  year: number;
+}
+
 /**
  * One question on a Mains paper, as the evaluator marks it. The question itself
  * is printed in the paper's PDF; this is only what marking needs.
@@ -74,6 +80,13 @@ export interface TestDoc {
   security: ExamSecurityPolicy | null;
   /** Missing means `enrolled`. */
   audience?: TestAudience;
+  /**
+   * Set on a `public` paper that reproduces an actual previous-year paper,
+   * e.g. `{ exam: "UPSC CSE Prelims GS I", year: 2023 }`. Such a paper is
+   * listed on the PYQ test page instead of the free mock test page; it is sat,
+   * scored and analysed by the same engine. Missing or `null` means a mock.
+   */
+  pyq?: TestPyq | null;
   /**
    * Mains papers only: media reference of the PDF students download, write on
    * and upload back. Lives under `tests/{testId}/paper/` — see `MEDIA_PATHS`.
@@ -335,8 +348,13 @@ export interface MockAttemptDoc {
   /** The CRM record created at registration — the reason this paper exists. */
   enquiryId: string;
   name: string;
-  /** 10 digits, normalised by `phoneField`. One sitting per number per paper. */
+  /** 10 digits, normalised by `phoneField`. A contact detail, not verified. */
   phone: string;
+  /**
+   * The Google-verified address the visitor signed in with, lower-cased. One
+   * sitting per address per paper. `null` on sittings registered before
+   * Google verification existed.
+   */
   email: string | null;
   targetAttempt: string | null;
   accessTokenHash: string;

@@ -7,6 +7,10 @@ import { cn } from "@/lib/utils/cn";
 export const buttonStyles = cva(
   [
     "inline-flex cursor-pointer items-center justify-center gap-2 rounded-[0.375rem] font-bold tracking-[-0.005em]",
+    // Heights are fixed, so a label must never wrap — it would spill out of
+    // the box. In a flex row the button keeps its width and the text beside
+    // it gives way instead.
+    "whitespace-nowrap shrink-0",
     "transition-[background-color,border-color,color] duration-150 ease-[var(--ease-brand)]",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
     "disabled:pointer-events-none disabled:opacity-55",

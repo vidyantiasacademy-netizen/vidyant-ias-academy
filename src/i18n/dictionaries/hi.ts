@@ -37,8 +37,7 @@ export const hi: Dictionary = {
     currentAffairs: "करंट अफ़ेयर्स",
     notes: "नोट्स",
     enrol: "प्रवेश और बैच",
-    quizzes: "क्विज़",
-    practiceQuizzes: "अभ्यास क्विज़",
+    pyqTest: "निःशुल्क PYQ टेस्ट",
     mockTest: "निःशुल्क मॉक टेस्ट",
     upscGuide: "UPSC परीक्षा गाइड",
     parents: "अभिभावकों के लिए",
@@ -72,7 +71,7 @@ export const hi: Dictionary = {
     rights: "सर्वाधिकार सुरक्षित।",
     openingHours: [
       { days: "सोमवार – शनिवार", hours: "सुबह 9:00 – रात 8:00" },
-      { days: "रविवार", hours: "सुबह 10:00 – शाम 4:00" },
+      { days: "रविवार", hours: "बंद" },
     ],
   },
   language: {

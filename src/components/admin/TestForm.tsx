@@ -38,6 +38,15 @@ const KIND_LABELS = {
 
 type McqKind = keyof typeof KIND_LABELS;
 
+/** Where the paper is offered: the portal, the free mock list, or the PYQ list. */
+type Listing = "enrolled" | "mock" | "pyq";
+
+const LISTING_HINTS: Record<Listing, string | undefined> = {
+  enrolled: undefined,
+  mock: "Listed at /mock-test. Visitors leave a name and number — each becomes a lead with their score — and sit it without fullscreen or invigilation.",
+  pyq: "Listed at /pyq-test. Add the actual questions of that year's paper. Visitors register the same way as for a mock, and get the same score, rank and subject analysis.",
+};
+
 const BOOLEAN_RULES: { key: keyof ExamSecurityPolicy; label: string }[] = [
   { key: "requireFullscreen", label: "Require fullscreen" },
   { key: "shuffleQuestions", label: "Shuffle question order per student" },
@@ -72,7 +81,12 @@ export function TestForm({
     test && test.kind !== "mains-descriptive" ? test.kind : "prelims-mcq",
   );
   const [subject, setSubject] = useState(test?.subject ?? "");
-  const [audience, setAudience] = useState<TestAudience>(test?.audience ?? "enrolled");
+  const [listing, setListing] = useState<Listing>(
+    test?.audience !== "public" ? "enrolled" : test.pyq ? "pyq" : "mock",
+  );
+  const audience: TestAudience = listing === "enrolled" ? "enrolled" : "public";
+  const [pyqExam, setPyqExam] = useState(test?.pyq?.exam ?? "UPSC CSE Prelims GS Paper I");
+  const [pyqYear, setPyqYear] = useState(String(test?.pyq?.year ?? ""));
   const [questionCount, setQuestionCount] = useState(String(test?.questionCount ?? 100));
   const [totalMarks, setTotalMarks] = useState(String(test?.totalMarks ?? 200));
   const [durationMinutes, setDurationMinutes] = useState(String(test?.durationMinutes ?? 120));
@@ -109,6 +123,7 @@ export function TestForm({
       resultsVisibleFrom: istInputToIso(resultsFrom),
       security: customSecurity ? security : null,
       audience,
+      pyq: listing === "pyq" ? { exam: pyqExam.trim(), year: Number(pyqYear) } : null,
     };
 
     startTransition(async () => {
@@ -195,23 +210,53 @@ export function TestForm({
           id="audience"
           label="Who can sit it"
           required
-          hint={
-            audience === "public"
-              ? "Listed at /mock-test. Visitors leave a name and number — each becomes a lead with their score — and sit it without fullscreen or invigilation."
-              : undefined
-          }
+          hint={LISTING_HINTS[listing]}
           className="sm:col-span-2"
         >
           <Select
             id="audience"
-            value={audience}
-            onChange={(event) => setAudience(event.target.value as TestAudience)}
+            value={listing}
+            onChange={(event) => setListing(event.target.value as Listing)}
             disabled={locked}
           >
             <option value="enrolled">Enrolled students only</option>
-            <option value="public">Anyone on the website — free mock test</option>
+            <option value="mock">Anyone on the website — free mock test</option>
+            <option value="pyq">Anyone on the website — PYQ test (previous-year paper)</option>
           </Select>
         </Field>
+
+        {listing === "pyq" ? (
+          <>
+            <Field
+              id="pyqExam"
+              label="Previous-year paper"
+              required
+              hint="As visitors should see it, e.g. UPSC CSE Prelims GS Paper I."
+              // Zod's flattened errors stop at the top-level key.
+              error={errorFor(errors, "pyq")}
+            >
+              <Input
+                id="pyqExam"
+                value={pyqExam}
+                onChange={(event) => setPyqExam(event.target.value)}
+                required
+              />
+            </Field>
+            <Field id="pyqYear" label="Year" required>
+              <Input
+                id="pyqYear"
+                type="number"
+                inputMode="numeric"
+                min={1950}
+                max={2100}
+                value={pyqYear}
+                onChange={(event) => setPyqYear(event.target.value)}
+                placeholder="2024"
+                required
+              />
+            </Field>
+          </>
+        ) : null}
 
         <Field
           id="subject"

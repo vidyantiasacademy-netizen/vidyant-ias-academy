@@ -53,6 +53,15 @@ const AUTH_MESSAGES: Record<string, { code: ErrorCode; message: string }> = {
     code: ERROR_CODES.CONFIG_ERROR,
     message: "This sign-in method is not enabled yet.",
   },
+  // Google verification popup (the free mock and PYQ tests).
+  "auth/popup-blocked": {
+    code: ERROR_CODES.VALIDATION_ERROR,
+    message: "Your browser blocked the Google window. Allow pop-ups for this site and try again.",
+  },
+  "auth/cancelled-popup-request": {
+    code: ERROR_CODES.VALIDATION_ERROR,
+    message: "Sign-in was cancelled.",
+  },
   "auth/network-request-failed": {
     code: ERROR_CODES.INTERNAL_ERROR,
     message: "Network problem. Check your connection and try again.",

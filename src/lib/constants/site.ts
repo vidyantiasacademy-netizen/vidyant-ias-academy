@@ -42,29 +42,38 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.vidyantias.com";
 
 export const CONTACT = {
-  // TODO(institute): replace with the verified centre address.
-  addressLines: ["vidyantIAS Study Centre", "Pune", "Maharashtra 411001"],
+  /** As the institute gave it (2026-11-21). Joined with ", " wherever it is printed. */
+  addressLines: [
+    "Second Floor, Amit Complex, Tilak Road",
+    "Opposite New English School, Near Navgraha Mandir",
+    "Pantancha Gate, Sadashiv Peth",
+    "Pune, Maharashtra 411030",
+  ],
+  /** The street part alone, for structured data. */
+  streetAddress:
+    "Second Floor, Amit Complex, Tilak Road, Opposite New English School, Near Navgraha Mandir, Pantancha Gate, Sadashiv Peth",
   addressLocality: "Pune",
   addressRegion: "Maharashtra",
-  postalCode: "411001",
+  postalCode: "411030",
   country: "IN",
-  // TODO(institute): replace with the verified phone number (E.164 for tel:).
-  phoneDisplay: "+91 00000 00000",
-  phoneHref: "+910000000000",
-  // TODO(institute): replace with the verified WhatsApp business number.
-  whatsappNumber: "910000000000",
+  phoneDisplay: "+91 73978 23816",
+  /** E.164, for `tel:` links. */
+  phoneHref: "+917397823816",
+  /** Country code and number, no `+`, for `wa.me` links. */
+  whatsappNumber: "917397823816",
   whatsappMessage:
     "Hi vidyantIAS, I would like to know more about your UPSC programs.",
-  // TODO(institute): replace with the official mailbox.
   email: "admissions@vidyantias.com",
   openingHours: [
     { days: "Monday – Saturday", hours: "9:00 am – 8:00 pm" },
-    { days: "Sunday", hours: "10:00 am – 4:00 pm" },
+    // "Closed" has no times, so structured data leaves Sunday out — which is how
+    // schema.org says a day is closed.
+    { days: "Sunday", hours: "Closed" },
   ],
-  /** TODO(institute): replace with the Google Business Profile place embed. */
-  mapsEmbedQuery: "vidyantIAS Pune",
+  /** TODO(institute): swap for the Google Business Profile place embed once it exists. */
+  mapsEmbedQuery: "Amit Complex, Tilak Road, Sadashiv Peth, Pune 411030",
   mapsDirectionsUrl:
-    "https://www.google.com/maps/search/?api=1&query=vidyantIAS+Pune",
+    "https://www.google.com/maps/search/?api=1&query=Amit+Complex%2C+Tilak+Road%2C+Sadashiv+Peth%2C+Pune+411030",
 } as const;
 
 export const SOCIAL_LINKS = [
@@ -84,7 +93,7 @@ export const ROUTES = {
   resources: "/resources",
   currentAffairs: "/current-affairs",
   notes: "/notes",
-  quizzes: "/quizzes",
+  pyqTest: "/pyq-test",
   upscGuide: "/upsc-guide",
   mockTest: "/mock-test",
   parents: "/parents",
@@ -130,7 +139,7 @@ export const MOBILE_NAV = [
   { key: "faculty", label: "Faculty", href: ROUTES.faculty },
   { key: "results", label: "Results", href: ROUTES.results },
   { key: "mockTest", label: "Free Mock Test", href: ROUTES.mockTest },
-  { key: "quizzes", label: "Quizzes", href: ROUTES.quizzes },
+  { key: "pyqTest", label: "Free PYQ Test", href: ROUTES.pyqTest },
   { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
   { key: "notes", label: "Notes", href: ROUTES.notes },
   { key: "resources", label: "Resources", href: ROUTES.resources },
@@ -203,16 +212,13 @@ export const FOOTER_NAV = {
     { key: "courses", label: "Courses", href: ROUTES.courses },
     { key: "enrol", label: "Admissions & Batches", href: ROUTES.enrol },
     { key: "faculty", label: "Faculty", href: ROUTES.faculty },
-    { key: "results", label: "Results", href: ROUTES.results },
-    { key: "testimonials", label: "Testimonials", href: ROUTES.testimonials },
-    { key: "parents", label: "For Parents", href: ROUTES.parents },
   ],
   resources: [
     { key: "mockTest", label: "Free Mock Test", href: ROUTES.mockTest },
     { key: "upscGuide", label: "UPSC Exam Guide", href: ROUTES.upscGuide },
     { key: "currentAffairs", label: "Current Affairs", href: ROUTES.currentAffairs },
     { key: "notes", label: "Notes", href: ROUTES.notes },
-    { key: "practiceQuizzes", label: "Practice Quizzes", href: ROUTES.quizzes },
+    { key: "pyqTest", label: "Free PYQ Test", href: ROUTES.pyqTest },
     { key: "blog", label: "Blog", href: ROUTES.blog },
     { key: "starterKit", label: "UPSC Starter Kit", href: `${ROUTES.resources}#upsc-starter-kit` },
     { key: "pyqStrategy", label: "PYQ Strategy", href: `${ROUTES.resources}#pyq-strategy` },

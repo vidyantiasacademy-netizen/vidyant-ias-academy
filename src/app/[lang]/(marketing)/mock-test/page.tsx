@@ -56,7 +56,7 @@ const FAQS = [
     id: "mock-free",
     question: "Is the mock test really free?",
     answer:
-      "Yes. There is no payment and no account to create — just your name and mobile number, so your result stays yours.",
+      "Yes. There is no payment and no account to create — just your name, your mobile number and a one-click Google sign-in, so your result stays yours.",
   },
   {
     id: "mock-calls",
@@ -68,7 +68,7 @@ const FAQS = [
     id: "mock-retake",
     question: "Can I take the same paper twice?",
     answer:
-      "No — one attempt per mobile number per paper, so the rank list compares people, not retries. New papers are added regularly.",
+      "No — one attempt per Google account per paper, so the rank list compares people, not retries. New papers are added regularly.",
   },
   {
     id: "mock-device",

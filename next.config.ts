@@ -26,6 +26,13 @@ const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
 const sanityProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 
 const nextConfig: NextConfig = {
+  // The free practice quizzes became PYQ tests; keep old links and indexed URLs working.
+  redirects() {
+    return [
+      { source: "/quizzes", destination: "/pyq-test", permanent: true },
+      { source: "/hi/quizzes", destination: "/hi/pyq-test", permanent: true },
+    ];
+  },
   // The note-PDF route reads the watermark from disk at request time; file
   // tracing cannot see a path built at runtime, so ship it explicitly.
   outputFileTracingIncludes: {

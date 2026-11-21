@@ -34,8 +34,7 @@ const PILLARS = [
  * copy:
  *
  * - exam pill (kesar rule + calendar),
- * - serif headline whose last words, "Right Direction.", are italic kesar
- *   with a pen-stroke swoosh underneath,
+ * - serif headline whose last words, "Right Direction.", are italic kesar,
  * - one line of promise,
  * - "Explore Courses" (kesar) + "Book a Free Demo Class" (outline),
  * - five pillars of the programme, divided by hairlines.
@@ -62,21 +61,7 @@ export function HomeHero() {
 
           <h1 className="reveal mt-6 font-display text-[2.375rem] font-bold leading-[1.08] tracking-[-0.015em] text-indigo md:text-[3.25rem] xl:text-[4rem] short:text-[3rem]">
             Your UPSC Preparation Deserves the{" "}
-            <span className="relative inline-block whitespace-nowrap pb-[0.12em] italic text-kesar-500">
-              Right Direction.
-              {/* Pen-stroke swoosh: thin at the start, swelling to the right. */}
-              <svg
-                aria-hidden
-                viewBox="0 0 300 18"
-                preserveAspectRatio="none"
-                className="absolute -bottom-[0.06em] right-0 h-[0.3em] w-[80%] text-kesar"
-              >
-                <path
-                  d="M2 15 C 70 4, 180 0, 298 7 C 190 5, 90 9, 2 15 Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </span>
+            <span className="whitespace-nowrap italic text-kesar-500">Right Direction.</span>
           </h1>
 
           <p className="reveal mt-5 max-w-[50ch] text-body text-ink-secondary md:text-body-lg">

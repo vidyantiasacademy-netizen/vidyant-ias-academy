@@ -226,26 +226,3 @@ export interface Announcement {
   /** ISO datetime it stops showing. Null keeps it up until it is removed. */
   endsAt?: string | null;
 }
-
-export type QuizStage = "prelims" | "mains" | "csat" | "current-affairs";
-
-export interface Quiz {
-  id: string;
-  slug: string;
-  title: string;
-  stage: QuizStage;
-  /** Syllabus area, e.g. "Polity" or "Modern History". */
-  subject: string;
-  description: string;
-  questionCount: number;
-  durationMinutes: number;
-  /** ISO date the quiz opens. */
-  publishedAt: string;
-  /**
-   * Where the attempt happens — an in-app path, or the institute's own form.
-   * Null while a quiz is announced but not yet open, so the card can say so
-   * instead of linking nowhere.
-   */
-  href?: string | null;
-  status: ContentStatus;
-}

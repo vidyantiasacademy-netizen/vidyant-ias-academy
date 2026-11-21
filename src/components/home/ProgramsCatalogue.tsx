@@ -1,12 +1,32 @@
 "use client";
 
-import { ArrowRight, Clock, MonitorPlay } from "lucide-react";
-import Image from "next/image";
+import {
+  ArrowRight,
+  BarChart3,
+  BookOpen,
+  Calculator,
+  ClipboardCheck,
+  FileCheck2,
+  History,
+  Layers,
+  Lightbulb,
+  ListChecks,
+  MonitorPlay,
+  Newspaper,
+  PenLine,
+  Scale,
+  Sparkles,
+  Target,
+  Timer,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 
 import { BuyCourseButton } from "@/components/checkout/BuyCourseButton";
 import { TrackedButtonLink, TrackedLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { EXAM_CYCLE } from "@/lib/constants/site";
 import { COURSE_CATEGORY_LABELS } from "@/lib/courses/labels";
 import { STAGE_CATEGORIES, usePrepStage } from "@/lib/prep-stage";
 import { cn } from "@/lib/utils/cn";
@@ -17,14 +37,11 @@ const CATEGORY_ORDER: CourseCategory[] = ["foundation", "prelims", "mains", "opt
 
 type Tab = "all" | CourseCategory;
 
-/** "6 months" fits the meta line; the long fallback note belongs on the course page. */
-const isShortDuration = (duration: string) => duration.length <= 12;
-
 /**
- * The homepage programme shelf: category tabs over a grid of poster cards.
- * The poster says what the programme is at a glance; the card under it
- * carries the name, how it is taught, and the two ways forward — read the
- * details, or enrol. Phones get the same cards as a swipeable row.
+ * The homepage programme shelf: category tabs over a grid of typographic
+ * programme cards — name, how it is taught, three highlights, and the two
+ * ways forward: read the details, or enrol. Phones get the same cards in a
+ * single column.
  */
 export function ProgramsCatalogue({
   courses,
@@ -115,16 +132,16 @@ export function ProgramsCatalogue({
       >
         <ul
           className={cn(
-            "mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [scrollbar-width:none]",
-            "-mx-5 px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4",
+            // Phones stack the cards inside the page gutter; a sideways row
+            // left the first card flush with the screen edge.
+            "mt-6 grid gap-4 sm:mt-7 sm:grid-cols-2 sm:gap-5 xl:gap-6",
+            // Three across only when there are three to show; two cards stay wide.
+            shown.length >= 3 && "xl:grid-cols-3",
           )}
         >
-          {shown.map((course, index) => (
-            <li
-              key={course.id}
-              className="w-[72%] shrink-0 snap-start sm:w-auto"
-            >
-              <ProgramCard course={course} priority={index < 3} />
+          {shown.map((course) => (
+            <li key={course.id}>
+              <ProgramCard course={course} />
             </li>
           ))}
         </ul>
@@ -133,89 +150,161 @@ export function ProgramsCatalogue({
   );
 }
 
-function ProgramCard({ course, priority }: { course: Course; priority: boolean }) {
+/** One line in the card's own voice, per stage. Course copy can override it later. */
+const TAGLINES: Record<CourseCategory, string> = {
+  foundation: "Build a strong foundation.",
+  prelims: "Revise smart. Attempt with confidence.",
+  mains: "Write better. Get evaluated.",
+  optional: "Depth in the subject you chose.",
+  "test-series": "Practise with precision. Learn from every test.",
+};
+
+/** Short labels for the mode pill; the full ones live on the course page. */
+const MODE_SHORT: Record<string, string> = {
+  "Classroom (Pune)": "Classroom",
+  "Live online": "Live online",
+  "Recorded access": "Recorded",
+  "Hybrid (classroom + online)": "Hybrid",
+};
+
+/** Most specific first: "CSAT tests" is about CSAT before it is about tests. */
+const HIGHLIGHT_ICONS: [RegExp, LucideIcon][] = [
+  [/current affairs/, Newspaper],
+  [/csat/, Calculator],
+  [/pyq|previous/, History],
+  [/mentor|one-to-one/, Users],
+  [/analysis|performance/, BarChart3],
+  [/solution|discussion|doubt/, Lightbulb],
+  [/evaluat|feedback/, FileCheck2],
+  [/writing|essay/, PenLine],
+  [/ethics/, Scale],
+  [/full-length|mock/, Timer],
+  [/sectional/, ListChecks],
+  [/test/, ClipboardCheck],
+  [/prelims/, Target],
+  [/gs|syllabus|revision|foundation/, BookOpen],
+];
+
+/** Spares, so three highlights never share an icon. */
+const SPARE_ICONS: LucideIcon[] = [Target, Layers, Sparkles, BookOpen];
+
+/** Icons for a card's highlights, by what each is about, with no repeats. */
+function highlightIcons(labels: string[]): LucideIcon[] {
+  const used = new Set<LucideIcon>();
+
+  return labels.map((label) => {
+    const text = label.toLowerCase();
+    const match = HIGHLIGHT_ICONS.find(([pattern, icon]) => pattern.test(text) && !used.has(icon))?.[1];
+    const icon = match ?? SPARE_ICONS.find((spare) => !used.has(spare)) ?? Sparkles;
+    used.add(icon);
+    return icon;
+  });
+}
+
+/**
+ * A programme as a typographic card: what it is, how it is taught, what it
+ * centres on, and the two ways forward. Every figure on it comes from the
+ * course record — modes, module count, highlights — never a made-up date or
+ * test count.
+ */
+function ProgramCard({ course }: { course: Course }) {
   const href = `/courses/${course.slug}`;
-  const mode = course.mode.join(" · ");
-  const duration = isShortDuration(course.duration) ? course.duration : null;
+  const modes = course.mode.map((mode) => MODE_SHORT[mode] ?? mode);
+  const modules = course.curriculum.length;
+  const highlights = course.features.slice(0, 3);
+  const icons = highlightIcons(highlights);
+  const tagline = TAGLINES[course.category];
 
   return (
-    <article className="group/card flex h-full flex-col overflow-hidden rounded-[1.25rem] bg-white p-3 text-ink shadow-soft transition-shadow duration-200 hover:shadow-soft-hover">
-      {/* The poster repeats the title, so it is a duplicate link kept out of the tab order. */}
-      <TrackedLink
-        href={href}
-        event={ANALYTICS_EVENTS.courseView}
-        payload={{ course: course.id, location: "programs-poster" }}
-        tabIndex={-1}
-        aria-hidden
-        className="relative block aspect-3/2 overflow-hidden rounded-[0.875rem] bg-paper"
-      >
-        <Image
-          src={course.image.src}
-          alt=""
-          fill
-          priority={priority}
-          sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, 72vw"
-          placeholder={course.image.lqip ? "blur" : "empty"}
-          blurDataURL={course.image.lqip}
-          className="object-cover transition-transform duration-300 ease-[var(--ease-brand)] group-hover/card:scale-[1.03]"
-        />
-      </TrackedLink>
-
-      <div className="flex flex-1 flex-col px-2 pt-4 pb-1">
-        <p className="w-fit rounded-full bg-kesar-100 px-3 py-1 text-[0.8125rem] font-bold text-kesar-700">
+    <article className="group/card relative flex h-full flex-col rounded-[1.25rem] bg-paper p-5 text-ink shadow-soft ring-1 ring-white/10 transition-shadow duration-200 hover:shadow-soft-hover sm:p-6">
+      {/* Category on the left, the exam it prepares for on the right. */}
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-eyebrow font-bold uppercase text-kesar-600">
           {COURSE_CATEGORY_LABELS[course.category]}
         </p>
-        <h3 className="mt-3 flex gap-2.5 font-display text-h4 leading-tight font-bold text-indigo">
-          <span aria-hidden className="mt-1 h-5 w-1 shrink-0 rounded-full bg-kesar" />
-          <TrackedLink
-            href={href}
-            event={ANALYTICS_EVENTS.courseView}
-            payload={{ course: course.id, location: "programs-card" }}
-            className="underline-offset-4 hover:underline"
-          >
-            {course.title}
-          </TrackedLink>
-        </h3>
+        <p className="flex shrink-0 items-center gap-2 text-eyebrow font-bold tracking-[0.1em] text-indigo uppercase sm:tracking-[0.14em]">
+          <span aria-hidden className="h-3.5 w-1 rounded-full bg-kesar" />
+          {EXAM_CYCLE.label}
+        </p>
+      </div>
 
-        {mode || duration ? (
-          <ul className="mt-3 space-y-1.5 text-small text-ink-secondary">
-            {mode ? (
-              <li className="flex items-start gap-2">
-                <MonitorPlay aria-hidden className="mt-0.5 size-4 shrink-0 text-kesar-500" strokeWidth={1.75} />
+      <h3 className="mt-3 font-display text-h4 leading-[1.15] font-bold text-indigo text-balance sm:mt-4 sm:text-h3 sm:leading-[1.1]">
+        <TrackedLink
+          href={href}
+          event={ANALYTICS_EVENTS.courseView}
+          payload={{ course: course.id, location: "programs-card" }}
+          className="underline-offset-4 outline-none after:absolute after:inset-0 after:rounded-[1.25rem] hover:underline focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-[var(--focus-ring)]"
+        >
+          {course.title}
+        </TrackedLink>
+      </h3>
+      <p className="mt-2 font-display text-body text-ink-secondary italic">{tagline}</p>
+
+      {/* How it is taught, and how much of it there is. */}
+      <div className="mt-4 flex flex-wrap items-center gap-2 sm:mt-5">
+        {modes.length > 0 ? (
+          <p className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-indigo px-3 py-1.5 text-[0.8125rem] font-semibold whitespace-nowrap text-white min-[400px]:gap-2 min-[400px]:px-3.5">
+            {/* Dropped on the narrowest phones, so three modes still fit on one line. */}
+            <MonitorPlay aria-hidden className="size-4 shrink-0 text-kesar max-[399px]:hidden" strokeWidth={1.75} />
+            <span className="sr-only">Taught: </span>
+            {modes.map((mode, index) => (
+              <span key={mode} className="flex items-center gap-1.5 min-[400px]:gap-2">
+                {index > 0 ? <span aria-hidden className="h-3 w-px bg-white/35" /> : null}
                 {mode}
-              </li>
-            ) : null}
-            {duration ? (
-              <li className="flex items-start gap-2">
-                <Clock aria-hidden className="mt-0.5 size-4 shrink-0 text-kesar-500" strokeWidth={1.75} />
-                {duration}
-              </li>
-            ) : null}
-          </ul>
+              </span>
+            ))}
+          </p>
         ) : null}
+        {modules > 0 ? (
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-[0.8125rem] font-semibold text-indigo ring-1 ring-kesar/60">
+            <Layers aria-hidden className="size-4 shrink-0 text-kesar-500" strokeWidth={1.75} />
+            {modules} {modules === 1 ? "module" : "modules"}
+          </p>
+        ) : null}
+      </div>
 
-        <div aria-hidden className="min-h-5 flex-1" />
-        <div className="flex items-center justify-between gap-3 border-t border-line pt-4">
-          <TrackedButtonLink
-            href={href}
-            event={ANALYTICS_EVENTS.courseCtaClick}
-            payload={{ course: course.id, location: "programs-card" }}
-            size="sm"
-            className="rounded-full px-5 hover:bg-kesar hover:text-indigo-900"
-          >
-            View details
-            <ArrowRight aria-hidden className="size-4" />
-          </TrackedButtonLink>
-          <BuyCourseButton
-            course={course}
-            location="home-programs"
-            variant="link"
-            size="sm"
-            className="px-0"
-          >
-            Enrol now
-          </BuyCourseButton>
-        </div>
+      {highlights.length > 0 ? (
+        <ul
+          aria-label="Highlights"
+          className="mt-5 grid grid-cols-3 divide-x divide-line border-y border-line py-4 sm:mt-6"
+        >
+          {highlights.map((highlight, index) => {
+            const Icon = icons[index] ?? Sparkles;
+            return (
+              <li key={highlight} className="flex flex-col items-center gap-2 px-1.5 text-center sm:px-2">
+                <Icon aria-hidden className="size-6 text-kesar-500" strokeWidth={1.6} />
+                <span className="text-[0.8125rem] leading-snug font-semibold text-indigo">
+                  {highlight}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+
+      <div aria-hidden className="min-h-5 flex-1" />
+
+      {/* Above the card-wide link, so both stay clickable. */}
+      <div className="relative z-10 grid grid-cols-2 gap-2.5">
+        <TrackedButtonLink
+          href={href}
+          event={ANALYTICS_EVENTS.courseCtaClick}
+          payload={{ course: course.id, location: "programs-card" }}
+          size="sm"
+          className="rounded-full px-4"
+        >
+          View details
+          <ArrowRight aria-hidden className="size-4 transition-transform duration-150 group-hover/card:translate-x-0.5" />
+        </TrackedButtonLink>
+        <BuyCourseButton
+          course={course}
+          location="home-programs"
+          variant="kesar"
+          size="sm"
+          className="rounded-full px-4"
+        >
+          Enrol now
+        </BuyCourseButton>
       </div>
     </article>
   );

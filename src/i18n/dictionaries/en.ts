@@ -37,8 +37,7 @@ export const en = {
     currentAffairs: "Current Affairs",
     notes: "Notes",
     enrol: "Admissions & Batches",
-    quizzes: "Quizzes",
-    practiceQuizzes: "Practice Quizzes",
+    pyqTest: "Free PYQ Test",
     mockTest: "Free Mock Test",
     upscGuide: "UPSC Exam Guide",
     parents: "For Parents",
@@ -72,7 +71,7 @@ export const en = {
     rights: "All rights reserved.",
     openingHours: [
       { days: "Monday – Saturday", hours: "9:00 am – 8:00 pm" },
-      { days: "Sunday", hours: "10:00 am – 4:00 pm" },
+      { days: "Sunday", hours: "Closed" },
     ],
   },
   language: {

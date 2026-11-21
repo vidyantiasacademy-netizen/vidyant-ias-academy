@@ -58,7 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: ROUTES.resources, priority: 0.7, changeFrequency: "weekly" },
     { path: ROUTES.currentAffairs, priority: 0.7, changeFrequency: "daily" },
     { path: ROUTES.notes, priority: 0.8, changeFrequency: "weekly" },
-    { path: ROUTES.quizzes, priority: 0.7, changeFrequency: "weekly" },
+    { path: ROUTES.pyqTest, priority: 0.7, changeFrequency: "weekly" },
     { path: ROUTES.mockTest, priority: 0.9, changeFrequency: "weekly" },
     { path: ROUTES.upscGuide, priority: 0.8, changeFrequency: "monthly" },
     ...UPSC_GUIDES.map((guide) => ({

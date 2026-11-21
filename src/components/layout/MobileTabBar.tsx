@@ -32,7 +32,7 @@ const TABS: Tab[] = [
     label: "Learn",
     href: ROUTES.resources,
     icon: BookOpen,
-    match: [ROUTES.currentAffairs, ROUTES.quizzes, ROUTES.mockTest, ROUTES.upscGuide],
+    match: [ROUTES.currentAffairs, ROUTES.pyqTest, ROUTES.mockTest, ROUTES.upscGuide],
   },
   { label: "Profile", href: ROUTES.login, icon: UserRound, match: ["/dashboard"] },
 ];

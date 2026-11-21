@@ -1,7 +1,4 @@
-import type { ReactNode } from "react";
-
 import { Container } from "@/components/ui/Container";
-import { GeoCorners, GeoTriad } from "@/components/ui/Geometry";
 import { TrackedButtonLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CTA } from "@/lib/constants/site";
@@ -13,32 +10,15 @@ interface CTASectionProps {
   /** Where the CTA appears — recorded with the analytics event. */
   location: string;
   className?: string;
-  /** Decorative scene beside the copy from lg, beneath it on smaller screens. */
-  illustration?: ReactNode;
 }
 
-/** Full-width closing call to action used at the end of every major page. */
-export function CTASection({
-  title,
-  description,
-  location,
-  className,
-  illustration,
-}: CTASectionProps) {
+/** Full-width closing call to action used at the end of every major page.
+    Plain homepage indigo band (same as the Programs section), no decoration. */
+export function CTASection({ title, description, location, className }: CTASectionProps) {
   return (
-    <section
-      className={cn(
-        "relative overflow-hidden bg-indigo py-14 focus-invert sm:py-16 lg:py-20",
-        className,
-      )}
-    >
-      {/* One corner only: the copy runs down the left side. An illustration
-          brings its own geometry, so the corner mark steps aside for it. */}
-      {illustration ? null : <GeoCorners corners={["top-right"]} />}
-      <Container className={cn("relative", illustration && "grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-12")}>
+    <section className={cn("relative bg-indigo py-14 text-white focus-invert sm:py-16 lg:py-20", className)}>
+      <Container>
         <div className="max-w-3xl">
-          {/* One Bauhaus element per band: the triad steps aside for an illustration. */}
-          {illustration ? null : <GeoTriad surface="dark" className="mb-6" />}
           <h2 className="text-h2 font-bold text-white lg:text-h2-lg">{title}</h2>
           <p className="mt-5 max-w-[52ch] text-body text-white/80 sm:text-body-lg">{description}</p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -62,7 +42,6 @@ export function CTASection({
             </TrackedButtonLink>
           </div>
         </div>
-        {illustration ? <div className="mx-auto w-full max-w-sm lg:max-w-none">{illustration}</div> : null}
       </Container>
     </section>
   );

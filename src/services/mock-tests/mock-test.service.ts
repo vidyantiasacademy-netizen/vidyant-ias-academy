@@ -24,6 +24,7 @@ import type {
   MockReviewQuestion,
   MockState,
   PublicPaper,
+  PublicSeries,
 } from "@/lib/mock-test/types";
 import { hasPassed, isAhead, latestFirst } from "@/lib/utils/instant";
 import { LEAD_FORMS } from "@/lib/validation/schemas";
@@ -71,7 +72,12 @@ function toPublicPaper(test: Test): PublicPaper {
     durationMinutes: test.durationMinutes,
     negativeMarksPerQuestion: test.negativeMarksPerQuestion,
     closesAt: test.closesAt,
+    pyq: test.pyq ?? null,
   };
+}
+
+function seriesOf(test: Pick<Test, "pyq">): PublicSeries {
+  return test.pyq ? "pyq" : "mock";
 }
 
 function isPublicMcq(test: Test): boolean {
@@ -86,8 +92,11 @@ function isOpen(test: Test, now = Date.now()): boolean {
   return (!test.opensAt || hasPassed(test.opensAt, now)) && (!test.closesAt || isAhead(test.closesAt, now));
 }
 
-/** Every public paper a visitor can start right now, newest first. No session needed. */
-export async function listOpenPapers(): Promise<PublicPaper[]> {
+/**
+ * Every public paper of one series a visitor can start right now. Mocks come
+ * newest first; previous-year papers latest year first. No session needed.
+ */
+export async function listOpenPapers(series: PublicSeries = "mock"): Promise<PublicPaper[]> {
   if (!isAdminConfigured()) return [];
 
   try {
@@ -99,8 +108,12 @@ export async function listOpenPapers(): Promise<PublicPaper[]> {
     const now = Date.now();
 
     return (toEntities<TestDoc>(snapshot.docs) as Test[])
-      .filter((test) => isPublicMcq(test) && isOpen(test, now))
-      .sort((a, b) => latestFirst(a.opensAt ?? a.createdAt, b.opensAt ?? b.createdAt))
+      .filter((test) => isPublicMcq(test) && isOpen(test, now) && seriesOf(test) === series)
+      .sort(
+        (a, b) =>
+          (b.pyq?.year ?? 0) - (a.pyq?.year ?? 0) ||
+          latestFirst(a.opensAt ?? a.createdAt, b.opensAt ?? b.createdAt),
+      )
       .map(toPublicPaper);
   } catch (error) {
     // Same contract as the course catalogue: an outage empties the list, it
@@ -144,7 +157,7 @@ async function requireOwnAttempt(attemptId: string, token: string | null): Promi
 
   if (!attempt || !token || !tokenMatches(token, attempt.accessTokenHash)) {
     throw new AppError(ERROR_CODES.NOT_FOUND, {
-      message: "This mock test sitting could not be found in this browser.",
+      message: "This test sitting could not be found in this browser.",
     });
   }
 
@@ -157,7 +170,8 @@ export interface RegistrationInput {
   testId: string;
   name: string;
   phone: string;
-  email: string | null;
+  /** Google-verified, lower-cased. One sitting per address per paper. */
+  email: string;
   targetAttempt: string | null;
 }
 
@@ -171,12 +185,12 @@ export interface RegistrationContext {
 /**
  * Registers a visitor for a paper and returns the token their browser keeps.
  *
- * One sitting per mobile number per paper, so the rank list is a list of
- * people rather than of retries. A number with an unfinished sitting gets that
- * sitting back with a fresh token — the newest browser wins, as in the student
- * engine, so a visitor who switched from phone to laptop is not locked out. A
- * number that has already finished is refused: handing its scorecard to anyone
- * who types the number would publish strangers' results.
+ * One sitting per Google account per paper — `email` is the address Google
+ * verified, not a typed one — so the rank list is a list of people rather than
+ * of retries. An account with an unfinished sitting gets that sitting back
+ * with a fresh token — the newest browser wins, as in the student engine, so a
+ * visitor who switched from phone to laptop is not locked out. An account that
+ * has already finished is refused.
  */
 export async function register(
   input: RegistrationInput,
@@ -185,21 +199,21 @@ export async function register(
   const test = await getPublicTest(input.testId);
 
   if (!isOpen(test)) {
-    throw new AppError(ERROR_CODES.FORBIDDEN, { message: "This mock test is not open right now." });
+    throw new AppError(ERROR_CODES.FORBIDDEN, { message: "This test is not open right now." });
   }
 
   const token = randomBytes(24).toString("hex");
   const attempts = collection(COLLECTIONS.mockAttempts);
 
   const existing = toEntities<MockAttemptDoc>(
-    (await attempts.where("testId", "==", test.id).where("phone", "==", input.phone).limit(5).get())
+    (await attempts.where("testId", "==", test.id).where("email", "==", input.email).limit(5).get())
       .docs,
   ) as MockAttempt[];
 
   if (existing.some((attempt) => attempt.status === "evaluated")) {
     throw new AppError(ERROR_CODES.CONFLICT, {
       message:
-        "This mobile number has already taken this mock test. Your result was sent to our counsellors — ask for it on a free counselling call.",
+        "This Google account has already taken this test. Your result was sent to our counsellors — ask for it on a free counselling call.",
     });
   }
 
@@ -219,7 +233,7 @@ export async function register(
     data: {
       name: input.name,
       phone: input.phone,
-      email: input.email ?? undefined,
+      email: input.email,
       targetAttempt: input.targetAttempt ?? undefined,
       paper: test.title,
     },
@@ -372,7 +386,7 @@ export async function begin(attemptId: string, token: string | null): Promise<Mo
 
   const test = await getPublicTest(attempt.testId);
   if (!isOpen(test)) {
-    throw new AppError(ERROR_CODES.FORBIDDEN, { message: "This mock test has closed." });
+    throw new AppError(ERROR_CODES.FORBIDDEN, { message: "This test has closed." });
   }
 
   const snapshot = await collection(COLLECTIONS.questions)
