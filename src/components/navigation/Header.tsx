@@ -18,7 +18,7 @@ import { TrackedButtonLink } from "@/components/ui/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { LanguageSwitcher } from "@/components/navigation/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
-import { CTA, MOBILE_NAV, PRIMARY_NAV, ROUTES } from "@/lib/constants/site";
+import { CTA, DESKTOP_NAV, MOBILE_NAV, PRIMARY_NAV, ROUTES } from "@/lib/constants/site";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -133,14 +133,16 @@ export function Header({ notice }: { notice?: ReactNode }) {
               {/* Seven links plus the actions need ~1070px even icon-only, so
                   the full bar starts at xl; below it the drawer takes over. */}
               <ul className="flex items-center gap-6 2xl:gap-7">
-                {PRIMARY_NAV.map((item) => {
-                  const active = activeSection === item.id;
+                {DESKTOP_NAV.map((item) => {
+                  // Sections light up by scroll position, pages by pathname.
+                  const section = "id" in item ? item.id : null;
+                  const active = section ? activeSection === section : isActive(item.href);
                   return (
-                    <li key={item.id}>
+                    <li key={item.key}>
                       <Link
                         href={item.href}
-                        onClick={(event) => onSectionClick(event, item.id)}
-                        aria-current={active ? "location" : undefined}
+                        onClick={(event) => (section ? onSectionClick(event, section) : closeMenu())}
+                        aria-current={active ? (section ? "location" : "page") : undefined}
                         className={cn(
                           "relative whitespace-nowrap text-small font-bold tracking-[-0.005em] transition-colors",
                           active ? "text-white hover:text-kesar" : "text-white/80 hover:text-kesar",

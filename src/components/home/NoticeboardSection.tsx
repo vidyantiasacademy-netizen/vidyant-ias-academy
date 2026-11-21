@@ -1,4 +1,4 @@
-import { ArrowRight, Bell, Newspaper } from "lucide-react";
+import { ArrowRight, Bell, Newspaper, PenLine } from "lucide-react";
 import type { ReactNode } from "react";
 
 import Link from "@/i18n/Link";
@@ -7,7 +7,7 @@ import { SectionArt } from "@/components/ui/SectionArt";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { getLocale } from "@/i18n/server";
 import { ROUTES } from "@/lib/constants/site";
-import { getSiteAnnouncements, getSiteCurrentAffairs } from "@/lib/content/site";
+import { getSiteAnnouncements, getSiteCurrentAffairs, getSitePosts } from "@/lib/content/site";
 import { cn } from "@/lib/utils/cn";
 
 function formatDate(iso: string) {
@@ -31,7 +31,7 @@ function Board({
   title: string;
   href: string;
   linkLabel: string;
-  index: 1 | 2;
+  index: 1 | 2 | 3;
   children: ReactNode;
 }) {
   return (
@@ -62,8 +62,18 @@ function Board({
   );
 }
 
-/** The entry shown on a board: date, title, detail. */
-function Entry({ date, title, detail }: { date?: string; title: string; detail?: string }) {
+/** The entry shown on a board: date, title (linked when `href` is set), detail. */
+function Entry({
+  date,
+  title,
+  href,
+  detail,
+}: {
+  date?: string;
+  title: string;
+  href?: string;
+  detail?: string;
+}) {
   return (
     <>
       {date ? (
@@ -71,25 +81,35 @@ function Entry({ date, title, detail }: { date?: string; title: string; detail?:
           <time dateTime={date}>{formatDate(date)}</time>
         </p>
       ) : null}
-      <h4 className={cn("text-h4 font-bold leading-snug text-indigo", date && "mt-2")}>{title}</h4>
+      <h4 className={cn("text-h4 font-bold leading-snug text-indigo", date && "mt-2")}>
+        {href ? (
+          <Link href={href} className="underline-offset-4 hover:text-kesar-600 hover:underline">
+            {title}
+          </Link>
+        ) : (
+          title
+        )}
+      </h4>
       {detail ? <p className="mt-3 line-clamp-3 text-body text-ink">{detail}</p> : null}
     </>
   );
 }
 
 /**
- * The noticeboard: the latest announcement and today's current-affairs
- * update. Each card falls back to an honest description of what will appear
+ * The noticeboard: the latest announcement, today's current-affairs update
+ * and the newest blog article. Each card falls back to an honest description of what will appear
  * there — never to a sample notice.
  */
 export async function NoticeboardSection() {
   const locale = await getLocale();
-  const [announcements, affairs] = await Promise.all([
+  const [announcements, affairs, posts] = await Promise.all([
     getSiteAnnouncements(locale),
     getSiteCurrentAffairs(locale, 1),
+    getSitePosts(locale, 3),
   ]);
   const notice = announcements[0];
   const affair = affairs[0];
+  const [post, ...morePosts] = posts;
 
   return (
     <Section id="noticeboard" tone="indigo" containerSize="wide" className="overflow-hidden" art={<SectionArt variant="noticeboard" />}>
@@ -101,10 +121,10 @@ export async function NoticeboardSection() {
             What&apos;s new, <em>this week.</em>
           </>
         }
-        description="Key updates and current affairs — in one place."
+        description="Key updates, current affairs and new articles — in one place."
       />
 
-      <div className="mt-4 grid gap-5 lg:mt-6 lg:grid-cols-2 lg:gap-6">
+      <div className="mt-4 grid gap-5 md:grid-cols-2 lg:mt-6 lg:gap-6 xl:grid-cols-3">
         <Board
           index={1}
           icon={<Bell aria-hidden strokeWidth={1.75} className="size-8" />}
@@ -135,6 +155,44 @@ export async function NoticeboardSection() {
             <Entry
               title="Daily Current Affairs"
               detail="Key national, international, economy, environment and other important updates."
+            />
+          )}
+        </Board>
+
+        <Board
+          index={3}
+          icon={<PenLine aria-hidden strokeWidth={1.75} className="size-8" />}
+          title="From the Blog"
+          href={ROUTES.blog}
+          linkLabel={post ? "View all articles" : "Go to the blog"}
+        >
+          {post ? (
+            <>
+              <Entry
+                date={post.publishedAt}
+                title={post.title}
+                href={`${ROUTES.blog}/${post.slug}`}
+                detail={post.excerpt}
+              />
+              {morePosts.length > 0 ? (
+                <ul className="mt-5 space-y-3 border-t border-line pt-5">
+                  {morePosts.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        href={`${ROUTES.blog}/${item.slug}`}
+                        className="text-body font-semibold leading-snug text-indigo underline-offset-4 hover:text-kesar-600 hover:underline"
+                      >
+                        {item.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </>
+          ) : (
+            <Entry
+              title="From the Blog"
+              detail="Practical writing on strategy, revision, answer writing and test analysis from our academic team."
             />
           )}
         </Board>

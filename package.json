@@ -22,6 +22,7 @@
     "seed:notes:sanity": "sanity exec scripts/seed-notes-sanity.mjs --with-user-token --",
     "seed:pyq:sanity": "sanity exec scripts/seed-pyq-sanity.mjs --with-user-token --",
     "seed:course-cards:sanity": "sanity exec scripts/seed-course-cards-sanity.mjs --with-user-token --",
+    "seed:blog:sanity": "sanity exec scripts/seed-blog-sanity.mjs --with-user-token --",
     "seed:answer-writing": "node scripts/seed-answer-writing-sample.mjs",
     "seed:pyq-test": "node scripts/seed-pyq-test-sample.mjs",
     "answer-writing:sample-pdf": "node scripts/generate-answer-writing-sample.mjs",
